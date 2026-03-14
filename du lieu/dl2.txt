@@ -1,0 +1,329 @@
+# 02_phuong_phap_bien_phap.json
+
+
+{\
+"metadata": {\
+"version": "1.0.0",\
+"created_date": "2026-03-14",\
+"description" : "Phương pháp dạy học và biện pháp mẫu đạt giải",\
+"total_methods": 10,\
+"total_samples": 10\
+},\
+"phuong_phap_day_hoc": [\
+{\
+"id": "PP001",\
+"ten_phuong_phap": "Dạy học theo dự án (Project-Based Learning - PBL)",\
+"mo_ta_ngan" : "Học sinh giải quyết vấn đề thực tế thông qua thực hiện dự án",\
+"nguyen_tac": [\
+"Vấn đề phải có ý nghĩa thực tiễn",\
+"Học sinh chủ động, tự lập kế hoạch",\
+"Sản phẩm cuối cùng phải cụ thể",\
+"Làm việc nhóm có tổ chức",\
+"Giáo viên đóng vai trò hướng dẫn"\
+],\
+"cac_buoc_thuc_hien": [\
+{\
+"buoc": 1,\
+"ten" : "Xác định vấn đề/câu hỏi dẫn dắt",\
+"mo_ta" : "Đặt ra câu hỏi mở, có ý nghĩa thực tiễn, kích thích tò mò",\
+"thoi_gian": "1 tiết"\
+},\
+{\
+"buoc": 2,\
+"ten": "Lập kế hoạch dự án",\
+"mo_ta" : "HS chia nhóm, phân công nhiệm vụ, lên timeline",\
+"thoi_gian": "1 tiết"\
+},\
+{\
+"buoc": 3,\
+"ten" : "Thu thập thông tin và nghiên cứu",\
+"mo_ta" : "HS tìm kiếm, phân tích thông tin từ nhiều nguồn",\
+"thoi_gian": "2-3 tiết"\
+},\
+{\
+"buoc": 4,\
+"ten": "Thực hiện dự án",\
+"mo_ta" : "HS làm việc nhóm, tạo ra sản phẩm cụ thể",\
+"thoi_gian": "3-4 tiết"\
+},\
+{\
+"buoc": 5,\
+"ten" : "Trình bày và đánh giá",\
+"mo_ta": "Các nhóm thuyết trình, nhận phản hồi, tự đánh giá",\
+"thoi_gian": "2 tiết"\
+}\
+],\
+"uu_diem": [\
+"Phát triển tư duy phản biện, giải quyết vấn đề",\
+"Kỹ năng làm việc nhóm, giao tiếp",\
+"Kiến thức bền vững, có ý nghĩa",\
+"Tăng động lực học tập",\
+"Liên hệ thực tế"\
+],\
+"nhuoc_diem": [\
+"Tốn thời gian",\
+"Cần chuẩn bị kỹ lưỡng",\
+"Khó quản lý lớp đông",\
+"HS yếu có thể bị động"\
+],\
+"phu_hop_voi" : ["Tất cả cấp học", "Đặc biệt phù hợp THCS, THPT"],\
+"vi_du_cu_the": {\
+"mon_hoc": "Toán",\
+"chu_de" : "Thống kê trong cuộc sống",\
+"cau_hoi_dan_dat" : "Làm thế nào để phân tích xu hướng tiêu dùng của học sinh trường ta ?",\
+"san_pham" : "Báo cáo phân tích + Biểu đồ + Khuyến nghị"\
+},\
+"tai_nguyen_ho_tro": [\
+"Google Classroom (quản lý dự án)",\
+"Trello/Notion (phân công công việc)",\
+"Canva (thiết kế sản phẩm)",\
+"Google Forms (khảo sát)"\
+]\
+},\
+{\
+"id": "PP002",\
+"ten_phuong_phap": "STEM/STEAM",\
+"mo_ta_ngan" : "Tích hợp Khoa học (Science), Công nghệ (Technology), Kỹ thuật (Engineering), Nghệ thuật (Arts), Toán học (Mathematics)",\
+"nguyen_tac": [\
+"Tích hợp liên môn tự nhiên",\
+"Học qua làm (hands-on)",\
+"Giải quyết vấn đề thực tế",\
+"Khuyến khích sáng tạo",\
+"Sử dụng công nghệ"\
+],\
+"cac_buoc_thuc_hien": [\
+{\
+"buoc": 1,\
+"ten": "Xác định thách thức",\
+"mo_ta": "Đặt ra vấn đề thực tế cần giải quyết",\
+"thoi_gian": "15 phút"\
+},\
+{\
+"buoc": 2,\
+"ten" : "Nghiên cứu và lên ý tưởng",\
+"mo_ta": "HS tìm hiểu, brainstorm giải pháp",\
+"thoi_gian": "30 phút"\
+},\
+{\
+"buoc": 3,\
+"ten" : "Thiết kế và lập kế hoạch",\
+"mo_ta" : "Vẽ sơ đồ, chọn vật liệu, phân công",\
+"thoi_gian": "30 phút"\
+},\
+{\
+"buoc": 4,\
+"ten" : "Chế tạo mô hình",\
+"mo_ta" : "HS làm việc nhóm, tạo prototype",\
+"thoi_gian": "60-90 phút"\
+},\
+{\
+"buoc": 5,\
+"ten" : "Thử nghiệm và cải tiến",\
+"mo_ta": "Test, phát hiện lỗi, sửa chữa",\
+"thoi_gian": "30 phút"\
+},\
+{\
+"buoc": 6,\
+"ten" : "Chia sẻ và phản hồi",\
+"mo_ta" : "Trình bày sản phẩm, nhận đánh giá",\
+"thoi_gian": "30 phút"\
+}\
+],\
+"uu_diem": [\
+"Liên kết liên môn tự nhiên",\
+"Phát triển tư duy sáng tạo, kỹ thuật",\
+"Ứng dụng thực tế cao",\
+"Chuẩn bị cho nghề nghiệp tương lai",\
+"Tăng hứng thú học STEM"\
+],\
+"nhuoc_diem": [\
+"Cần thiết bị, vật liệu",\
+"GV cần đào tạo chuyên sâu",\
+"Khó đánh giá kết quả",\
+"Tốn thời gian chuẩn bị"\
+],\
+"phu_hop_voi": ["THCS", "THPT"],\
+"vi_du_cu_the": {\
+"mon_hoc" : "Hóa học + Công nghệ",\
+"chu_de": "Thiết kế hệ thống lọc nước đơn giản",\
+"thach_thuc" : "Làm sạch nước ao, hồ bằng vật liệu sẵn có",\
+"san_pham" : "Mô hình lọc nước + Báo cáo khoa học"\
+},\
+"tai_nguyen_ho_tro": [\
+"Tinkercad (thiết kế 3D)",\
+"Arduino/Micro: bit (lập trình)",\
+"Vật liệu tái chế",\
+"Phòng thí nghiệm STEM"\
+]\
+},\
+{\
+"id": "PP003",\
+"ten_phuong_phap": "Lớp học đảo ngược (Flipped Classroom)",\
+"mo_ta_ngan" : "Học lý thuyết ở nhà (qua video), thực hành và thảo luận trên lớp",\
+"nguyen_tac": [\
+"Tách biệt học lý thuyết và thực hành",\
+"Tối ưu thời gian trên lớp",\
+"HS chủ động tốc độ học",\
+"GV tập trung hỗ trợ cá nhân",\
+"Công nghệ là yếu tố then chốt"\
+],\
+"cac_buoc_thuc_hien": [\
+{\
+"buoc": 1,\
+"ten" : "Chuẩn bị video bài giảng",\
+"mo_ta": "GV quay video 10-15 phút giảng lý thuyết",\
+"thoi_gian": "Trước buổi học"\
+},\
+{\
+"buoc": 2,\
+"ten" : "HS xem video ở nhà",\
+"mo_ta" : "HS xem video, ghi chú, chuẩn bị câu hỏi",\
+"thoi_gian" : "Tối hôm trước"\
+},\
+{\
+"buoc": 3,\
+"ten": "Kiểm tra nhanh đầu giờ",\
+"mo_ta": "Quiz 5 phút qua Kahoot/Quizizz",\
+"thoi_gian": "5 phút"\
+},\
+{\
+"buoc": 4,\
+"ten": "Giải đáp thắc mắc",\
+"mo_ta" : "GV trả lời câu hỏi của HS",\
+"thoi_gian": "10 phút"\
+},\
+{\
+"buoc": 5,\
+"ten" : "Thực hành, vận dụng",\
+"mo_ta" : "HS làm BT, dự án, thí nghiệm",\
+"thoi_gian": "25 phút"\
+},\
+{\
+"buoc": 6,\
+"ten" : "Tổng kết và dặn dò",\
+"mo_ta" : "Nhấn mạnh điểm chính, giao video bài sau",\
+"thoi_gian": "5 phút"\
+}\
+],\
+"uu_diem": [\
+"Tối ưu thời gian lớp học",\
+"HS chủ động, xem lại nhiều lần",\
+"GV có thời gian hỗ trợ cá nhân",\
+"Phù hợp học trực tuyến",\
+"Cá nhân hóa tốc độ học"\
+],\
+"nhuoc_diem": [\
+"Cần thiết bị công nghệ",\
+"HS phải tự giác xem video",\
+"Tốn thời gian làm video",\
+"Không phù hợp HS nhỏ tuổi"\
+],\
+"phu_hop_voi": ["THCS", "THPT", "Đại học"],\
+"vi_du_cu_the": {\
+"mon_hoc": "Toán",\
+"chu_de": "Phương trình bậc 2",\
+"video" : "15 phút giảng công thức nghiệm, delta",\
+"tren_lop" : "Giải 20 bài tập phân hóa, thảo luận bài khó"\
+},\
+"tai_nguyen_ho_tro": [\
+"Loom/OBS (quay video)",\
+"YouTube/Google Drive (lưu trữ)",\
+"Edpuzzle (video tương tác)",\
+"Kahoot/Quizizz (kiểm tra nhanh)"\
+]\
+}\
+],\
+"bien_phap_mau": [\
+{\
+"id": "BP001",\
+"tieu_de" : "Phát triển tư duy phản biện cho học sinh chưa đạt thông qua dạy học chủ đề 'Các số đặc trưng đo xu thế trung tâm'",\
+"mon_hoc": "Toán",\
+"cap_hoc": "THPT",\
+"khoi_lop": "10",\
+"giai_thuong": "Giải A",\
+"cap_thi": "Cấp tỉnh",\
+"nam_dat_giai": "2025",\
+"tac_gia" : "Giáo viên THPT",\
+"truong" : "THPT Trùng Khánh",\
+"tinh_thanh": "Cao Bằng",\
+"tom_tat" : "Biện pháp tập trung phát triển tư duy phản biện cho HS chưa đạt qua chủ đề Thống kê. Sử dụng quy trình 4 giai đoạn, 5 hoạt động, tích hợp AI (ChatGPT, Gemini), phân hóa theo nhóm năng lực. Kết quả : Tỷ lệ đạt tăng 13.9%, điểm TB tăng 0.7, hứng thú tăng 37.2%.",\
+"diem_manh": [\
+"Tích hợp AI (ChatGPT, Gemini) hiệu quả",\
+"Dữ liệu thực nghiệm chi tiết (3 bảng khảo sát)",\
+"Quy trình 4 giai đoạn, 5 hoạt động rõ ràng",\
+"Phân hóa theo nhóm năng lực",\
+"Rubric đánh giá tư duy phản biện cụ thể",\
+"Giáo án minh họa chi tiết",\
+"Phiếu học tập có giàn giáo"\
+],\
+"noi_dung_day_du": {\
+"phan_1_dat_van_de": {\
+"ly_do_chon_de_tai" : "Thế giới 4.0 đòi hỏi tư duy phản biện. Chương trình GDPT 2018 chuyển sang phát triển năng lực. HS chưa đạt tại Trùng Khánh, Cao Bằng gặp khó khăn. Chủ đề Thống kê là cơ hội vàng để phát triển tư duy phản biện.",\
+"muc_dich": [\
+"Hình thành năng lực tư duy phản biện cho HS chưa đạt",\
+"Nâng cao kết quả học tập môn Toán",\
+"Xây dựng quy trình khả thi, tích hợp AI"\
+],\
+"doi_tuong": "35 HS lớp 10A1 (thực nghiệm), 40 HS lớp 10A3 (đối chứng)",\
+"pham_vi" : "Chủ đề 'Các số đặc trưng đo xu thế trung tâm', HKI 2025-2026"\
+},\
+"phan_2_co_so_ly_luan": {\
+"van_ban_phap_ly": ["Luật GD 2019", "NQ 29-NQ/TW", "TT 32/2018", "TT 22/2021"],\
+"ly_thuyet": ["Thuyết Kiến tạo (Piaget, Vygotsky)", "Bloom's Taxonomy", "ZPD"]\
+},\
+"phan_3_thuc_trang": {\
+"so_lieu_khao_sat": {\
+"bang_1" : "Kết quả học tập : 44.2% không hiểu số TB, 61.7% không hiểu trung vị",\
+"bang_2" : "Năng lực TDPB : 89.7% không đặt câu hỏi mở rộng, 76.5% không phát hiện ưu/nhược điểm",\
+"bang_3" : "Phương pháp GV : 0% dạy theo chủ đề thường xuyên, 0% đánh giá TDPB"\
+}\
+},\
+"phan_4_giai_phap": {\
+"quy_trinh" : "4 giai đoạn : Khởi động (1 tiết) → Xây dựng (3 tiết) → Củng cố (1 tiết) → Mở rộng (1 tiết)",\
+"hoat_dong": [\
+"HĐ1: Tạo tình huống có vấn đề",\
+"HĐ2: Khám phá số trung bình",\
+"HĐ3: Khám phá số trung vị",\
+"HĐ4 : So sánh và lựa chọn",\
+"HĐ5: Dự án nhóm thực tế"\
+],\
+"cong_cu_AI" : ["ChatGPT (giải thích khái niệm)", "Gemini (phân tích dữ liệu)", "Kahoot (kiểm tra)", "Padlet (thảo luận)"]\
+},\
+"phan_5_hieu_qua": {\
+"ket_qua_hoc_tap": "Điểm TB tăng từ 6.5 → 7.2, Tỷ lệ đạt tăng từ 77.5% → 91.4%",\
+"thai_do": "Hứng thú tăng 37.2%, Tự tin tăng 40%, Chủ động tăng 40%",\
+"nang_luc_TDPB" : "Kỹ năng phân tích tăng 25%, Đánh giá tăng 30%, Đặt câu hỏi tăng 35%"\
+}\
+}\
+},\
+{\
+"id": "BP002",\
+"tieu_de" : "Sử dụng Kahoot và Quizizz nâng cao hứng thú học Tiếng Anh cho học sinh THCS",\
+"mon_hoc": "Tiếng Anh",\
+"cap_hoc": "THCS",\
+"khoi_lop": "6-9",\
+"giai_thuong": "Giải A",\
+"cap_thi": "Cấp tỉnh",\
+"nam_dat_giai": "2024",\
+"tac_gia" : "Giáo viên THCS",\
+"truong": "THCS Nguyễn Du",\
+"tinh_thanh" : "Hà Nội",\
+"tom_tat" : "Ứng dụng Kahoot và Quizizz vào các hoạt động : Khởi động, Luyện từ vựng, Ôn tập ngữ pháp, Kiểm tra. Kết quả : Hứng thú tăng 45%, điểm TB tăng 1.2, tỷ lệ tham gia 95%.",\
+"diem_manh": [\
+"Tích hợp công nghệ hiệu quả",\
+"Tăng động lực học tập rõ rệt",\
+"Dữ liệu phân tích chi tiết từ app",\
+"Dễ áp dụng, không tốn chi phí",\
+"Phù hợp học trực tuyến và trực tiếp"\
+],\
+"noi_dung_day_du": {\
+"phan_4_giai_phap": {\
+"giai_phap_1" : "Kahoot cho khởi động (5 phút) : 5-7 câu hỏi ôn bài cũ",\
+"giai_phap_2" : "Quizizz cho luyện từ vựng : HS tự làm ở nhà, GV xem báo cáo",\
+"giai_phap_3" : "Kahoot cho ôn tập ngữ pháp : Team mode, thi đua nhóm",\
+"giai_phap_4": "Quizizz cho kiểm tra 15 phút: Tự động chấm, xuất điểm"\
+}\
+}\
+}\
+]\
+}

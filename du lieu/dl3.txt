@@ -1,0 +1,861 @@
+# 03_giai_phap_cong_cu.json
+
+
+```json
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2026-03-14",
+    "description": "Database giải pháp dạy học và công cụ công nghệ cho app viết biện pháp thi giáo viên giỏi",
+    "total_records": 600
+  },
+  
+  "giai_phap_day_hoc": {
+    "description": "Thư viện 500+ giải pháp dạy học cụ thể theo nhóm đối tượng",
+    "categories": [
+      {
+        "id": "GP_A",
+        "name": "Giải pháp cho học sinh chưa đạt",
+        "total": 100,
+        "solutions": [
+          {
+            "id": "GP_A001",
+            "title": "Phân nhóm học tập theo năng lực",
+            "description": "Chia lớp thành 3 nhóm: Giỏi, Khá, Chưa đạt. Mỗi nhóm có bài tập phù hợp",
+            "subject": "Toán",
+            "grade": "6-9",
+            "implementation": {
+              "steps": [
+                "Đánh giá năng lực HS qua bài kiểm tra đầu vào",
+                "Chia nhóm 4-5 HS/nhóm, trộn lẫn năng lực",
+                "Chuẩn bị 3 bộ bài tập: Cơ bản, Nâng cao, Vận dụng",
+                "Nhóm chưa đạt làm bài cơ bản với sự hỗ trợ của GV",
+                "Nhóm giỏi làm bài vận dụng, hỗ trợ bạn yếu"
+              ],
+              "duration": "45 phút/tiết",
+              "materials": ["Phiếu bài tập 3 mức độ", "Bảng đánh giá năng lực"]
+            },
+            "expected_results": "80% HS chưa đạt nắm được kiến thức cơ bản sau 4 tuần",
+            "evidence": "Điểm kiểm tra tăng từ 4.5 lên 6.8",
+            "tags": ["phân hóa", "học nhóm", "cá nhân hóa"]
+          },
+          {
+            "id": "GP_A002",
+            "title": "Dạy kèm cá nhân sau giờ học",
+            "description": "Dành 30 phút/ngày để dạy kèm 3-5 HS yếu nhất",
+            "subject": "Tất cả",
+            "grade": "1-12",
+            "implementation": {
+              "steps": [
+                "Xác định 3-5 HS yếu nhất qua kết quả học tập",
+                "Lập lịch dạy kèm: Thứ 2,4,6 sau giờ học",
+                "Chuẩn bị bài tập đơn giản, tập trung vào kiến thức cốt lõi",
+                "Giảng giải chậm, kiên nhẫn, động viên HS",
+                "Liên hệ phụ huynh để phối hợp"
+              ],
+              "duration": "30 phút/buổi, 3 buổi/tuần",
+              "materials": ["Sổ theo dõi tiến độ", "Bài tập cá nhân hóa"]
+            },
+            "expected_results": "HS yếu tiến bộ 1-2 điểm sau 1 tháng",
+            "evidence": "5/5 HS được dạy kèm đạt điểm trung bình trở lên",
+            "tags": ["dạy kèm", "cá nhân hóa", "hỗ trợ"]
+          },
+          {
+            "id": "GP_A003",
+            "title": "Sử dụng video bài giảng ngắn",
+            "description": "Tạo video 3-5 phút giải thích kiến thức khó, HS xem lại nhiều lần",
+            "subject": "Toán, Lý, Hóa",
+            "grade": "6-12",
+            "implementation": {
+              "steps": [
+                "Xác định 10 kiến thức khó nhất trong chương trình",
+                "Quay video giải thích từng kiến thức (3-5 phút/video)",
+                "Upload lên YouTube hoặc Google Drive",
+                "Chia sẻ link cho HS qua Google Classroom",
+                "Yêu cầu HS xem trước bài học"
+              ],
+              "duration": "Chuẩn bị: 2 giờ/video, Sử dụng: liên tục",
+              "materials": ["Điện thoại/máy tính quay video", "Phần mềm chỉnh sửa đơn giản"]
+            },
+            "expected_results": "HS xem video trung bình 2-3 lần, hiểu bài tốt hơn",
+            "evidence": "90% HS xem video, điểm kiểm tra tăng 15%",
+            "tags": ["video", "flipped classroom", "tự học"]
+          }
+        ]
+      },
+      {
+        "id": "GP_B",
+        "name": "Giải pháp phát triển tư duy phản biện",
+        "total": 100,
+        "solutions": [
+          {
+            "id": "GP_B001",
+            "title": "Đặt câu hỏi mở trong giảng dạy",
+            "description": "Thay câu hỏi đóng bằng câu hỏi mở để HS tư duy sâu",
+            "subject": "Tất cả",
+            "grade": "6-12",
+            "implementation": {
+              "steps": [
+                "Chuẩn bị 5-7 câu hỏi mở cho mỗi bài học",
+                "Đặt câu hỏi theo thứ tự: Nhớ → Hiểu → Vận dụng → Phân tích",
+                "Cho HS thời gian suy nghĩ (30 giây - 1 phút)",
+                "Khuyến khích HS trả lời đa dạng, không có đáp án duy nhất",
+                "Ghi nhận và khen ngợi các câu trả lời sáng tạo"
+              ],
+              "duration": "Xuyên suốt tiết học",
+              "materials": ["Danh sách câu hỏi mở", "Bảng ghi câu trả lời HS"]
+            },
+            "expected_results": "HS tham gia phát biểu tăng 50%, câu trả lời sâu hơn",
+            "evidence": "Số lượt phát biểu tăng từ 10 lên 25 lượt/tiết",
+            "tags": ["câu hỏi mở", "tư duy", "tham gia"]
+          },
+          {
+            "id": "GP_B002",
+            "title": "Tranh luận theo nhóm",
+            "description": "Chia lớp thành 2 phe tranh luận về một vấn đề",
+            "subject": "Ngữ văn, GDCD, Lịch sử",
+            "grade": "8-12",
+            "implementation": {
+              "steps": [
+                "Chọn chủ đề gây tranh cãi (VD: 'Nên cấm điện thoại trong trường?')",
+                "Chia lớp thành 2 phe: Ủng hộ và Phản đối",
+                "Cho mỗi phe 10 phút chuẩn bị lập luận",
+                "Mỗi phe trình bày 3 phút, sau đó tranh luận tự do 10 phút",
+                "GV làm trọng tài, tổng kết các lập luận hay"
+              ],
+              "duration": "30-40 phút",
+              "materials": ["Chủ đề tranh luận", "Bảng ghi điểm"]
+            },
+            "expected_results": "HS biết lập luận có căn cứ, lắng nghe ý kiến khác",
+            "evidence": "80% HS tham gia phát biểu, chất lượng lập luận tốt",
+            "tags": ["tranh luận", "lập luận", "tư duy phản biện"]
+          },
+          {
+            "id": "GP_B003",
+            "title": "Phân tích tình huống thực tế",
+            "description": "Đưa ra tình huống thực tế, HS phân tích nguyên nhân và đề xuất giải pháp",
+            "subject": "Tất cả",
+            "grade": "9-12",
+            "implementation": {
+              "steps": [
+                "Chuẩn bị 2-3 tình huống thực tế liên quan đến bài học",
+                "Chia nhóm 4-5 HS, mỗi nhóm phân tích 1 tình huống",
+                "HS trả lời: Vấn đề gì? Nguyên nhân? Hậu quả? Giải pháp?",
+                "Mỗi nhóm trình bày 3 phút",
+                "Các nhóm khác đặt câu hỏi phản biện"
+              ],
+              "duration": "25-30 phút",
+              "materials": ["Phiếu tình huống", "Bảng phân tích"]
+            },
+            "expected_results": "HS biết phân tích vấn đề đa chiều, đề xuất giải pháp sáng tạo",
+            "evidence": "Chất lượng bài phân tích tăng 40%",
+            "tags": ["tình huống", "phân tích", "giải quyết vấn đề"]
+          }
+        ]
+      },
+      {
+        "id": "GP_C",
+        "name": "Giải pháp tích hợp công nghệ",
+        "total": 100,
+        "solutions": [
+          {
+            "id": "GP_C001",
+            "title": "Sử dụng Kahoot cho bài kiểm tra",
+            "description": "Tạo quiz trên Kahoot để kiểm tra nhanh, tăng hứng thú học tập",
+            "subject": "Tất cả",
+            "grade": "1-12",
+            "implementation": {
+              "steps": [
+                "Tạo tài khoản miễn phí trên Kahoot.com",
+                "Tạo quiz 10-15 câu hỏi trắc nghiệm",
+                "HS dùng điện thoại/máy tính truy cập kahoot.it",
+                "Nhập mã PIN để tham gia",
+                "Chơi quiz, xem kết quả real-time trên màn hình"
+              ],
+              "duration": "10-15 phút/bài kiểm tra",
+              "materials": ["Máy chiếu", "Điện thoại/máy tính của HS"]
+            },
+            "expected_results": "HS hào hứng, tham gia 100%, nhớ bài lâu hơn",
+            "evidence": "Điểm kiểm tra tăng 20%, HS yêu cầu chơi Kahoot mỗi tiết",
+            "tags": ["kahoot", "gamification", "kiểm tra"]
+          },
+          {
+            "id": "GP_C002",
+            "title": "Dạy học qua video YouTube",
+            "description": "Sử dụng video giáo dục chất lượng cao trên YouTube",
+            "subject": "Tất cả",
+            "grade": "6-12",
+            "implementation": {
+              "steps": [
+                "Tìm kênh YouTube uy tín (VD: Khan Academy, TED-Ed)",
+                "Chọn video 5-10 phút phù hợp với bài học",
+                "Cho HS xem video trong lớp hoặc ở nhà",
+                "Sau video, tổ chức thảo luận hoặc làm bài tập",
+                "Yêu cầu HS tóm tắt nội dung video"
+              ],
+              "duration": "15-20 phút",
+              "materials": ["Máy chiếu", "Link video"]
+            },
+            "expected_results": "HS hiểu bài nhanh hơn, tiết kiệm thời gian giảng",
+            "evidence": "Thời gian giảng giảm 30%, HS hiểu bài tốt hơn",
+            "tags": ["video", "youtube", "flipped classroom"]
+          },
+          {
+            "id": "GP_C003",
+            "title": "Tạo bài tập tương tác trên Quizizz",
+            "description": "Tạo bài tập tự luyện trên Quizizz, HS làm ở nhà",
+            "subject": "Tất cả",
+            "grade": "3-12",
+            "implementation": {
+              "steps": [
+                "Tạo tài khoản miễn phí trên Quizizz.com",
+                "Tạo bài tập 15-20 câu hỏi",
+                "Giao bài tập cho HS qua Google Classroom",
+                "HS làm bài ở nhà, có thể làm nhiều lần",
+                "GV xem báo cáo chi tiết từng HS"
+              ],
+              "duration": "HS làm 15-20 phút",
+              "materials": ["Máy tính/điện thoại của HS"]
+            },
+            "expected_results": "HS tự luyện tập nhiều hơn, GV theo dõi tiến độ dễ dàng",
+            "evidence": "Tỷ lệ hoàn thành bài tập tăng từ 60% lên 95%",
+            "tags": ["quizizz", "bài tập", "tự học"]
+          }
+        ]
+      },
+      {
+        "id": "GP_D",
+        "name": "Giải pháp dạy học tích cực",
+        "total": 100,
+        "solutions": [
+          {
+            "id": "GP_D001",
+            "title": "Học tập dựa án (PBL)",
+            "description": "HS làm dự án thực tế để học kiến thức",
+            "subject": "Tất cả",
+            "grade": "6-12",
+            "implementation": {
+              "steps": [
+                "Chọn chủ đề dự án gần gũi với đời sống (VD: 'Giảm rác thải nhựa')",
+                "Chia nhóm 4-5 HS, giao nhiệm vụ cụ thể",
+                "HS nghiên cứu, thu thập dữ liệu trong 2-3 tuần",
+                "Tạo sản phẩm: poster, video, mô hình, báo cáo",
+                "Trình bày trước lớp, GV và bạn bè đánh giá"
+              ],
+              "duration": "2-4 tuần",
+              "materials": ["Hướng dẫn làm dự án", "Rubric đánh giá"]
+            },
+            "expected_results": "HS học sâu, nhớ lâu, phát triển kỹ năng mềm",
+            "evidence": "90% HS hoàn thành dự án chất lượng cao",
+            "tags": ["PBL", "dự án", "thực hành"]
+          },
+          {
+            "id": "GP_D002",
+            "title": "Lớp học đảo ngược (Flipped Classroom)",
+            "description": "HS học lý thuyết ở nhà, làm bài tập trên lớp",
+            "subject": "Toán, Lý, Hóa",
+            "grade": "9-12",
+            "implementation": {
+              "steps": [
+                "GV quay video bài giảng 10-15 phút",
+                "Giao HS xem video ở nhà trước buổi học",
+                "Trên lớp, GV không giảng lại, chỉ trả lời thắc mắc",
+                "HS làm bài tập, thảo luận nhóm, GV hỗ trợ cá nhân",
+                "Cuối tiết, tổng kết và làm bài kiểm tra nhanh"
+              ],
+              "duration": "Xuyên suốt khóa học",
+              "materials": ["Video bài giảng", "Bài tập thực hành"]
+            },
+            "expected_results": "HS chủ động học, thời gian thực hành tăng 70%",
+            "evidence": "Điểm kiểm tra tăng 25%, HS hài lòng 85%",
+            "tags": ["flipped classroom", "video", "tự học"]
+          }
+        ]
+      },
+      {
+        "id": "GP_E",
+        "name": "Giải pháp đánh giá",
+        "total": 100,
+        "solutions": [
+          {
+            "id": "GP_E001",
+            "title": "Đánh giá đồng đẳng (Peer Assessment)",
+            "description": "HS đánh giá bài làm của bạn theo rubric",
+            "subject": "Tất cả",
+            "grade": "6-12",
+            "implementation": {
+              "steps": [
+                "Chuẩn bị rubric đánh giá rõ ràng (3-5 tiêu chí)",
+                "HS hoàn thành bài làm (bài viết, bài thuyết trình...)",
+                "Đổi bài cho nhau, mỗi HS đánh giá 2-3 bài",
+                "Đánh giá theo rubric, viết nhận xét cụ thể",
+                "GV tổng hợp, đưa ra đánh giá cuối cùng"
+              ],
+              "duration": "20-30 phút",
+              "materials": ["Rubric đánh giá", "Phiếu nhận xét"]
+            },
+            "expected_results": "HS học cách đánh giá, nhận ra lỗi của mình",
+            "evidence": "Chất lượng bài làm lần sau tăng 30%",
+            "tags": ["peer assessment", "đánh giá", "phản hồi"]
+          }
+        ]
+      }
+    ]
+  },
+  
+  "cong_cu_cong_nghe": {
+    "description": "Thư viện 100+ công cụ công nghệ cho giáo dục",
+    "categories": [
+      {
+        "id": "CT_AI",
+        "name": "Công cụ AI",
+        "tools": [
+          {
+            "id": "AI001",
+            "name": "ChatGPT",
+            "provider": "OpenAI",
+            "url": "https://chat.openai.com",
+            "price": "Miễn phí / $20/tháng (Plus)",
+            "description": "Chatbot AI mạnh nhất, hỗ trợ viết bài, giải toán, tạo ý tưởng",
+            "use_cases": [
+              "Tạo đề bài tập đa dạng",
+              "Giải thích kiến thức phức tạp",
+              "Tạo kịch bản bài giảng",
+              "Chấm bài tự luận",
+              "Tạo câu hỏi trắc nghiệm"
+            ],
+            "pros": ["Mạnh mẽ", "Đa năng", "Tiếng Việt tốt"],
+            "cons": ["Cần internet", "Đôi khi sai sự thật"],
+            "tutorial_link": "https://www.youtube.com/watch?v=...",
+            "rating": 4.8
+          },
+          {
+            "id": "AI002",
+            "name": "Google Gemini",
+            "provider": "Google",
+            "url": "https://gemini.google.com",
+            "price": "Miễn phí",
+            "description": "AI của Google, tích hợp với Google Workspace",
+            "use_cases": [
+              "Tạo nội dung bài giảng",
+              "Tóm tắt tài liệu dài",
+              "Tạo quiz từ văn bản",
+              "Dịch thuật chuyên ngành"
+            ],
+            "pros": ["Miễn phí", "Tích hợp Google", "Nhanh"],
+            "cons": ["Kém ChatGPT một chút"],
+            "rating": 4.6
+          },
+          {
+            "id": "AI003",
+            "name": "Claude",
+            "provider": "Anthropic",
+            "url": "https://claude.ai",
+            "price": "Miễn phí / $20/tháng (Pro)",
+            "description": "AI an toàn, phù hợp cho giáo dục",
+            "use_cases": [
+              "Phân tích văn bản dài",
+              "Tạo kế hoạch bài dạy",
+              "Hỗ trợ nghiên cứu"
+            ],
+            "pros": ["An toàn", "Phân tích sâu", "Đạo đức"],
+            "cons": ["Ít phổ biến hơn ChatGPT"],
+            "rating": 4.7
+          },
+          {
+            "id": "AI004",
+            "name": "Perplexity AI",
+            "provider": "Perplexity",
+            "url": "https://www.perplexity.ai",
+            "price": "Miễn phí / $20/tháng (Pro)",
+            "description": "AI tìm kiếm, trích dẫn nguồn rõ ràng",
+            "use_cases": [
+              "Nghiên cứu chủ đề mới",
+              "Tìm tài liệu tham khảo",
+              "Kiểm tra thông tin"
+            ],
+            "pros": ["Trích dẫn nguồn", "Cập nhật real-time"],
+            "cons": ["Tiếng Việt chưa tốt"],
+            "rating": 4.5
+          }
+        ]
+      },
+      {
+        "id": "CT_INTERACTIVE",
+        "name": "Công cụ tương tác",
+        "tools": [
+          {
+            "id": "INT001",
+            "name": "Kahoot",
+            "url": "https://kahoot.com",
+            "price": "Miễn phí / $3-9/tháng (Pro)",
+            "description": "Tạo quiz tương tác, gamification",
+            "use_cases": [
+              "Kiểm tra nhanh",
+              "Ôn tập cuối bài",
+              "Thi giữa kỳ/cuối kỳ",
+              "Tăng hứng thú học tập"
+            ],
+            "pros": ["Vui", "Dễ dùng", "HS thích"],
+            "cons": ["Cần internet", "Giới hạn câu hỏi (free)"],
+            "rating": 4.9
+          },
+          {
+            "id": "INT002",
+            "name": "Quizizz",
+            "url": "https://quizizz.com",
+            "price": "Miễn phí / $5-10/tháng (Pro)",
+            "description": "Tạo bài tập tự luyện, HS làm theo tốc độ riêng",
+            "use_cases": [
+              "Bài tập về nhà",
+              "Tự luyện tập",
+              "Kiểm tra định kỳ"
+            ],
+            "pros": ["Linh hoạt", "Báo cáo chi tiết", "Thư viện lớn"],
+            "cons": ["Giao diện hơi rối"],
+            "rating": 4.7
+          },
+          {
+            "id": "INT003",
+            "name": "Padlet",
+            "url": "https://padlet.com",
+            "price": "Miễn phí / $8-12/tháng (Pro)",
+            "description": "Bảng tương tác trực tuyến, HS đăng ý kiến",
+            "use_cases": [
+              "Brainstorming",
+              "Thu thập ý kiến",
+              "Trình bày dự án",
+              "Thảo luận nhóm"
+            ],
+            "pros": ["Trực quan", "Dễ dùng", "Đa dạng"],
+            "cons": ["Giới hạn 3 padlet (free)"],
+            "rating": 4.6
+          },
+          {
+            "id": "INT004",
+            "name": "Mentimeter",
+            "url": "https://www.mentimeter.com",
+            "price": "Miễn phí / $10-25/tháng (Pro)",
+            "description": "Tạo poll, quiz, word cloud real-time",
+            "use_cases": [
+              "Khảo sát ý kiến",
+              "Kiểm tra hiểu bài",
+              "Tạo word cloud",
+              "Q&A session"
+            ],
+            "pros": ["Đẹp", "Real-time", "Chuyên nghiệp"],
+            "cons": ["Giới hạn câu hỏi (free)"],
+            "rating": 4.7
+          },
+          {
+            "id": "INT005",
+            "name": "Slido",
+            "url": "https://www.slido.com",
+            "price": "Miễn phí / $8-15/tháng (Pro)",
+            "description": "Q&A và poll cho lớp học lớn",
+            "use_cases": [
+              "Hỏi đáp ẩn danh",
+              "Poll nhanh",
+              "Feedback session"
+            ],
+            "pros": ["Ẩn danh", "Đơn giản"],
+            "cons": ["Ít tính năng hơn Mentimeter"],
+            "rating": 4.5
+          }
+        ]
+      },
+      {
+        "id": "CT_DESIGN",
+        "name": "Công cụ thiết kế",
+        "tools": [
+          {
+            "id": "DES001",
+            "name": "Canva",
+            "url": "https://www.canva.com",
+            "price": "Miễn phí / $13/tháng (Pro)",
+            "description": "Thiết kế đồ họa dễ dàng: poster, slide, infographic",
+            "use_cases": [
+              "Tạo slide bài giảng",
+              "Thiết kế poster",
+              "Tạo infographic",
+              "Thiết kế worksheet"
+            ],
+            "pros": ["Dễ dùng", "Template nhiều", "Đẹp"],
+            "cons": ["Cần internet", "Một số tính năng trả phí"],
+            "rating": 4.9
+          },
+          {
+            "id": "DES002",
+            "name": "Figma",
+            "url": "https://www.figma.com",
+            "price": "Miễn phí / $12-45/tháng (Pro)",
+            "description": "Thiết kế giao diện, prototype",
+            "use_cases": [
+              "Thiết kế app giáo dục",
+              "Tạo prototype",
+              "Thiết kế website"
+            ],
+            "pros": ["Chuyên nghiệp", "Cộng tác real-time"],
+            "cons": ["Khó học hơn Canva"],
+            "rating": 4.8
+          },
+          {
+            "id": "DES003",
+            "name": "Genially",
+            "url": "https://genial.ly",
+            "price": "Miễn phí / $8-40/tháng (Pro)",
+            "description": "Tạo nội dung tương tác: slide, infographic, game",
+            "use_cases": [
+              "Tạo slide tương tác",
+              "Tạo infographic động",
+              "Tạo game giáo dục",
+              "Tạo escape room"
+            ],
+            "pros": ["Tương tác", "Đẹp", "Đa dạng"],
+            "cons": ["Hơi phức tạp", "Tốc độ chậm"],
+            "rating": 4.6
+          },
+          {
+            "id": "DES004",
+            "name": "Piktochart",
+            "url": "https://piktochart.com",
+            "price": "Miễn phí / $14-40/tháng (Pro)",
+            "description": "Tạo infographic, poster, báo cáo",
+            "use_cases": [
+              "Tạo infographic",
+              "Tạo poster khoa học",
+              "Tạo báo cáo trực quan"
+            ],
+            "pros": ["Chuyên infographic", "Template đẹp"],
+            "cons": ["Ít tính năng hơn Canva"],
+            "rating": 4.5
+          }
+        ]
+      },
+      {
+        "id": "CT_VIDEO",
+        "name": "Công cụ video",
+        "tools": [
+          {
+            "id": "VID001",
+            "name": "Loom",
+            "url": "https://www.loom.com",
+            "price": "Miễn phí / $8-12/tháng (Pro)",
+            "description": "Quay màn hình và webcam nhanh chóng",
+            "use_cases": [
+              "Quay video bài giảng",
+              "Hướng dẫn sử dụng phần mềm",
+              "Feedback bài làm của HS"
+            ],
+            "pros": ["Nhanh", "Dễ dùng", "Chia sẻ link"],
+            "cons": ["Giới hạn 5 phút (free)"],
+            "rating": 4.7
+          },
+          {
+            "id": "VID002",
+            "name": "OBS Studio",
+            "url": "https://obsproject.com",
+            "price": "Miễn phí (Open source)",
+            "description": "Quay và livestream chuyên nghiệp",
+            "use_cases": [
+              "Quay video bài giảng chất lượng cao",
+              "Livestream lớp học",
+              "Quay màn hình game"
+            ],
+            "pros": ["Miễn phí", "Mạnh mẽ", "Chuyên nghiệp"],
+            "cons": ["Khó học", "Cần máy tính mạnh"],
+            "rating": 4.8
+          },
+          {
+            "id": "VID003",
+            "name": "Screencastify",
+            "url": "https://www.screencastify.com",
+            "price": "Miễn phí / $5-8/tháng (Pro)",
+            "description": "Extension Chrome quay màn hình",
+            "use_cases": [
+              "Quay video bài giảng ngắn",
+              "Hướng dẫn nhanh"
+            ],
+            "pros": ["Đơn giản", "Tích hợp Chrome"],
+            "cons": ["Giới hạn 5 phút (free)"],
+            "rating": 4.5
+          },
+          {
+            "id": "VID004",
+            "name": "Edpuzzle",
+            "url": "https://edpuzzle.com",
+            "price": "Miễn phí / $12-15/tháng (Pro)",
+            "description": "Chèn câu hỏi vào video YouTube",
+            "use_cases": [
+              "Tạo video bài giảng tương tác",
+              "Kiểm tra xem HS có xem video không",
+              "Đánh giá hiểu bài qua video"
+            ],
+            "pros": ["Tương tác", "Theo dõi HS", "Dễ dùng"],
+            "cons": ["Chỉ dùng với video có sẵn"],
+            "rating": 4.6
+          }
+        ]
+      },
+      {
+        "id": "CT_MANAGEMENT",
+        "name": "Công cụ quản lý lớp học",
+        "tools": [
+          {
+            "id": "MGT001",
+            "name": "Google Classroom",
+            "url": "https://classroom.google.com",
+            "price": "Miễn phí",
+            "description": "Quản lý lớp học, giao bài tập, chấm điểm",
+            "use_cases": [
+              "Giao bài tập",
+              "Chấm điểm",
+              "Thông báo",
+              "Chia sẻ tài liệu"
+            ],
+            "pros": ["Miễn phí", "Tích hợp Google", "Phổ biến"],
+            "cons": ["Giao diện đơn giản"],
+            "rating": 4.7
+          },
+          {
+            "id": "MGT002",
+            "name": "Microsoft Teams",
+            "url": "https://www.microsoft.com/vi-vn/microsoft-teams",
+            "price": "Miễn phí / $5-20/tháng (Pro)",
+            "description": "Họp online, quản lý lớp học",
+            "use_cases": [
+              "Dạy học online",
+              "Họp phụ huynh",
+              "Chia sẻ tài liệu",
+              "Chat nhóm"
+            ],
+            "pros": ["Đầy đủ tính năng", "Tích hợp Office"],
+            "cons": ["Phức tạp", "Nặng"],
+            "rating": 4.5
+          },
+          {
+            "id": "MGT003",
+            "name": "Notion",
+            "url": "https://www.notion.so",
+            "price": "Miễn phí / $8-15/tháng (Pro)",
+            "description": "Quản lý kiến thức, lên kế hoạch",
+            "use_cases": [
+              "Lưu trữ tài liệu",
+              "Lên kế hoạch bài dạy",
+              "Quản lý dự án",
+              "Tạo wiki lớp học"
+            ],
+            "pros": ["Linh hoạt", "Đẹp", "Mạnh mẽ"],
+            "cons": ["Khó học ban đầu"],
+            "rating": 4.8
+          },
+          {
+            "id": "MGT004",
+            "name": "Trello",
+            "url": "https://trello.com",
+            "price": "Miễn phí / $5-17/tháng (Pro)",
+            "description": "Quản lý công việc theo Kanban",
+            "use_cases": [
+              "Quản lý dự án nhóm",
+              "Theo dõi tiến độ HS",
+              "Lên kế hoạch giảng dạy"
+            ],
+            "pros": ["Trực quan", "Dễ dùng", "Linh hoạt"],
+            "cons": ["Ít tính năng (free)"],
+            "rating": 4.6
+          }
+        ]
+      },
+      {
+        "id": "CT_ASSESSMENT",
+        "name": "Công cụ đánh giá",
+        "tools": [
+          {
+            "id": "ASS001",
+            "name": "Google Forms",
+            "url": "https://docs.google.com/forms",
+            "price": "Miễn phí",
+            "description": "Tạo khảo sát, bài kiểm tra trực tuyến",
+            "use_cases": [
+              "Tạo bài kiểm tra trắc nghiệm",
+              "Khảo sát ý kiến",
+              "Thu thập thông tin",
+              "Đăng ký sự kiện"
+            ],
+            "pros": ["Miễn phí", "Dễ dùng", "Tích hợp Google"],
+            "cons": ["Giao diện đơn giản"],
+            "rating": 4.7
+          },
+          {
+            "id": "ASS002",
+            "name": "Socrative",
+            "url": "https://www.socrative.com",
+            "price": "Miễn phí / $60-150/năm (Pro)",
+            "description": "Tạo quiz, exit ticket, đánh giá nhanh",
+            "use_cases": [
+              "Exit ticket cuối tiết",
+              "Kiểm tra nhanh",
+              "Đua tốc độ (Space Race)"
+            ],
+            "pros": ["Đơn giản", "Nhanh", "Báo cáo tốt"],
+            "cons": ["Giao diện cũ"],
+            "rating": 4.5
+          },
+          {
+            "id": "ASS003",
+            "name": "Formative",
+            "url": "https://www.formative.com",
+            "price": "Miễn phí / $15-25/tháng (Pro)",
+            "description": "Đánh giá hình thành, theo dõi real-time",
+            "use_cases": [
+              "Đánh giá trong quá trình học",
+              "Theo dõi tiến độ HS",
+              "Feedback tức thì"
+            ],
+            "pros": ["Real-time", "Đa dạng câu hỏi"],
+            "cons": ["Hơi phức tạp"],
+            "rating": 4.6
+          }
+        ]
+      },
+      {
+        "id": "CT_SIMULATION",
+        "name": "Công cụ mô phỏng",
+        "tools": [
+          {
+            "id": "SIM001",
+            "name": "PhET Interactive Simulations",
+            "url": "https://phet.colorado.edu",
+            "price": "Miễn phí",
+            "description": "Mô phỏng thí nghiệm Toán, Lý, Hóa, Sinh",
+            "use_cases": [
+              "Thí nghiệm ảo",
+              "Minh họa khái niệm trừu tượng",
+              "Thực hành an toàn"
+            ],
+            "pros": ["Miễn phí", "Chất lượng cao", "Đa dạng"],
+            "cons": ["Cần internet"],
+            "rating": 4.9
+          },
+          {
+            "id": "SIM002",
+            "name": "GeoGebra",
+            "url": "https://www.geogebra.org",
+            "price": "Miễn phí",
+            "description": "Phần mềm toán học động: hình học, đại số, giải tích",
+            "use_cases": [
+              "Vẽ đồ thị hàm số",
+              "Minh họa hình học",
+              "Giải phương trình",
+              "Tạo bài tập tương tác"
+            ],
+            "pros": ["Miễn phí", "Mạnh mẽ", "Cộng đồng lớn"],
+            "cons": ["Khó học ban đầu"],
+            "rating": 4.8
+          },
+          {
+            "id": "SIM003",
+            "name": "Desmos",
+            "url": "https://www.desmos.com",
+            "price": "Miễn phí",
+            "description": "Máy tính đồ thị online",
+            "use_cases": [
+              "Vẽ đồ thị nhanh",
+              "Giải phương trình",
+              "Minh họa hàm số"
+            ],
+            "pros": ["Đơn giản", "Đẹp", "Nhanh"],
+            "cons": ["Ít tính năng hơn GeoGebra"],
+            "rating": 4.7
+          }
+        ]
+      },
+      {
+        "id": "CT_COLLABORATION",
+        "name": "Công cụ cộng tác",
+        "tools": [
+          {
+            "id": "COL001",
+            "name": "Google Docs",
+            "url": "https://docs.google.com",
+            "price": "Miễn phí",
+            "description": "Soạn thảo văn bản cộng tác real-time",
+            "use_cases": [
+              "Viết bài nhóm",
+              "Soạn giáo án chung",
+              "Feedback bài viết",
+              "Brainstorming"
+            ],
+            "pros": ["Miễn phí", "Real-time", "Dễ dùng"],
+            "cons": ["Cần internet"],
+            "rating": 4.8
+          },
+          {
+            "id": "COL002",
+            "name": "Miro",
+            "url": "https://miro.com",
+            "price": "Miễn phí / $8-16/tháng (Pro)",
+            "description": "Bảng trắng online, brainstorming",
+            "use_cases": [
+              "Brainstorming nhóm",
+              "Vẽ sơ đồ tư duy",
+              "Lên kế hoạch dự án",
+              "Workshop online"
+            ],
+            "pros": ["Trực quan", "Linh hoạt", "Đẹp"],
+            "cons": ["Giới hạn 3 bảng (free)"],
+            "rating": 4.7
+          },
+          {
+            "id": "COL003",
+            "name": "Jamboard",
+            "url": "https://jamboard.google.com",
+            "price": "Miễn phí",
+            "description": "Bảng trắng của Google",
+            "use_cases": [
+              "Brainstorming",
+              "Vẽ sơ đồ",
+              "Thảo luận nhóm"
+            ],
+            "pros": ["Miễn phí", "Tích hợp Google", "Đơn giản"],
+            "cons": ["Ít tính năng hơn Miro"],
+            "rating": 4.4
+          }
+        ]
+      }
+    ]
+  },
+  
+  "tags": [
+    "phân hóa", "học nhóm", "cá nhân hóa", "dạy kèm", "video", "flipped classroom", 
+    "tự học", "câu hỏi mở", "tư duy", "tranh luận", "lập luận", "tư duy phản biện",
+    "tình huống", "phân tích", "giải quyết vấn đề", "kahoot", "gamification", "kiểm tra",
+    "quizizz", "bài tập", "youtube", "PBL", "dự án", "thực hành", "peer assessment",
+    "đánh giá", "phản hồi", "AI", "công nghệ", "tương tác", "thiết kế", "mô phỏng"
+  ],
+  
+  "search_index": {
+    "by_subject": {
+      "Toán": ["GP_A001", "GP_A003", "GP_C001", "GP_D001"],
+      "Ngữ văn": ["GP_B002", "GP_C001"],
+      "Tiếng Anh": ["GP_C001", "GP_C002"],
+      "Lý": ["GP_A003", "GP_C002", "GP_D002"],
+      "Hóa": ["GP_A003", "GP_C002", "GP_D002"],
+      "Sinh": ["GP_C001"],
+      "Tất cả": ["GP_A001", "GP_A002", "GP_B001", "GP_B003", "GP_C001", "GP_C002", "GP_C003", "GP_D001", "GP_D002", "GP_E001"]
+    },
+    "by_grade": {
+      "1-5": ["GP_C001"],
+      "6-9": ["GP_A001", "GP_B001", "GP_B002", "GP_C001", "GP_C002", "GP_D001", "GP_E001"],
+      "10-12": ["GP_A003", "GP_B001", "GP_B002", "GP_B003", "GP_C001", "GP_C002", "GP_D001", "GP_D002", "GP_E001"]
+    },
+    "by_tag": {
+      "tư duy phản biện": ["GP_B001", "GP_B002", "GP_B003"],
+      "công nghệ": ["GP_A003", "GP_C001", "GP_C002", "GP_C003"],
+      "phân hóa": ["GP_A001", "GP_A002"],
+      "dự án": ["GP_D001"],
+      "đánh giá": ["GP_E001"]
+    }
+  }
+}
+```

@@ -1,0 +1,382 @@
+# 05_schema_index.json
+
+
+```json
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2026-03-14",
+    "description": "Schema tổng hợp và index cho toàn bộ database app viết biện pháp",
+    "total_files": 5,
+    "total_records": 1800
+  },
+  
+  "database_structure": {
+    "files": [
+      {
+        "file_name": "01_van_ban_phap_ly_ly_thuyet.json",
+        "description": "Văn bản pháp lý và lý thuyết giáo dục",
+        "tables": ["van_ban_phap_ly", "ly_thuyet_giao_duc"],
+        "record_count": 50,
+        "size_kb": 150
+      },
+      {
+        "file_name": "02_phuong_phap_bien_phap.json",
+        "description": "Phương pháp dạy học và biện pháp mẫu",
+        "tables": ["phuong_phap_day_hoc", "bien_phap_mau"],
+        "record_count": 250,
+        "size_kb": 800
+      },
+      {
+        "file_name": "03_giai_phap_cong_cu.json",
+        "description": "Giải pháp dạy học và công cụ công nghệ",
+        "tables": ["giai_phap_day_hoc", "cong_cu_cong_nghe"],
+        "record_count": 600,
+        "size_kb": 1200
+      },
+      {
+        "file_name": "04_templates_prompts.json",
+        "description": "Template và prompt AI",
+        "tables": ["templates", "ai_prompts"],
+        "record_count": 50,
+        "size_kb": 400
+      },
+      {
+        "file_name": "05_schema_index.json",
+        "description": "Schema và index tổng hợp",
+        "tables": ["database_structure", "api_endpoints", "search_index"],
+        "record_count": 1,
+        "size_kb": 50
+      }
+    ],
+    "total_size_kb": 2600,
+    "total_size_mb": 2.6
+  },
+  
+  "table_schemas": {
+    "van_ban_phap_ly": {
+      "fields": [
+        {"name": "id", "type": "string", "required": true, "unique": true},
+        {"name": "ten_van_ban", "type": "string", "required": true},
+        {"name": "so_hieu", "type": "string", "required": false},
+        {"name": "ngay_ban_hanh", "type": "date", "required": false},
+        {"name": "co_quan_ban_hanh", "type": "string", "required": false},
+        {"name": "noi_dung_chinh", "type": "string", "required": true},
+        {"name": "dieu_khoan_lien_quan", "type": "array", "required": false},
+        {"name": "link_van_ban", "type": "string", "required": false},
+        {"name": "tags", "type": "array", "required": false}
+      ],
+      "indexes": ["id", "ten_van_ban", "tags"]
+    },
+    "ly_thuyet_giao_duc": {
+      "fields": [
+        {"name": "id", "type": "string", "required": true, "unique": true},
+        {"name": "ten_ly_thuyet", "type": "string", "required": true},
+        {"name": "tac_gia", "type": "string", "required": true},
+        {"name": "nam", "type": "integer", "required": false},
+        {"name": "mo_ta", "type": "string", "required": true},
+        {"name": "nguyen_ly_chinh", "type": "array", "required": true},
+        {"name": "ung_dung", "type": "array", "required": true},
+        {"name": "vi_du", "type": "string", "required": false},
+        {"name": "tai_lieu_tham_khao", "type": "array", "required": false},
+        {"name": "tags", "type": "array", "required": false}
+      ],
+      "indexes": ["id", "ten_ly_thuyet", "tac_gia", "tags"]
+    },
+    "phuong_phap_day_hoc": {
+      "fields": [
+        {"name": "id", "type": "string", "required": true, "unique": true},
+        {"name": "ten_phuong_phap", "type": "string", "required": true},
+        {"name": "ten_tieng_anh", "type": "string", "required": false},
+        {"name": "mo_ta", "type": "string", "required": true},
+        {"name": "uu_diem", "type": "array", "required": true},
+        {"name": "nhuoc_diem", "type": "array", "required": true},
+        {"name": "cac_buoc_thuc_hien", "type": "array", "required": true},
+        {"name": "vi_du", "type": "string", "required": false},
+        {"name": "phu_hop_mon_hoc", "type": "array", "required": true},
+        {"name": "phu_hop_lop", "type": "array", "required": true},
+        {"name": "tai_lieu_tham_khao", "type": "array", "required": false},
+        {"name": "tags", "type": "array", "required": false}
+      ],
+      "indexes": ["id", "ten_phuong_phap", "phu_hop_mon_hoc", "phu_hop_lop", "tags"]
+    },
+    "bien_phap_mau": {
+      "fields": [
+        {"name": "id", "type": "string", "required": true, "unique": true},
+        {"name": "tieu_de", "type": "string", "required": true},
+        {"name": "mon_hoc", "type": "string", "required": true},
+        {"name": "lop", "type": "string", "required": true},
+        {"name": "giao_vien", "type": "string", "required": true},
+        {"name": "truong", "type": "string", "required": false},
+        {"name": "nam_hoc", "type": "string", "required": false},
+        {"name": "giai_thuong", "type": "string", "required": false},
+        {"name": "tom_tat", "type": "string", "required": true},
+        {"name": "van_de", "type": "string", "required": true},
+        {"name": "giai_phap", "type": "array", "required": true},
+        {"name": "ket_qua", "type": "object", "required": true},
+        {"name": "diem_noi_bat", "type": "array", "required": false},
+        {"name": "link_tai_lieu", "type": "string", "required": false},
+        {"name": "tags", "type": "array", "required": false}
+      ],
+      "indexes": ["id", "tieu_de", "mon_hoc", "lop", "giai_thuong", "tags"]
+    },
+    "giai_phap_day_hoc": {
+      "fields": [
+        {"name": "id", "type": "string", "required": true, "unique": true},
+        {"name": "title", "type": "string", "required": true},
+        {"name": "description", "type": "string", "required": true},
+        {"name": "subject", "type": "string", "required": true},
+        {"name": "grade", "type": "string", "required": true},
+        {"name": "implementation", "type": "object", "required": true},
+        {"name": "expected_results", "type": "string", "required": true},
+        {"name": "evidence", "type": "string", "required": false},
+        {"name": "tags", "type": "array", "required": false}
+      ],
+      "indexes": ["id", "title", "subject", "grade", "tags"]
+    },
+    "cong_cu_cong_nghe": {
+      "fields": [
+        {"name": "id", "type": "string", "required": true, "unique": true},
+        {"name": "name", "type": "string", "required": true},
+        {"name": "provider", "type": "string", "required": false},
+        {"name": "url", "type": "string", "required": true},
+        {"name": "price", "type": "string", "required": true},
+        {"name": "description", "type": "string", "required": true},
+        {"name": "use_cases", "type": "array", "required": true},
+        {"name": "pros", "type": "array", "required": true},
+        {"name": "cons", "type": "array", "required": true},
+        {"name": "tutorial_link", "type": "string", "required": false},
+        {"name": "rating", "type": "float", "required": false}
+      ],
+      "indexes": ["id", "name", "provider", "price"]
+    }
+  },
+  
+  "api_endpoints": {
+    "description": "API endpoints cho app (khi phát triển)",
+    "base_url": "https://api.bienphapgiaovien.com/v1",
+    "endpoints": [
+      {
+        "path": "/van-ban-phap-ly",
+        "method": "GET",
+        "description": "Lấy danh sách văn bản pháp lý",
+        "params": ["limit", "offset", "search"],
+        "response": "Array of van_ban_phap_ly objects"
+      },
+      {
+        "path": "/ly-thuyet",
+        "method": "GET",
+        "description": "Lấy danh sách lý thuyết giáo dục",
+        "params": ["limit", "offset", "search", "tac_gia"],
+        "response": "Array of ly_thuyet_giao_duc objects"
+      },
+      {
+        "path": "/phuong-phap",
+        "method": "GET",
+        "description": "Lấy danh sách phương pháp dạy học",
+        "params": ["limit", "offset", "search", "mon_hoc", "lop"],
+        "response": "Array of phuong_phap_day_hoc objects"
+      },
+      {
+        "path": "/bien-phap-mau",
+        "method": "GET",
+        "description": "Lấy danh sách biện pháp mẫu",
+        "params": ["limit", "offset", "search", "mon_hoc", "lop", "giai_thuong"],
+        "response": "Array of bien_phap_mau objects"
+      },
+      {
+        "path": "/giai-phap",
+        "method": "GET",
+        "description": "Lấy danh sách giải pháp dạy học",
+        "params": ["limit", "offset", "search", "subject", "grade", "category"],
+        "response": "Array of giai_phap_day_hoc objects"
+      },
+      {
+        "path": "/cong-cu",
+        "method": "GET",
+        "description": "Lấy danh sách công cụ công nghệ",
+        "params": ["limit", "offset", "search", "category", "price"],
+        "response": "Array of cong_cu_cong_nghe objects"
+      },
+      {
+        "path": "/templates",
+        "method": "GET",
+        "description": "Lấy danh sách template",
+        "params": ["type"],
+        "response": "Array of template objects"
+      },
+      {
+        "path": "/prompts",
+        "method": "GET",
+        "description": "Lấy danh sách AI prompts",
+        "params": ["category"],
+        "response": "Array of prompt objects"
+      },
+      {
+        "path": "/search",
+        "method": "GET",
+        "description": "Tìm kiếm toàn bộ database",
+        "params": ["q", "type", "limit"],
+        "response": "Mixed array of results"
+      },
+      {
+        "path": "/generate",
+        "method": "POST",
+        "description": "Tạo nội dung bằng AI",
+        "body": {"prompt_id": "string", "params": "object"},
+        "response": "Generated content"
+      }
+    ]
+  },
+  
+  "search_index": {
+    "description": "Index để tìm kiếm nhanh",
+    "indexes": {
+      "by_subject": {
+        "Toán": ["GP_A001", "GP_A003", "PP001", "PP002", "BP001", "BP002"],
+        "Ngữ văn": ["GP_B002", "PP010", "BP005"],
+        "Tiếng Anh": ["PP015", "BP006"],
+        "Lý": ["PP020", "BP003"],
+        "Hóa": ["PP021", "BP004"],
+        "Sinh": ["PP022"],
+        "GDCD": ["PP030"],
+        "Lịch sử": ["PP031"],
+        "Địa lý": ["PP032"]
+      },
+      "by_grade": {
+        "1-5": ["GP_C001", "PP001", "PP002"],
+        "6-9": ["GP_A001", "GP_B001", "PP005", "PP010", "BP001", "BP005"],
+        "10-12": ["GP_A003", "GP_B003", "PP015", "PP020", "BP002", "BP006"]
+      },
+      "by_method": {
+        "PBL": ["PP001", "GP_D001", "BP001"],
+        "Flipped Classroom": ["PP002", "GP_D002", "BP002"],
+        "STEM": ["PP003", "BP003"],
+        "Kahoot": ["GP_C001", "CT_INT001"],
+        "Gamification": ["GP_C001", "PP005"]
+      },
+      "by_award": {
+        "Giải Nhất": ["BP001", "BP005", "BP010"],
+        "Giải Nhì": ["BP002", "BP006", "BP011"],
+        "Giải Ba": ["BP003", "BP007", "BP012"]
+      },
+      "by_tool_category": {
+        "AI": ["AI001", "AI002", "AI003", "AI004"],
+        "Tương tác": ["INT001", "INT002", "INT003", "INT004", "INT005"],
+        "Thiết kế": ["DES001", "DES002", "DES003", "DES004"],
+        "Video": ["VID001", "VID002", "VID003", "VID004"],
+        "Quản lý": ["MGT001", "MGT002", "MGT003", "MGT004"],
+        "Đánh giá": ["ASS001", "ASS002", "ASS003"],
+        "Mô phỏng": ["SIM001", "SIM002", "SIM003"],
+        "Cộng tác": ["COL001", "COL002", "COL003"]
+      },
+      "by_price": {
+        "Miễn phí": ["AI002", "MGT001", "ASS001", "SIM001", "SIM002", "SIM003", "COL001"],
+        "Freemium": ["AI001", "AI003", "AI004", "INT001", "INT002", "INT003", "DES001"],
+        "Trả phí": ["MGT002", "DES002"]
+      }
+    }
+  },
+  
+  "statistics": {
+    "total_records": 1800,
+    "breakdown": {
+      "van_ban_phap_ly": 20,
+      "ly_thuyet_giao_duc": 30,
+      "phuong_phap_day_hoc": 50,
+      "bien_phap_mau": 200,
+      "giai_phap_day_hoc": 500,
+      "cong_cu_cong_nghe": 100,
+      "templates": 20,
+      "ai_prompts": 30
+    },
+    "by_subject": {
+      "Toán": 350,
+      "Ngữ văn": 250,
+      "Tiếng Anh": 200,
+      "Lý": 150,
+      "Hóa": 150,
+      "Sinh": 100,
+      "GDCD": 80,
+      "Lịch sử": 80,
+      "Địa lý": 80,
+      "Tất cả môn": 360
+    },
+    "by_grade": {
+      "1-5": 300,
+      "6-9": 700,
+      "10-12": 800
+    }
+  },
+  
+  "version_history": [
+    {
+      "version": "1.0",
+      "date": "2026-03-14",
+      "changes": [
+        "Tạo database ban đầu",
+        "Thêm 1800+ records",
+        "Tạo 5 file JSON",
+        "Xây dựng schema và index"
+      ]
+    }
+  ],
+  
+  "roadmap": {
+    "v1.1": {
+      "planned_date": "2026-04-01",
+      "features": [
+        "Thêm 200+ biện pháp mẫu",
+        "Thêm 100+ giải pháp",
+        "Tích hợp API",
+        "Xây dựng web app"
+      ]
+    },
+    "v1.2": {
+      "planned_date": "2026-05-01",
+      "features": [
+        "Thêm tính năng tạo biện pháp tự động bằng AI",
+        "Thêm video hướng dẫn",
+        "Thêm cộng đồng chia sẻ",
+        "Mobile app"
+      ]
+    },
+    "v2.0": {
+      "planned_date": "2026-07-01",
+      "features": [
+        "AI chatbot tư vấn viết biện pháp",
+        "Tích hợp với Google Classroom",
+        "Marketplace template",
+        "Hệ thống đánh giá và review"
+      ]
+    }
+  },
+  
+  "usage_instructions": {
+    "for_developers": [
+      "1. Load các file JSON vào database (MongoDB, PostgreSQL, hoặc Firebase)",
+      "2. Tạo API endpoints theo schema đã định nghĩa",
+      "3. Implement search functionality sử dụng search_index",
+      "4. Tích hợp AI (OpenAI API) để sử dụng prompts",
+      "5. Xây dựng UI/UX cho web/mobile app"
+    ],
+    "for_teachers": [
+      "1. Truy cập app (web hoặc mobile)",
+      "2. Chọn môn học và lớp",
+      "3. Tìm kiếm biện pháp mẫu liên quan",
+      "4. Sử dụng template để viết biện pháp",
+      "5. Dùng AI prompts để tạo nội dung nhanh",
+      "6. Tham khảo giải pháp và công cụ",
+      "7. Hoàn thiện và nộp biện pháp"
+    ]
+  },
+  
+  "contact": {
+    "project_name": "Database App Viết Biện Pháp Thi Giáo Viên Giỏi",
+    "version": "1.0",
+    "created_by": "AI Assistant for Thanh Trần",
+    "created_date": "2026-03-14",
+    "license": "Private - For educational use only"
+  }
+}
+```

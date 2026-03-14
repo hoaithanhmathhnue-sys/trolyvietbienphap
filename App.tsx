@@ -2077,7 +2077,7 @@ Tổ: [Tổ chuyên môn]
 
             // Ẩn step Review Tính mới (11) và Review Phạm vi (13) và Kết luận (14) trong thanh sidebar để không quá dài
             // Steps 10 (Tính mới), 12 (Phạm vi) sẽ hiển thị
-            if (stepNum === 11 || stepNum === 13) return null;
+            if (stepNum === 11 || stepNum === 13 || stepNum === 5 || stepNum === 7 || stepNum === 9) return null;
 
             let statusColor = "text-gray-400 border-gray-200";
             let icon = <div className="w-2 h-2 rounded-full bg-gray-300" />;
@@ -2342,7 +2342,7 @@ Tổ: [Tổ chuyên môn]
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 min-h-0 p-4 lg:p-8 flex flex-col overflow-y-auto relative">
+      <div className="flex-1 min-h-0 p-4 lg:p-8 flex flex-col overflow-y-auto relative main-scroll">
 
         {/* Mobile Header */}
         <div className="lg:hidden mb-4 bg-gradient-to-r from-white to-sky-50 p-4 rounded-xl shadow-lg border border-sky-100 flex flex-col gap-2">

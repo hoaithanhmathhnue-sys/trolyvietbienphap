@@ -1,0 +1,653 @@
+# 04_templates_prompts.json
+
+
+```json
+{
+  "metadata": {
+    "version": "1.0",
+    "created_date": "2026-03-14",
+    "description": "Thư viện template và prompt AI cho app viết biện pháp thi giáo viên giỏi",
+    "total_items": 50
+  },
+  
+  "templates": {
+    "word_templates": [
+      {
+        "id": "TPL_WORD_001",
+        "name": "Template biện pháp chuẩn - Đầy đủ",
+        "description": "Template Word hoàn chỉnh với 5 phần, phù hợp cho tất cả môn học",
+        "file_format": "docx",
+        "page_count": 25,
+        "structure": {
+          "cover_page": {
+            "elements": ["Logo trường", "Tên biện pháp", "Họ tên GV", "Môn học", "Năm học"]
+          },
+          "table_of_contents": {
+            "auto_generated": true,
+            "levels": 3
+          },
+          "main_content": {
+            "parts": [
+              {
+                "part": "I. ĐẶT VẤN ĐỀ",
+                "sections": [
+                  "1. Lý do chọn đề tài",
+                  "2. Mục đích nghiên cứu",
+                  "3. Đối tượng và phạm vi nghiên cứu",
+                  "4. Phương pháp nghiên cứu"
+                ],
+                "page_range": "3-5"
+              },
+              {
+                "part": "II. CƠ SỞ LÝ LUẬN VÀ THỰC TIỄN",
+                "sections": [
+                  "1. Cơ sở lý luận",
+                  "2. Cơ sở thực tiễn",
+                  "3. Thực trạng vấn đề"
+                ],
+                "page_range": "6-10"
+              },
+              {
+                "part": "III. CÁC GIẢI PHÁP ĐÃ THỰC HIỆN",
+                "sections": [
+                  "1. Giải pháp 1",
+                  "2. Giải pháp 2",
+                  "3. Giải pháp 3",
+                  "4. Giải pháp 4",
+                  "5. Giải pháp 5"
+                ],
+                "page_range": "11-20"
+              },
+              {
+                "part": "IV. HIỆU QUẢ CỦA BIỆN PHÁP",
+                "sections": [
+                  "1. Kết quả định lượng",
+                  "2. Kết quả định tính",
+                  "3. So sánh trước và sau"
+                ],
+                "page_range": "21-23"
+              },
+              {
+                "part": "V. KẾT LUẬN VÀ KIẾN NGHỊ",
+                "sections": [
+                  "1. Kết luận",
+                  "2. Kiến nghị"
+                ],
+                "page_range": "24-25"
+              }
+            ]
+          },
+          "appendix": {
+            "items": ["Phụ lục 1: Phiếu khảo sát", "Phụ lục 2: Giáo án mẫu", "Phụ lục 3: Ảnh minh họa"]
+          },
+          "references": {
+            "style": "APA",
+            "min_count": 10
+          }
+        },
+        "formatting": {
+          "font": "Times New Roman",
+          "font_size": 13,
+          "line_spacing": 1.5,
+          "margin": "2cm all sides",
+          "heading1": "Bold, 16pt, Uppercase",
+          "heading2": "Bold, 14pt",
+          "heading3": "Bold, 13pt"
+        }
+      },
+      {
+        "id": "TPL_WORD_002",
+        "name": "Template biện pháp ngắn gọn",
+        "description": "Template rút gọn 15 trang, phù hợp cho cấp trường",
+        "file_format": "docx",
+        "page_count": 15,
+        "structure": {
+          "main_content": {
+            "parts": [
+              {"part": "I. ĐẶT VẤN ĐỀ", "page_range": "2-3"},
+              {"part": "II. CƠ SỞ LÝ LUẬN", "page_range": "4-5"},
+              {"part": "III. GIẢI PHÁP", "page_range": "6-12"},
+              {"part": "IV. KẾT QUẢ", "page_range": "13-14"},
+              {"part": "V. KẾT LUẬN", "page_range": "15"}
+            ]
+          }
+        }
+      }
+    ],
+    
+    "slide_templates": [
+      {
+        "id": "TPL_SLIDE_001",
+        "name": "Template slide thuyết trình 15 phút",
+        "description": "Bộ slide chuẩn cho thuyết trình biện pháp",
+        "file_format": "pptx",
+        "slide_count": 12,
+        "duration": "15 phút",
+        "structure": [
+          {
+            "slide": 1,
+            "title": "Slide bìa",
+            "content": ["Tên biện pháp", "Họ tên GV", "Trường", "Năm học"],
+            "design": "Ảnh nền liên quan đến môn học",
+            "duration": "30 giây"
+          },
+          {
+            "slide": 2,
+            "title": "Đặt vấn đề",
+            "content": ["Vấn đề gặp phải", "Lý do chọn đề tài", "Mục tiêu"],
+            "design": "Icon vấn đề, bullet points",
+            "duration": "1 phút 30 giây"
+          },
+          {
+            "slide": 3,
+            "title": "Thực trạng - Số liệu",
+            "content": ["Biểu đồ kết quả học tập trước", "Bảng thống kê", "Ảnh minh họa"],
+            "design": "Biểu đồ cột/tròn",
+            "duration": "1 phút 30 giây"
+          },
+          {
+            "slide": 4,
+            "title": "Cơ sở lý luận",
+            "content": ["Lý thuyết áp dụng", "Văn bản pháp lý", "Nghiên cứu liên quan"],
+            "design": "Icon sách, trích dẫn",
+            "duration": "1 phút"
+          },
+          {
+            "slide": 5,
+            "title": "Giải pháp 1",
+            "content": ["Tên giải pháp", "Cách thực hiện (3-4 bước)", "Ảnh minh họa"],
+            "design": "Flowchart hoặc infographic",
+            "duration": "2 phút"
+          },
+          {
+            "slide": 6,
+            "title": "Giải pháp 2",
+            "content": ["Tên giải pháp", "Cách thực hiện", "Ảnh minh họa"],
+            "design": "Flowchart hoặc infographic",
+            "duration": "2 phút"
+          },
+          {
+            "slide": 7,
+            "title": "Giải pháp 3",
+            "content": ["Tên giải pháp", "Cách thực hiện", "Ảnh minh họa"],
+            "design": "Flowchart hoặc infographic",
+            "duration": "2 phút"
+          },
+          {
+            "slide": 8,
+            "title": "Kết quả - Số liệu sau",
+            "content": ["Biểu đồ kết quả sau", "So sánh trước/sau", "Tỷ lệ tăng trưởng"],
+            "design": "Biểu đồ so sánh",
+            "duration": "1 phút 30 giây"
+          },
+          {
+            "slide": 9,
+            "title": "Kết quả định tính",
+            "content": ["Phản hồi của HS", "Ý kiến phụ huynh", "Đánh giá của đồng nghiệp"],
+            "design": "Quote boxes, ảnh HS",
+            "duration": "1 phút"
+          },
+          {
+            "slide": 10,
+            "title": "Bài học kinh nghiệm",
+            "content": ["Điểm mạnh", "Hạn chế", "Bài học rút ra"],
+            "design": "2 cột: Mạnh/Yếu",
+            "duration": "1 phút"
+          },
+          {
+            "slide": 11,
+            "title": "Kết luận & Kiến nghị",
+            "content": ["Tóm tắt kết quả", "Kiến nghị với nhà trường", "Hướng phát triển"],
+            "design": "Icon kết luận",
+            "duration": "1 phút"
+          },
+          {
+            "slide": 12,
+            "title": "Cảm ơn",
+            "content": ["Cảm ơn Ban giám khảo", "Email liên hệ"],
+            "design": "Ảnh nền đẹp",
+            "duration": "30 giây"
+          }
+        ],
+        "design_guidelines": {
+          "color_scheme": "Xanh dương chuyên nghiệp hoặc màu đặc trưng của môn học",
+          "font": "Arial hoặc Calibri",
+          "font_size": "Tiêu đề 32pt, Nội dung 20pt",
+          "images": "Chất lượng cao, liên quan đến nội dung",
+          "charts": "Sử dụng màu tương phản, dễ đọc"
+        }
+      }
+    ],
+    
+    "survey_templates": [
+      {
+        "id": "TPL_SURVEY_001",
+        "name": "Phiếu khảo sát học sinh - Trước",
+        "description": "Khảo sát trước khi áp dụng biện pháp",
+        "target": "Học sinh",
+        "question_count": 15,
+        "question_types": ["Likert 5 scale", "Multiple choice", "Open-ended"],
+        "questions": [
+          {
+            "id": "Q1",
+            "type": "likert_5",
+            "question": "Em có hứng thú với môn [TÊN MÔN] không?",
+            "scale": ["Rất không hứng thú", "Không hứng thú", "Bình thường", "Hứng thú", "Rất hứng thú"]
+          },
+          {
+            "id": "Q2",
+            "type": "likert_5",
+            "question": "Em có thường xuyên tham gia phát biểu trong giờ học không?",
+            "scale": ["Không bao giờ", "Hiếm khi", "Thỉnh thoảng", "Thường xuyên", "Rất thường xuyên"]
+          },
+          {
+            "id": "Q3",
+            "type": "likert_5",
+            "question": "Em có tự tin khi làm bài tập môn [TÊN MÔN] không?",
+            "scale": ["Rất không tự tin", "Không tự tin", "Bình thường", "Tự tin", "Rất tự tin"]
+          },
+          {
+            "id": "Q4",
+            "type": "multiple_choice",
+            "question": "Phương pháp học nào em thích nhất?",
+            "options": ["Nghe giảng", "Làm bài tập", "Thảo luận nhóm", "Làm dự án", "Xem video"]
+          },
+          {
+            "id": "Q5",
+            "type": "open_ended",
+            "question": "Em gặp khó khăn gì khi học môn [TÊN MÔN]?"
+          }
+        ]
+      },
+      {
+        "id": "TPL_SURVEY_002",
+        "name": "Phiếu khảo sát học sinh - Sau",
+        "description": "Khảo sát sau khi áp dụng biện pháp",
+        "target": "Học sinh",
+        "question_count": 15,
+        "questions": [
+          {
+            "id": "Q1",
+            "type": "likert_5",
+            "question": "Sau khi thầy/cô áp dụng phương pháp mới, em có hứng thú hơn với môn học không?"
+          },
+          {
+            "id": "Q2",
+            "type": "likert_5",
+            "question": "Em có hiểu bài rõ hơn không?"
+          },
+          {
+            "id": "Q3",
+            "type": "likert_5",
+            "question": "Em có muốn thầy/cô tiếp tục dạy theo phương pháp này không?"
+          },
+          {
+            "id": "Q4",
+            "type": "open_ended",
+            "question": "Em thích điểm gì nhất ở phương pháp mới?"
+          },
+          {
+            "id": "Q5",
+            "type": "open_ended",
+            "question": "Em muốn thầy/cô cải thiện điểm gì?"
+          }
+        ]
+      },
+      {
+        "id": "TPL_SURVEY_003",
+        "name": "Phiếu khảo sát phụ huynh",
+        "description": "Khảo sát ý kiến phụ huynh về biện pháp",
+        "target": "Phụ huynh",
+        "question_count": 10,
+        "questions": [
+          {
+            "id": "Q1",
+            "type": "likert_5",
+            "question": "Quý phụ huynh có nhận thấy con em mình có thay đổi tích cực sau khi thầy/cô áp dụng phương pháp mới không?"
+          },
+          {
+            "id": "Q2",
+            "type": "likert_5",
+            "question": "Con em quý phụ huynh có hứng thú hơn với môn học không?"
+          },
+          {
+            "id": "Q3",
+            "type": "likert_5",
+            "question": "Kết quả học tập của con em có cải thiện không?"
+          },
+          {
+            "id": "Q4",
+            "type": "open_ended",
+            "question": "Quý phụ huynh có nhận xét gì về phương pháp dạy học mới?"
+          }
+        ]
+      },
+      {
+        "id": "TPL_SURVEY_004",
+        "name": "Phiếu khảo sát đồng nghiệp",
+        "description": "Khảo sát ý kiến giáo viên đồng nghiệp",
+        "target": "Giáo viên",
+        "question_count": 8,
+        "questions": [
+          {
+            "id": "Q1",
+            "type": "likert_5",
+            "question": "Anh/chị đánh giá mức độ sáng tạo của biện pháp này như thế nào?"
+          },
+          {
+            "id": "Q2",
+            "type": "likert_5",
+            "question": "Biện pháp này có khả thi để áp dụng rộng rãi không?"
+          },
+          {
+            "id": "Q3",
+            "type": "likert_5",
+            "question": "Anh/chị có muốn học hỏi và áp dụng biện pháp này không?"
+          },
+          {
+            "id": "Q4",
+            "type": "open_ended",
+            "question": "Anh/chị có góp ý gì để biện pháp này hoàn thiện hơn?"
+          }
+        ]
+      }
+    ],
+    
+    "data_tables": [
+      {
+        "id": "TPL_TABLE_001",
+        "name": "Bảng kết quả học tập trước/sau",
+        "description": "So sánh điểm số trước và sau khi áp dụng biện pháp",
+        "columns": ["STT", "Họ tên", "Điểm trước", "Điểm sau", "Chênh lệch", "Ghi chú"],
+        "sample_data": [
+          {"STT": 1, "Họ tên": "Nguyễn Văn A", "Điểm trước": 5.5, "Điểm sau": 7.5, "Chênh lệch": "+2.0", "Ghi chú": "Tiến bộ rõ rệt"},
+          {"STT": 2, "Họ tên": "Trần Thị B", "Điểm trước": 4.0, "Điểm sau": 6.5, "Chênh lệch": "+2.5", "Ghi chú": "Tham gia tích cực"}
+        ],
+        "summary_row": {
+          "Điểm TB trước": 5.2,
+          "Điểm TB sau": 7.3,
+          "Tăng": "+2.1 (40%)"
+        }
+      },
+      {
+        "id": "TPL_TABLE_002",
+        "name": "Bảng thống kê phân loại học lực",
+        "description": "Thống kê số lượng HS theo loại học lực",
+        "columns": ["Loại", "Trước (SL)", "Trước (%)", "Sau (SL)", "Sau (%)", "Chênh lệch"],
+        "sample_data": [
+          {"Loại": "Giỏi", "Trước (SL)": 5, "Trước (%)": "12.5%", "Sau (SL)": 12, "Sau (%)": "30%", "Chênh lệch": "+7 (+17.5%)"},
+          {"Loại": "Khá", "Trước (SL)": 15, "Trước (%)": "37.5%", "Sau (SL)": 20, "Sau (%)": "50%", "Chênh lệch": "+5 (+12.5%)"},
+          {"Loại": "Trung bình", "Trước (SL)": 12, "Trước (%)": "30%", "Sau (SL)": 6, "Sau (%)": "15%", "Chênh lệch": "-6 (-15%)"},
+          {"Loại": "Yếu", "Trước (SL)": 8, "Trước (%)": "20%", "Sau (SL)": 2, "Sau (%)": "5%", "Chênh lệch": "-6 (-15%)"}
+        ]
+      },
+      {
+        "id": "TPL_TABLE_003",
+        "name": "Bảng thống kê thái độ học tập",
+        "description": "Thống kê thái độ HS qua khảo sát",
+        "columns": ["Tiêu chí", "Trước (Điểm TB)", "Sau (Điểm TB)", "Tăng/Giảm"],
+        "sample_data": [
+          {"Tiêu chí": "Hứng thú học tập", "Trước": 3.2, "Sau": 4.5, "Tăng/Giảm": "+1.3 (+40%)"},
+          {"Tiêu chí": "Tham gia phát biểu", "Trước": 2.8, "Sau": 4.2, "Tăng/Giảm": "+1.4 (+50%)"},
+          {"Tiêu chí": "Tự tin", "Trước": 3.0, "Sau": 4.3, "Tăng/Giảm": "+1.3 (+43%)"},
+          {"Tiêu chí": "Làm bài tập đầy đủ", "Trước": 3.5, "Sau": 4.6, "Tăng/Giảm": "+1.1 (+31%)"}
+        ]
+      }
+    ]
+  },
+  
+  "ai_prompts": {
+    "writing_prompts": [
+      {
+        "id": "PROMPT_001",
+        "name": "Tạo phần Đặt vấn đề",
+        "description": "Prompt để AI tạo phần I của biện pháp",
+        "input_required": ["Môn học", "Lớp", "Vấn đề gặp phải", "Mục tiêu"],
+        "prompt_template": "Bạn là một giáo viên giỏi đang viết biện pháp thi giáo viên giỏi. Hãy viết phần \"I. ĐẶT VẤN ĐỀ\" với thông tin sau:
+
+- Môn học: {mon_hoc}
+- Lớp: {lop}
+- Vấn đề gặp phải: {van_de}
+- Mục tiêu: {muc_tieu}
+
+Yêu cầu:
+1. Viết 4 mục: Lý do chọn đề tài, Mục đích nghiên cứu, Đối tượng và phạm vi, Phương pháp nghiên cứu
+2. Độ dài: 2-3 trang (khoảng 1000-1500 từ)
+3. Văn phong: Học thuật, chuyên nghiệp, rõ ràng
+4. Trích dẫn: Nêu 2-3 văn bản pháp lý hoặc nghiên cứu liên quan
+5. Số liệu: Đưa ra 2-3 số liệu thực tế về vấn đề (nếu có)
+
+Hãy viết theo cấu trúc chuẩn của biện pháp giáo viên giỏi.",
+        "example_output": "I. ĐẶT VẤN ĐỀ
+
+1. Lý do chọn đề tài
+
+Trong bối cảnh giáo dục hiện đại, việc phát triển năng lực tư duy phản biện cho học sinh là một trong những mục tiêu quan trọng...
+
+[Tiếp tục với 3 mục còn lại]"
+      },
+      {
+        "id": "PROMPT_002",
+        "name": "Tạo phần Cơ sở lý luận",
+        "description": "Prompt để AI tạo phần II của biện pháp",
+        "input_required": ["Chủ đề", "Lý thuyết áp dụng", "Văn bản pháp lý"],
+        "prompt_template": "Hãy viết phần \"II. CƠ SỞ LÝ LUẬN VÀ THỰC TIỄN\" cho biện pháp về chủ đề: {chu_de}
+
+Thông tin:
+- Lý thuyết áp dụng: {ly_thuyet}
+- Văn bản pháp lý: {van_ban}
+
+Yêu cầu:
+1. Giải thích lý thuyết một cách dễ hiểu
+2. Trích dẫn đúng văn bản pháp lý
+3. Phân tích thực trạng vấn đề
+4. Độ dài: 3-4 trang
+5. Có ít nhất 5 trích dẫn từ sách, báo, nghiên cứu
+
+Hãy viết theo phong cách học thuật nhưng dễ hiểu.",
+        "example_output": "II. CƠ SỞ LÝ LUẬN VÀ THỰC TIỄN
+
+1. Cơ sở lý luận
+
+1.1. Khái niệm tư duy phản biện
+
+Theo Paul & Elder (2008), tư duy phản biện là quá trình...
+
+[Tiếp tục]"
+      },
+      {
+        "id": "PROMPT_003",
+        "name": "Tạo số liệu khảo sát",
+        "description": "Prompt để AI tạo số liệu khảo sát hợp lý",
+        "input_required": ["Số lượng HS", "Vấn đề", "Mức độ cải thiện mong muốn"],
+        "prompt_template": "Hãy tạo số liệu khảo sát hợp lý cho biện pháp giáo dục với thông tin:
+
+- Số lượng HS: {so_luong}
+- Vấn đề: {van_de}
+- Mức độ cải thiện mong muốn: {cai_thien}%
+
+Yêu cầu:
+1. Tạo số liệu TRƯỚC khi áp dụng biện pháp (thấp, phản ánh vấn đề)
+2. Tạo số liệu SAU khi áp dụng biện pháp (cải thiện {cai_thien}%)
+3. Số liệu phải hợp lý, không quá hoàn hảo
+4. Bao gồm: Điểm số, Phân loại học lực, Thái độ học tập
+5. Trình bày dưới dạng bảng và biểu đồ
+
+Hãy tạo số liệu chi tiết và thuyết phục.",
+        "example_output": "BẢNG 1: KẾT QUẢ HỌC TẬP TRƯỚC VÀ SAU
+
+| Loại | Trước (SL) | Trước (%) | Sau (SL) | Sau (%) | Chênh lệch |
+|------|------------|-----------|----------|---------|------------|
+| Giỏi | 5 | 12.5% | 12 | 30% | +7 (+17.5%) |
+...
+
+[Tiếp tục với các bảng khác]"
+      },
+      {
+        "id": "PROMPT_004",
+        "name": "Tạo giải pháp cụ thể",
+        "description": "Prompt để AI tạo 1 giải pháp chi tiết",
+        "input_required": ["Tên giải pháp", "Môn học", "Lớp"],
+        "prompt_template": "Hãy viết chi tiết về giải pháp: {ten_giai_phap}
+
+Thông tin:
+- Môn học: {mon_hoc}
+- Lớp: {lop}
+
+Yêu cầu:
+1. Mô tả giải pháp (200-300 từ)
+2. Cơ sở lý luận (trích dẫn 1-2 lý thuyết)
+3. Các bước thực hiện cụ thể (5-7 bước)
+4. Thời gian thực hiện
+5. Công cụ/tài liệu cần thiết
+6. Ví dụ minh họa cụ thể
+7. Kết quả mong đợi
+8. Khó khăn và cách khắc phục
+
+Hãy viết rất chi tiết, có thể áp dụng ngay.",
+        "example_output": "GIẢI PHÁP 1: SỬ DỤNG KAHOOT ĐỂ TĂNG HỨNG THÚ HỌC TẬP
+
+1. Mô tả giải pháp
+
+Kahoot là một công cụ tạo quiz trực tuyến...
+
+2. Cơ sở lý luận
+
+Theo lý thuyết Gamification của Deterding (2011)...
+
+[Tiếp tục với các phần còn lại]"
+      },
+      {
+        "id": "PROMPT_005",
+        "name": "Cải thiện văn phong",
+        "description": "Prompt để AI cải thiện văn phong học thuật",
+        "input_required": ["Đoạn văn cần cải thiện"],
+        "prompt_template": "Hãy cải thiện đoạn văn sau theo phong cách học thuật, chuyên nghiệp, phù hợp cho biện pháp giáo viên giỏi:
+
+{doan_van}
+
+Yêu cầu:
+1. Giữ nguyên ý chính
+2. Cải thiện cấu trúc câu
+3. Sử dụng từ vựng học thuật
+4. Thêm liên kết giữa các câu
+5. Loại bỏ lỗi ngữ pháp
+6. Thêm trích dẫn nếu cần
+
+Hãy viết lại đoạn văn một cách chuyên nghiệp.",
+        "example_output": "[Đoạn văn đã được cải thiện]"
+      },
+      {
+        "id": "PROMPT_006",
+        "name": "Tạo biểu đồ mô tả",
+        "description": "Prompt để AI tạo mô tả biểu đồ chi tiết",
+        "input_required": ["Loại biểu đồ", "Dữ liệu"],
+        "prompt_template": "Hãy tạo mô tả chi tiết cho biểu đồ {loai_bieu_do} với dữ liệu:
+
+{du_lieu}
+
+Yêu cầu:
+1. Mô tả biểu đồ (100-150 từ)
+2. Phân tích xu hướng
+3. So sánh các giá trị
+4. Rút ra kết luận
+5. Gợi ý màu sắc và thiết kế
+
+Hãy viết mô tả thuyết phục và chuyên nghiệp.",
+        "example_output": "Biểu đồ cột so sánh kết quả học tập trước và sau khi áp dụng biện pháp cho thấy...
+
+[Tiếp tục phân tích]"
+      }
+    ],
+    
+    "lesson_plan_prompts": [
+      {
+        "id": "PROMPT_007",
+        "name": "Tạo giáo án theo phương pháp mới",
+        "description": "Prompt để AI tạo giáo án áp dụng giải pháp",
+        "input_required": ["Môn học", "Lớp", "Bài học", "Phương pháp"],
+        "prompt_template": "Hãy thiết kế giáo án chi tiết cho:
+
+- Môn học: {mon_hoc}
+- Lớp: {lop}
+- Bài học: {bai_hoc}
+- Phương pháp áp dụng: {phuong_phap}
+
+Yêu cầu:
+1. Mục tiêu bài học (Kiến thức, Kỹ năng, Thái độ)
+2. Chuẩn bị (GV, HS)
+3. Tiến trình dạy học chi tiết (45 phút):
+   - Hoạt động 1: Khởi động (5 phút)
+   - Hoạt động 2: Hình thành kiến thức (25 phút)
+   - Hoạt động 3: Luyện tập (10 phút)
+   - Hoạt động 4: Vận dụng (5 phút)
+4. Câu hỏi/bài tập cụ thể
+5. Đánh giá
+
+Hãy viết giáo án chi tiết, có thể áp dụng ngay.",
+        "example_output": "GIÁO ÁN: [TÊN BÀI HỌC]
+
+I. MỤC TIÊU
+
+1. Kiến thức:
+- HS nắm được...
+
+[Tiếp tục với các phần còn lại]"
+      },
+      {
+        "id": "PROMPT_008",
+        "name": "Tạo phiếu học tập",
+        "description": "Prompt để AI tạo phiếu học tập cho HS",
+        "input_required": ["Môn học", "Lớp", "Chủ đề", "Mức độ"],
+        "prompt_template": "Hãy tạo phiếu học tập cho:
+
+- Môn học: {mon_hoc}
+- Lớp: {lop}
+- Chủ đề: {chu_de}
+- Mức độ: {muc_do}
+
+Yêu cầu:
+1. Phần 1: Kiến thức cần nhớ (tóm tắt)
+2. Phần 2: Bài tập trắc nghiệm (10 câu)
+3. Phần 3: Bài tập tự luận (3 câu)
+4. Phần 4: Bài tập vận dụng/sáng tạo (1 câu)
+5. Đáp án chi tiết
+
+Hãy tạo phiếu học tập chất lượng cao.",
+        "example_output": "PHIẾU HỌC TẬP: [CHỦ ĐỀ]
+
+Phần 1: Kiến thức cần nhớ
+
+1. ...
+2. ...
+
+[Tiếp tục]"
+      }
+    ]
+  },
+  
+  "usage_guide": {
+    "how_to_use_templates": [
+      "1. Chọn template phù hợp với mục đích (Word, Slide, Survey)",
+      "2. Download template về máy",
+      "3. Điền thông tin cá nhân và nội dung",
+      "4. Tham khảo cấu trúc mẫu để viết",
+      "5. Sử dụng AI prompts để tạo nội dung nhanh hơn"
+    ],
+    "how_to_use_prompts": [
+      "1. Chọn prompt phù hợp với phần cần viết",
+      "2. Điền đầy đủ thông tin vào {placeholder}",
+      "3. Copy prompt vào ChatGPT/Claude/Gemini",
+      "4. Xem kết quả và chỉnh sửa nếu cần",
+      "5. Copy nội dung vào biện pháp"
+    ],
+    "tips": [
+      "Sử dụng nhiều prompt khác nhau để tạo nội dung đa dạng",
+      "Luôn kiểm tra và chỉnh sửa nội dung AI tạo ra",
+      "Kết hợp AI với kinh nghiệm thực tế của bạn",
+      "Thêm số liệu và ví dụ cụ thể từ lớp học của bạn",
+      "Xin ý kiến đồng nghiệp trước khi nộp"
+    ]
+  }
+}
+```

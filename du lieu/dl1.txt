@@ -1,0 +1,170 @@
+# 01_van_ban_phap_ly_ly_thuyet.json
+
+
+{\
+"metadata": {\
+"version": "1.0.0",\
+"created_date": "2026-03-14",\
+"description" : "Văn bản pháp lý và lý thuyết giáo dục cho app viết biện pháp thi giáo viên giỏi",\
+"total_records": 10\
+},\
+"van_ban_phap_ly": [\
+{\
+"id": "VB001",\
+"ten_van_ban": "Luật Giáo dục",\
+"so_hieu": "43/2019/QH14",\
+"ngay_ban_hanh": "2019-06-14",\
+"co_quan_ban_hanh": "Quốc hội",\
+"noi_dung_tom_tat" : "Quy định về hệ thống giáo dục quốc dân, tổ chức và hoạt động của cơ sở giáo dục",\
+"noi_dung_chi_tiet" : "Luật Giáo dục 2019 khẳng định mục tiêu giáo dục là phát triển toàn diện con người Việt Nam có đạo đức, tri thức, văn hóa, sức khỏe, thẩm mỹ và nghề nghiệp ; có phẩm chất, năng lực và ý thức công dân ; trung thành với lý tưởng độc lập dân tộc và chủ nghĩa xã hội.",\
+"lien_quan_den": ["Phát triển năng lực", "Đổi mới giáo dục", "Chất lượng giáo dục"],\
+"file_dinh_kem": "<https://thuvienphapluat.vn/van-ban/Giao-duc/Luat-Giao-duc-2019-43-2019-QH14>"\
+},\
+{\
+"id": "VB002",\
+"ten_van_ban" : "Nghị quyết về đổi mới căn bản, toàn diện giáo dục và đào tạo",\
+"so_hieu": "29-NQ/TW",\
+"ngay_ban_hanh": "2013-11-04",\
+"co_quan_ban_hanh" : "Ban Chấp hành Trung ương Đảng",\
+"noi_dung_tom_tat" : "Đổi mới căn bản, toàn diện giáo dục và đào tạo, đáp ứng yêu cầu công nghiệp hóa, hiện đại hóa",\
+"noi_dung_chi_tiet" : "Nghị quyết nhấn mạnh việc chuyển mạnh quá trình giáo dục từ chủ yếu trang bị kiến thức sang phát triển toàn diện năng lực và phẩm chất người học ; dạy cách học, cách nghĩ, khuyến khích tự học, tạo cơ sở để người học tự cập nhật và đổi mới tri thức, kỹ năng, phát triển năng lực.",\
+"lien_quan_den": ["Đổi mới phương pháp dạy học", "Phát triển năng lực", "Tư duy phản biện"],\
+"file_dinh_kem": "<https://thuvienphapluat.vn/van-ban/Giao-duc/Nghi-quyet-29-NQ-TW-doi-moi-can-ban-toan-dien-giao-duc-dao-tao-2013>"\
+},\
+{\
+"id": "VB003",\
+"ten_van_ban" : "Chương trình giáo dục phổ thông",\
+"so_hieu": "32/2018/TT-BGDĐT",\
+"ngay_ban_hanh": "2018-12-26",\
+"co_quan_ban_hanh" : "Bộ Giáo dục và Đào tạo",\
+"noi_dung_tom_tat" : "Ban hành Chương trình giáo dục phổ thông tổng thể",\
+"noi_dung_chi_tiet" : "Chương trình GDPT 2018 chính thức thay đổi triết lý giáo dục, chuyển từ tiếp cận nội dung sang tiếp cận phát triển phẩm chất và năng lực người học. Mục tiêu không chỉ dừng lại ở việc trang bị kiến thức, mà là hình thành và phát triển các năng lực chung và năng lực đặc thù của từng môn học.",\
+"lien_quan_den": ["Chương trình mới", "Phát triển năng lực", "Dạy học tích cực"],\
+"file_dinh_kem": "<https://thuvienphapluat.vn/van-ban/Giao-duc/Thong-tu-32-2018-TT-BGDDT-chuong-trinh-giao-duc-pho-thong>"\
+},\
+{\
+"id": "VB004",\
+"ten_van_ban" : "Quy định về đánh giá học sinh THCS và THPT",\
+"so_hieu": "22/2021/TT-BGDĐT",\
+"ngay_ban_hanh": "2021-07-20",\
+"co_quan_ban_hanh" : "Bộ Giáo dục và Đào tạo",\
+"noi_dung_tom_tat" : "Quy định về đánh giá học sinh trung học cơ sở và trung học phổ thông",\
+"noi_dung_chi_tiet" : "Thông tư thể hiện rõ sự chuyển dịch trong quan điểm kiểm tra, đánh giá : từ việc chủ yếu kiểm tra kiến thức đã học sang việc đánh giá năng lực vận dụng kiến thức để giải quyết các vấn đề thực tiễn. Đánh giá không chỉ là cho điểm, xếp loại mà còn là một công cụ để thúc đẩy sự tiến bộ của người học.",\
+"lien_quan_den" : ["Đánh giá năng lực", "Đánh giá thường xuyên", "Sản phẩm học tập"],\
+"file_dinh_kem": "<https://thuvienphapluat.vn/van-ban/Giao-duc/Thong-tu-22-2021-TT-BGDDT-danh-gia-hoc-sinh-THCS-THPT>"\
+},\
+{\
+"id": "VB005",\
+"ten_van_ban" : "Quy định về Hội thi giáo viên dạy giỏi",\
+"so_hieu": "22/2019/TT-BGDĐT",\
+"ngay_ban_hanh": "2019-08-09",\
+"co_quan_ban_hanh" : "Bộ Giáo dục và Đào tạo",\
+"noi_dung_tom_tat" : "Quy định về Hội thi giáo viên dạy giỏi cơ sở giáo dục mầm non ; giáo viên dạy giỏi, giáo viên chủ nhiệm lớp giỏi cơ sở giáo dục phổ thông",\
+"noi_dung_chi_tiet" : "Thông tư quy định về mục đích, yêu cầu, nội dung, hình thức tổ chức Hội thi giáo viên dạy giỏi các cấp. Nội dung biện pháp do chính giáo viên đúc rút, sáng tạo, áp dụng trong thực tế giảng dạy môn học nhằm góp phần nâng cao chất lượng công tác giảng dạy.",\
+"lien_quan_den" : ["Hội thi giáo viên giỏi", "Biện pháp dạy học", "Đổi mới phương pháp"],\
+"file_dinh_kem": "<https://thuvienphapluat.vn/van-ban/Giao-duc/Thong-tu-22-2019-TT-BGDDT-Hoi-thi-giao-vien-day-gioi>"\
+}\
+],\
+"ly_thuyet_giao_duc": [\
+{\
+"id": "LT001",\
+"ten_ly_thuyet": "Thuyết Kiến tạo (Constructivism)",\
+"tac_gia": "Jean Piaget, Lev Vygotsky",\
+"nam_phat_trien": "1970-1980",\
+"mo_ta_tom_tat" : "Người học chủ động xây dựng kiến thức thông qua kinh nghiệm và tương tác với môi trường",\
+"noi_dung_chi_tiet" : "Tri thức không phải là thứ có sẵn từ bên ngoài để người học tiếp nhận thụ động, mà được chính người học chủ động kiến tạo trong tâm trí thông qua tương tác với môi trường và trải nghiệm thực tế. Có 2 nhánh chính : Thuyết Kiến tạo Nhận thức (Piaget) tập trung vào cơ chế đồng hóa và điều ứng ; Thuyết Kiến tạo Xã hội (Vygotsky) nhấn mạnh vai trò của tương tác xã hội và Vùng Phát triển Gần (ZPD).",\
+"ung_dung_thuc_te": [\
+"Tạo môi trường học tập giàu trải nghiệm",\
+"Đặt câu hỏi mở, khuyến khích HS tự khám phá",\
+"Tổ chức hoạt động nhóm, học hỏi lẫn nhau",\
+"Liên hệ kiến thức mới với kiến thức cũ",\
+"Sử dụng kỹ thuật giàn giáo (scaffolding) cho HS yếu"\
+],\
+"vi_du_minh_hoa" : "Thay vì giảng công thức tính diện tích hình tròn, GV cho HS : (1) Đo chu vi và đường kính nhiều hình tròn, (2) Tính tỷ lệ chu vi/đường kính, (3) Phát hiện ra số π ≈ 3.14, (4) Tự rút ra công thức S = πr²",\
+"tai_lieu_tham_khao": [\
+"Piaget, J. (1970). Genetic Epistemology",\
+"Vygotsky, L. (1978). Mind in Society"\
+]\
+},\
+{\
+"id": "LT002",\
+"ten_ly_thuyet" : "Vùng phát triển gần (Zone of Proximal Development - ZPD)",\
+"tac_gia": "Lev Vygotsky",\
+"nam_phat_trien": "1978",\
+"mo_ta_tom_tat" : "Khoảng cách giữa khả năng tự học và khả năng học với sự hỗ trợ",\
+"noi_dung_chi_tiet" : "ZPD là khoảng cách giữa trình độ phát triển hiện tại của trẻ (khả năng tự giải quyết vấn đề một cách độc lập) và trình độ phát triển tiềm năng (khả năng giải quyết vấn đề dưới sự hướng dẫn của người lớn hoặc sự hợp tác với bạn bè có năng lực cao hơn). Giáo viên cần xác định ZPD của mỗi học sinh để thiết kế hoạt động học tập phù hợp.",\
+"ung_dung_thuc_te": [\
+"Phân hóa dạy học theo năng lực",\
+"Sử dụng kỹ thuật giàn giáo (scaffolding)",\
+"Tổ chức học tập hợp tác, peer tutoring",\
+"Thiết kế bài tập có độ khó phù hợp",\
+"Hỗ trợ tạm thời, giảm dần khi HS tiến bộ"\
+],\
+"vi_du_minh_hoa" : "HS yếu không giải được bài toán khó. GV cung cấp gợi ý từng bước (giàn giáo) : (1) Đọc đề, gạch chân thông tin, (2) Xác định yêu cầu, (3) Chọn công thức, (4) Thực hiện, (5) Kiểm tra. Dần dần giảm gợi ý khi HS thành thạo.",\
+"tai_lieu_tham_khao": [\
+"Vygotsky, L. (1978). Mind in Society",\
+"Wood, D., Bruner, J., & Ross, G. (1976). The role of tutoring in problem solving"\
+]\
+},\
+{\
+"id": "LT003",\
+"ten_ly_thuyet" : "Phân loại Bloom (Bloom's Taxonomy)",\
+"tac_gia": "Benjamin Bloom",\
+"nam_phat_trien": "1956",\
+"mo_ta_tom_tat" : "6 cấp độ tư duy từ thấp đến cao : Nhớ, Hiểu, Vận dụng, Phân tích, Đánh giá, Sáng tạo",\
+"noi_dung_chi_tiet" : "Bloom's Taxonomy phân loại các mục tiêu giáo dục thành 6 cấp độ tư duy theo thứ tự từ thấp đến cao. Phiên bản gốc (1956) : Kiến thức, Hiểu, Vận dụng, Phân tích, T 종 hợp, Đánh giá. Phiên bản sửa đổi (2001) : Nhớ, Hiểu, Vận dụng, Phân tích, Đánh giá, Sáng tạo. Giáo viên cần thiết kế câu hỏi và hoạt động học tập ở tất cả các cấp độ, đặc biệt chú trọng phát triển tư duy bậc cao (cấp 4-6).",\
+"ung_dung_thuc_te": [\
+"Thiết kế câu hỏi theo 6 cấp độ",\
+"Đảm bảo phát triển tư duy bậc cao (cấp 4-6)",\
+"Phân hóa bài tập theo cấp độ",\
+"Đánh giá năng lực toàn diện",\
+"Xây dựng rubric đánh giá"\
+],\
+"vi_du_minh_hoa" : "Dạy 'Phương trình bậc 2' : (1) Nhớ : 'Công thức nghiệm ?', (2) Hiểu : 'Tại sao có công thức này ?', (3) Vận dụng : 'Giải PT x²-5x+6=0', (4) Phân tích : 'So sánh 2 cách giải', (5) Đánh giá : 'Cách nào hiệu quả hơn ?', (6) Sáng tạo : 'Tạo bài toán thực tế về PT bậc 2'",\
+"tai_lieu_tham_khao": [\
+"Bloom, B. S. (1956). Taxonomy of Educational Objectives",\
+"Anderson, L. W., & Krathwohl, D. R. (2001). A Taxonomy for Learning, Teaching, and Assessing"\
+]\
+},\
+{\
+"id": "LT004",\
+"ten_ly_thuyet": "Lý thuyết Đa trí tuệ (Multiple Intelligences)",\
+"tac_gia": "Howard Gardner",\
+"nam_phat_trien": "1983",\
+"mo_ta_tom_tat" : "Con người có 8 loại trí tuệ khác nhau : Ngôn ngữ, Logic-Toán, Không gian, Âm nhạc, Vận động, Xã hội, Nội tâm, Tự nhiên",\
+"noi_dung_chi_tiet" : "Gardner cho rằng trí thông minh không phải là một khái niệm đơn nhất mà bao gồm nhiều loại trí tuệ độc lập. Mỗi người có điểm mạnh ở các loại trí tuệ khác nhau. Giáo dục cần đa dạng hóa hoạt động học tập để phát huy thế mạnh của mỗi học sinh.",\
+"ung_dung_thuc_te": [\
+"Đa dạng hoạt động học tập",\
+"Phát huy thế mạnh của mỗi HS",\
+"Thiết kế bài học đa giác độ",\
+"Đánh giá đa dạng (không chỉ kiểm tra viết)",\
+"Tổ chức nhóm dị biệt (khác trí tuệ)"\
+],\
+"vi_du_minh_hoa" : "Dạy 'Phương trình bậc 2' theo 8 trí tuệ : (1) Ngôn ngữ : Viết bài về lịch sử PT, (2) Logic : Giải PT, (3) Không gian : Vẽ đồ thị Parabol, (4) Âm nhạc : Sáng tác bài hát về công thức, (5) Vận động : Trò chơi 'Tìm nghiệm', (6) Xã hội : Thảo luận nhóm, (7) Nội tâm : Tự đánh giá, (8) Tự nhiên : Ứng dụng PT trong tự nhiên",\
+"tai_lieu_tham_khao": [\
+"Gardner, H. (1983). Frames of Mind: The Theory of Multiple Intelligences",\
+"Armstrong, T. (2009). Multiple Intelligences in the Classroom"\
+]\
+},\
+{\
+"id": "LT005",\
+"ten_ly_thuyet" : "Thuyết Hành vi (Behaviorism)",\
+"tac_gia": "B. F. Skinner",\
+"nam_phat_trien": "1950",\
+"mo_ta_tom_tat" : "Học tập là sự thay đổi hành vi qua kích thích và phản ứng, củng cố tích cực và tiêu cực",\
+"noi_dung_chi_tiet" : "Thuyết Hành vi cho rằng học tập là quá trình hình thành mối liên kết giữa kích thích (stimulus) và phản ứng (response). Hành vi được củng cố tích cực (positive reinforcement) sẽ được lặp lại, hành vi bị phạt (punishment) sẽ giảm dần. Skinner phát triển khái niệm 'điều kiện hóa thao tác' (operant conditioning).",\
+"ung_dung_thuc_te": [\
+"Hệ thống khen thưởng, phạt rõ ràng",\
+"Phản hồi tức thì",\
+"Chia nhỏ mục tiêu, củng cố từng bước",\
+"Gamification (điểm thưởng, huy hiệu)",\
+"Luyện tập lặp lại có hệ thống"\
+],\
+"vi_du_minh_hoa" : "Hệ thống điểm thưởng : HS làm đúng BT (+10 điểm), phát biểu (+5 điểm), giúp bạn (+5 điểm), tiến bộ (+20 điểm). Tích lũy đủ điểm đổi quà (sách, dụng cụ học tập). HS được động viên ngay lập tức khi có hành vi tích cực.",\
+"tai_lieu_tham_khao": [\
+"Skinner, B. F. (1953). Science and Human Behavior",\
+"Skinner, B. F. (1968). The Technology of Teaching"\
+]\
+}\
+]\
+}

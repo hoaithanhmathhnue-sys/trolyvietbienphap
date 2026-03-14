@@ -252,6 +252,32 @@ select {
   max-width: 100%;
 }
 
+/* Main content scrollbar - LUÔN HIỆN */
+.main-scroll {
+  overflow-y: scroll !important;
+  scrollbar-width: thin;
+  scrollbar-color: #0ea5e9 #e0f2fe;
+}
+
+.main-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-scroll::-webkit-scrollbar-track {
+  background: #e0f2fe;
+  border-radius: 8px;
+}
+
+.main-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #38bdf8, #0ea5e9);
+  border-radius: 8px;
+  min-height: 40px;
+}
+
+.main-scroll::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #0ea5e9, #0284c7);
+}
+
 /* Exception for root and body */
 html,
 body,
