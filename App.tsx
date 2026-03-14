@@ -2250,7 +2250,7 @@ Tổ: [Tổ chuyên môn]
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 flex flex-col lg:flex-row font-sans text-gray-900">
+    <div className="h-screen bg-gradient-to-br from-sky-50 via-blue-50 to-indigo-50 flex flex-col lg:flex-row font-sans text-gray-900 overflow-hidden">
       <ApiKeyModal
         isOpen={showApiModal}
         onSave={handleSaveApiKey}
@@ -2342,7 +2342,7 @@ Tổ: [Tổ chuyên môn]
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4 lg:p-8 flex flex-col h-screen overflow-y-auto relative">
+      <div className="flex-1 min-h-0 p-4 lg:p-8 flex flex-col overflow-y-auto relative">
 
         {/* Mobile Header */}
         <div className="lg:hidden mb-4 bg-gradient-to-r from-white to-sky-50 p-4 rounded-xl shadow-lg border border-sky-100 flex flex-col gap-2">
