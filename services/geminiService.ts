@@ -575,3 +575,130 @@ BẮT ĐẦU JSON NGAY:`;
     throw new Error(getFriendlyErrorMessage(error).message);
   }
 };
+
+// ====== PHÂN TÍCH BIỆN PHÁP CŨ (KHÁM & CHỮA BỆNH) ======
+export const analyzeOldDocument = async (
+  apiKey: string,
+  content: string,
+  selectedModel?: string
+): Promise<{
+  totalScore: number;
+  criteria: Array<{ name: string; score: number; maxScore: number; details: string }>;
+  suggestions: string[];
+  summary: string;
+}> => {
+  try {
+    const genAI = new GoogleGenAI({ apiKey });
+    const modelName = selectedModel || 'gemini-2.5-flash';
+
+    // Truncate content if too long (keep first 15000 chars)
+    const truncatedContent = content.length > 15000
+      ? content.substring(0, 15000) + '\n\n[... nội dung còn lại đã được cắt bớt ...]'
+      : content;
+
+    const prompt = `
+Bạn là CHUYÊN GIA THẨM ĐỊNH SKKN/Biện pháp GVG/GVCN hàng đầu Việt Nam.
+
+NHIỆM VỤ: Phân tích và chấm điểm biện pháp/SKKN sau theo 5 tiêu chí.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📄 NỘI DUNG CẦN PHÂN TÍCH:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+${truncatedContent}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 YÊU CẦU CHẤM ĐIỂM (5 TIÊU CHÍ, MỖI TIÊU CHÍ TỐI ĐA 20 ĐIỂM):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. **CẤU TRÚC & BỐ CỤC** (20 điểm):
+   - Có đầy đủ các phần: Đặt vấn đề, Thực trạng, Giải pháp/Biện pháp, Kết quả, Kết luận?
+   - Bố cục logic, mạch lạc?
+   - Tiêu đề rõ ràng, phân cấp hợp lý?
+
+2. **CHỐNG ĐẠO VĂN & TÍNH ĐỘC ĐÁO** (20 điểm):
+   - Có câu khuôn mẫu "Trong bối cảnh...", "Với sự phát triển..." không?
+   - Có paraphrase tốt hay copy nguyên văn?
+   - Mỗi đoạn có yếu tố riêng biệt (bối cảnh, tên riêng, quan sát) không?
+
+3. **TÍNH MỚI & SÁNG TẠO** (20 điểm):
+   - Giải pháp/Biện pháp có thực sự mới không?
+   - Có ứng dụng công nghệ, phương pháp hiện đại?
+   - Khác biệt so với các SKKN phổ biến?
+
+4. **SỐ LIỆU & TÍNH KHOA HỌC** (20 điểm):
+   - Có bảng số liệu so sánh trước/sau?
+   - Số liệu có lẻ, cụ thể (không tròn trĩnh)?
+   - Có ghi rõ nguồn gốc số liệu (khảo sát ngày nào, bao nhiêu học sinh)?
+
+5. **NGÔN NGỮ & GIỌNG VĂN** (20 điểm):
+   - Cân bằng giữa khoa học và thực tiễn?
+   - Có quan sát cá nhân xen kẽ số liệu?
+   - Có thừa nhận hạn chế?
+   - Câu văn đa dạng hay lặp pattern?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ TRẢ VỀ ĐÚNG FORMAT JSON (KHÔNG CÓ GÌ KHÁC):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+{
+  "totalScore": <tổng điểm 0-100>,
+  "criteria": [
+    {"name": "Cấu trúc & Bố cục", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"},
+    {"name": "Chống đạo văn & Tính độc đáo", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"},
+    {"name": "Tính mới & Sáng tạo", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"},
+    {"name": "Số liệu & Tính khoa học", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"},
+    {"name": "Ngôn ngữ & Giọng văn", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"}
+  ],
+  "suggestions": [
+    "<gợi ý cải thiện cụ thể 1>",
+    "<gợi ý cải thiện cụ thể 2>",
+    "<gợi ý cải thiện cụ thể 3>",
+    "<gợi ý cải thiện cụ thể 4>",
+    "<gợi ý cải thiện cụ thể 5>"
+  ],
+  "summary": "<tóm tắt tổng quan 3-5 câu về chất lượng biện pháp>"
+}
+
+CHỈ TRẢ VỀ JSON, KHÔNG CÓ GIẢI THÍCH HAY VĂN BẢN KHÁC.`;
+
+    const response = await genAI.models.generateContent({
+      model: modelName,
+      contents: prompt,
+    });
+
+    let jsonText = response.text || '';
+
+    // Clean up response
+    if (jsonText.includes('```json')) {
+      jsonText = jsonText.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+    } else if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+
+    // Find JSON object in response
+    const jsonMatch = jsonText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      jsonText = jsonMatch[0];
+    }
+
+    const result = JSON.parse(jsonText);
+
+    // Validate and sanitize result
+    return {
+      totalScore: Math.min(100, Math.max(0, result.totalScore || 0)),
+      criteria: (result.criteria || []).map((c: any) => ({
+        name: c.name || 'Không rõ',
+        score: Math.min(c.maxScore || 20, Math.max(0, c.score || 0)),
+        maxScore: c.maxScore || 20,
+        details: c.details || 'Không có chi tiết',
+      })),
+      suggestions: result.suggestions || [],
+      summary: result.summary || 'Không có tóm tắt.',
+    };
+
+  } catch (error: any) {
+    console.error('Lỗi phân tích biện pháp cũ:', error);
+    throw new Error(getFriendlyErrorMessage(error).message);
+  }
+};

@@ -229,6 +229,32 @@ Bạn sẽ không viết tất cả cùng lúc. Bạn sẽ viết từng phần 
 5. Nhận lệnh "Viết Giải Pháp 2 & 3" -> Viết chi tiết Giải pháp 2 và 3.
 6. Nhận lệnh "Viết Giải Pháp 4 & 5" -> Viết chi tiết Giải pháp 4 và 5.
 7. Nhận lệnh "Viết Phần V & VI & Phụ lục" -> Hoàn thiện (Bảng số liệu chuẩn Markdown).
+
+## ✍️ PHẦN BỔ SUNG: GIỌNG VĂN TỰ NHIÊN - CHỐNG DẤU HIỆU AI (BẮT BUỘC)
+
+### NGUYÊN TẮC CỐT LÕI:
+- **CÂN BẰNG**: Khoa học về cấu trúc, cá nhân về nội dung
+- **KHÔNG SỬ DỤNG**: Câu khuôn mẫu AI như "Trong bối cảnh...", "Với sự phát triển...", "Trước yêu cầu..."
+- **BẮT BUỘC SỬ DỤNG**:
+  + Số liệu lẻ: 31/45 em (68,9%) thay vì 70%
+  + Tên riêng học sinh: em Minh, em Hà, nhóm 2
+  + Bối cảnh cụ thể: tên trường, lớp, thời gian thực hiện
+  + Thừa nhận hạn chế: "2 em vẫn đạt dưới 5..."
+  + Cơ cấu câu đa dạng: tránh câu đơn liên tục, xen câu ngắn dài
+  + Quan sát cá nhân xen kẽ số liệu: "Điều ấn tượng hơn với tôi không phải là con số, mà là thái độ..."
+
+### PARAPHRASE 3 CẤP ĐỘ:
+- **Mức 1** (Rủi ro cao): Chỉ thay từ đồng nghĩa -> ❌ Vẫn dễ bị phát hiện
+- **Mức 2** (Rủi ro TB): Đổi cấu trúc câu -> ⚠️ Vẫn giữ thuật ngữ chính
+- **Mức 3** (An toàn): Paraphrase sâu + Tích hợp ngữ cảnh riêng -> ✅ Chuyển từ định nghĩa chung sang mô tả cụ thể
+
+### CHECKLIST CHỐNG DẤU HIỆU AI TRƯỚC KHI TRẢ BÀI:
+- [ ] Mỗi đoạn văn có ít nhất 1 yếu tố riêng: tên trường/lớp/học sinh, số liệu cụ thể, thời gian, hoặc quan sát cá nhân
+- [ ] Số liệu lẻ, không tròn trĩnh?
+- [ ] KHÔNG có câu mở đầu "Trong bối cảnh..."?
+- [ ] Có thừa nhận hạn chế?
+- [ ] Câu văn đa dạng (không lặp pattern AI thường dùng)?
+- [ ] Đã paraphrase tất cả trích dẫn (mức 3)?
 `;
 
 export const SOLUTION_MODE_PROMPT = `
@@ -444,15 +470,15 @@ GIẢI PHÁP [SỐ]: [TÊN GỌI CỤ THỂ, ẤN TƯỢNG]
 
 export const STEPS_INFO = {
    [0]: { label: "Thông tin", description: "Thiết lập thông tin cơ bản" },
-   [1]: { label: "Lập Dàn Ý", description: "Xây dựng khung sườn cho SKKN" },
+   [1]: { label: "Lập Dàn Ý", description: "Xây dựng khung sườn biện pháp" },
    [2]: { label: "1. Đặt vấn đề", description: "Lí do, mục đích, đối tượng NC" },
    [3]: { label: "2. Thực trạng", description: "Cơ sở lý luận & thực tiễn" },
-   [4]: { label: "2.3. Giải pháp 1", description: "Giải pháp trọng tâm" },
-   [5]: { label: "Review GP1", description: "Xem và sửa giải pháp 1" },
-   [6]: { label: "2.3. Giải pháp 2", description: "Giải pháp thứ 2" },
-   [7]: { label: "Review GP2", description: "Xem và sửa giải pháp 2" },
-   [8]: { label: "2.3. Giải pháp 3", description: "Giải pháp thứ 3" },
-   [9]: { label: "Review GP3", description: "Xem và sửa giải pháp 3" },
+   [4]: { label: "2.3. Biện pháp 1", description: "Biện pháp trọng tâm" },
+   [5]: { label: "Review BP1", description: "Xem và sửa biện pháp 1" },
+   [6]: { label: "2.3. Biện pháp 2", description: "Biện pháp thứ 2" },
+   [7]: { label: "Review BP2", description: "Xem và sửa biện pháp 2" },
+   [8]: { label: "2.3. Biện pháp 3", description: "Biện pháp thứ 3" },
+   [9]: { label: "Review BP3", description: "Xem và sửa biện pháp 3" },
    [10]: { label: "2.4. Tính mới, sáng tạo", description: "Tính mới của đề tài" },
    [11]: { label: "Review Tính mới", description: "Xem và sửa tính mới" },
    [12]: { label: "3. Phạm vi áp dụng", description: "Phạm vi & khả năng áp dụng" },

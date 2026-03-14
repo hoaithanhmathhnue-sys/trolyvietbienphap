@@ -9,9 +9,10 @@ import { DocumentPreview } from './components/DocumentPreview';
 import { Button } from './components/Button';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { SolutionReviewModal } from './components/SolutionReviewModal';
-import { Download, ChevronRight, Wand2, FileText, CheckCircle, RefreshCw, Settings, AlertTriangle, Save, Trash2 } from 'lucide-react';
+import { Download, ChevronRight, Wand2, FileText, CheckCircle, RefreshCw, Settings, AlertTriangle, Save, Trash2, Stethoscope, PenTool } from 'lucide-react';
 
 import { LockScreen } from './components/LockScreen';
+import ReviewOldDocPanel from './components/ReviewOldDocPanel';
 
 // Helper: Truncate text dài cho AI prompt - giữ phần đầu (nội dung chính) và thông báo lược bớt
 const MAX_REF_DOCS_FOR_PROMPT = 80000; // ~80K ký tự tối đa cho tài liệu tham khảo trong prompt
@@ -62,6 +63,7 @@ const App: React.FC = () => {
   const [apiKey, setApiKey] = useState('');
   const [showApiModal, setShowApiModal] = useState(false);
   const [selectedModel, setSelectedModel] = useState(FALLBACK_MODELS[0]);
+  const [activeTab, setActiveTab] = useState<'create' | 'review'>('create');
 
   // Check LocalStorage on Mount
   useEffect(() => {
@@ -2051,9 +2053,9 @@ Tổ: [Tổ chuyên môn]
         <div className="mb-8">
           <h1 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500 flex items-center gap-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
             <Wand2 className="h-6 w-6 text-blue-500" />
-            SKKN 2025
+            BIỆN PHÁP GVG
           </h1>
-          <p className="text-xs text-blue-800 font-medium mt-1.5 tracking-wide">✨ Trợ lý viết SKKN thông minh</p>
+          <p className="text-xs text-blue-800 font-medium mt-1.5 tracking-wide">✨ Trợ lý viết biện pháp GVG/GVCN giỏi</p>
         </div>
 
         {/* Progress Stepper */}
@@ -2335,12 +2337,12 @@ Tổ: [Tổ chuyên môn]
         {/* Mobile Header */}
         <div className="lg:hidden mb-4 bg-gradient-to-r from-white to-sky-50 p-4 rounded-xl shadow-lg border border-sky-100 flex flex-col gap-2">
           <div className="flex justify-between items-center">
-            <h1 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500 text-xl" style={{ fontFamily: 'Nunito, sans-serif' }}>SKKN 2025</h1>
+            <h1 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500 text-xl" style={{ fontFamily: 'Nunito, sans-serif' }}>BIỆN PHÁP GVG</h1>
             <span className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-medium">
               {STEPS_INFO[state.step < 9 ? state.step : 8].label}
             </span>
           </div>
-          <p className="text-xs text-blue-700 font-medium">✨ Trợ lý viết SKKN thông minh</p>
+          <p className="text-xs text-blue-700 font-medium">✨ Trợ lý viết biện pháp GVG/GVCN giỏi</p>
         </div>
 
         {state.error && (() => {
@@ -2460,16 +2462,49 @@ Tổ: [Tổ chuyên môn]
         })()}
 
         {state.step === GenerationStep.INPUT_FORM ? (
-          <div className="flex-1 flex items-start justify-center overflow-y-auto">
-            <SKKNForm
-              userInfo={userInfo}
-              onChange={handleUserChange}
-              onSubmit={startGeneration}
-              onManualSubmit={handleManualOutlineSubmit}
-              isSubmitting={state.isStreaming}
-              apiKey={apiKey}
-              selectedModel={selectedModel}
-            />
+          <div className="flex-1 flex flex-col items-center overflow-y-auto">
+            {/* Tab Navigation */}
+            <div className="w-full max-w-4xl flex gap-2 mb-6 bg-white/80 backdrop-blur-sm p-1.5 rounded-2xl shadow-sm border border-gray-200">
+              <button
+                onClick={() => setActiveTab('create')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
+                  activeTab === 'create'
+                    ? 'bg-gradient-to-r from-blue-500 to-sky-500 text-white shadow-lg'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <PenTool className="w-4 h-4" />
+                ✍️ Viết Mới
+              </button>
+              <button
+                onClick={() => setActiveTab('review')}
+                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
+                  activeTab === 'review'
+                    ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg'
+                    : 'text-gray-600 hover:bg-gray-100'
+                }`}
+              >
+                <Stethoscope className="w-4 h-4" />
+                🩺 Khám Bệnh Biện Pháp Cũ
+              </button>
+            </div>
+
+            {activeTab === 'create' ? (
+              <SKKNForm
+                userInfo={userInfo}
+                onChange={handleUserChange}
+                onSubmit={startGeneration}
+                onManualSubmit={handleManualOutlineSubmit}
+                isSubmitting={state.isStreaming}
+                apiKey={apiKey}
+                selectedModel={selectedModel}
+              />
+            ) : (
+              <ReviewOldDocPanel
+                apiKey={apiKey}
+                selectedModel={selectedModel}
+              />
+            )}
           </div>
         ) : (
           <div className="flex-1 flex flex-col min-h-0 relative">

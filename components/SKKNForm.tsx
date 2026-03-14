@@ -495,7 +495,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
   };
 
   // Check valid based on mode - chỉ check các field là string
-  const requiredFields: (keyof UserInfo)[] = ['topic', 'subject', 'school'];
+  const requiredFields: (keyof UserInfo)[] = ['topic', 'subject'];
   const isInfoValid = requiredFields.every(key => {
     const value = userInfo[key];
     return typeof value === 'string' && value.trim() !== '';
@@ -675,18 +675,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <InputGroup label="Tên trường / Đơn vị" icon={School} required>
-                <InputWithHistory
-                  name="school"
-                  value={userInfo.school}
-                  onChange={handleChange}
-                  className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full pl-10 text-sm border-gray-300 rounded-md p-3 border text-gray-900 placeholder-gray-500"
-                  placeholder="VD: Trường THPT Nguyễn Du"
-                  required
-                />
-              </InputGroup>
-            </div>
+
           </div>
         </div>
 
