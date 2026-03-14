@@ -44,32 +44,30 @@ export interface UserInfo {
   includeStatistics: boolean; // Bổ sung bảng biểu, số liệu thống kê
   requirementsConfirmed: boolean; // Đã xác nhận các yêu cầu chưa
 
-  // Tùy chọn số lượng giải pháp
-  includeSolution4_5: boolean; // Có viết giải pháp 4 và 5 hay không (mặc định false = chỉ 3 giải pháp)
 }
 
 export enum GenerationStep {
   INPUT_FORM = 0,
   OUTLINE = 1,
-  PART_I_II = 2,
-  PART_III = 3,
-  // Giải pháp 1
-  PART_IV_SOL1 = 4,
-  PART_IV_SOL1_REVIEW = 5,
-  // Giải pháp 2
-  PART_IV_SOL2 = 6,
-  PART_IV_SOL2_REVIEW = 7,
-  // Giải pháp 3
-  PART_IV_SOL3 = 8,
-  PART_IV_SOL3_REVIEW = 9,
-  // Giải pháp 4 (tùy chọn)
-  PART_IV_SOL4 = 10,
-  PART_IV_SOL4_REVIEW = 11,
-  // Giải pháp 5 (tùy chọn)
-  PART_IV_SOL5 = 12,
-  PART_IV_SOL5_REVIEW = 13,
-  // Phần V, VI và kết luận
-  PART_V_VI = 14,
+  // Phần 1: Đặt vấn đề (1.1, 1.2, 1.3)
+  PART_1 = 2,
+  // Phần 2: Thực trạng (2.1 Cơ sở lý luận, 2.2 Cơ sở thực tiễn)
+  PART_2 = 3,
+  // Phần 2.3: Nội dung các biện pháp
+  BP1 = 4,
+  BP1_REVIEW = 5,
+  BP2 = 6,
+  BP2_REVIEW = 7,
+  BP3 = 8,
+  BP3_REVIEW = 9,
+  // Phần 2.4: Tính mới, tính sáng tạo
+  TINH_MOI = 10,
+  TINH_MOI_REVIEW = 11,
+  // Phần 3: Phạm vi ảnh hưởng, khả năng áp dụng
+  PHAM_VI = 12,
+  PHAM_VI_REVIEW = 13,
+  // Phần 4: Kết luận và kiến nghị
+  KET_LUAN = 14,
   APPENDIX = 15,
   COMPLETED = 16
 }

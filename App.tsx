@@ -156,7 +156,6 @@ const App: React.FC = () => {
     includePracticalExamples: false, // Thêm ví dụ thực tế
     includeStatistics: false, // Bổ sung bảng biểu thống kê
     requirementsConfirmed: false, // Đã xác nhận yêu cầu
-    includeSolution4_5: false, // Mặc định chỉ viết 3 giải pháp
     customTemplate: undefined // Cấu trúc mẫu SKKN tùy chỉnh (đã trích xuất)
   });
 
@@ -334,7 +333,7 @@ const App: React.FC = () => {
     const pages = userInfo.pageLimit;
     const wordsPerPage = 350; // 1 trang A4 ≈ 350 từ (font 13pt, line spacing 1.5)
     const charsPerPage = 2500;
-    const numSolutions = userInfo.includeSolution4_5 ? 5 : 3;
+    const numSolutions = 3; // Biện pháp GVG luôn có 3 biện pháp
 
     // Phân bổ: I&II (5%), III (5%), IV-GP (85%), V&VI (5%)
     const partI_II_pages = Math.max(1, Math.round(pages * 0.05));
@@ -356,7 +355,7 @@ const App: React.FC = () => {
       perSolution: { pages: pagesPerSolution, words: pagesPerSolution * wordsPerPage, chars: pagesPerSolution * charsPerPage },
       partV_VI: { pages: partV_VI_pages, words: partV_VI_pages * wordsPerPage, chars: partV_VI_pages * charsPerPage },
     };
-  }, [userInfo.pageLimit, userInfo.includeSolution4_5]);
+  }, [userInfo.pageLimit]);
 
   // Helper: Tạo prompt giới hạn số từ/trang cho MỘT phần cụ thể đang viết
   const getSectionPagePrompt = useCallback((sectionName: string, sectionKey: 'partI_II' | 'partIII' | 'perSolution' | 'partV_VI') => {
@@ -454,7 +453,7 @@ Hãy áp dụng CHÍNH XÁC các yêu cầu trên vào phần đang viết!`);
 ${requirements.join('\n')}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `;
-  }, [userInfo.requirementsConfirmed, userInfo.pageLimit, userInfo.includePracticalExamples, userInfo.includeStatistics, userInfo.specialRequirements, userInfo.textbook, userInfo.includeSolution4_5, getPageAllocation]);
+  }, [userInfo.requirementsConfirmed, userInfo.pageLimit, userInfo.includePracticalExamples, userInfo.includeStatistics, userInfo.specialRequirements, userInfo.textbook, getPageAllocation]);
 
   // Helper function để tạo prompt cấu trúc từ mẫu SKKN đã trích xuất
   const getCustomTemplatePrompt = useCallback(() => {
@@ -810,13 +809,7 @@ CẤU TRÚC SKKN BẬC CAO (TRUNG CẤP / CAO ĐẲNG / ĐẠI HỌC):
 
    GIẢI PHÁP 3: [Tên giải pháp - dựa trên nghiên cứu khoa học]
         [Cấu trúc tương tự, triển khai đầy đủ 5 mục]
-   ${userInfo.includeSolution4_5 ? `
-   GIẢI PHÁP 4: [Tên giải pháp nâng cao - ứng dụng công nghệ]
-        [Giải pháp tích hợp LMS, AI, Virtual Lab...]
 
-   GIẢI PHÁP 5: [Tên giải pháp phát triển - hợp tác doanh nghiệp]
-        [Giải pháp gắn kết đào tạo với thị trường lao động]
-   ` : ''}
    → MỐI LIÊN HỆ HỆ THỐNG GIỮA CÁC GIẢI PHÁP
 
 5. KẾT QUẢ NGHIÊN CỨU & ĐÁNH GIÁ (5-6 trang)
@@ -967,13 +960,7 @@ CẤU TRÚC SKKN CHUẨN (ÁP DỤNG KHI KHÔNG CÓ MẪU RIÊNG):
 
    GIẢI PHÁP 3: [Tên giải pháp cụ thể, ấn tượng]
         [Cấu trúc tương tự giải pháp 1, triển khai đầy đủ 5 mục]
-   ${userInfo.includeSolution4_5 ? `
-   GIẢI PHÁP 4: [Tên giải pháp mở rộng/nâng cao]
-        [Giải pháp bổ trợ, ứng dụng công nghệ nâng cao]
 
-   GIẢI PHÁP 5: [Tên giải pháp mở rộng/nâng cao]
-        [Giải pháp phát triển, mở rộng đối tượng áp dụng]
-   ` : ''}
    → MỐI LIÊN HỆ GIỮA CÁC GIẢI PHÁP (giải thích tính hệ thống, logic)
 
 5. KẾT QUẢ ĐẠT ĐƯỢC (4-5 trang)
@@ -991,28 +978,17 @@ CẤU TRÚC SKKN CHUẨN (ÁP DỤNG KHI KHÔNG CÓ MẪU RIÊNG):
         → Bảng so sánh kết quả TRƯỚC - SAU (dùng số liệu lẻ: 42.3%, 67.8%)
         → Biểu đồ minh họa
         → Phân tích, nhận xét kết quả
-        → Ý kiến phản hồi từ học sinh, đồng nghiệp
-
-6. ĐIỀU KIỆN ĐỂ SÁNG KIẾN ĐƯỢC NHÂN RỘNG (1-2 trang)
-
-   → Điều kiện về CSVC
-   → Điều kiện về năng lực giáo viên
-   → Điều kiện về đối tượng học sinh
-   → Khả năng áp dụng tại các trường khác
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-📌 KẾT LUẬN VÀ KHUYẾN NGHỊ (2-3 trang)
+📌 KẾT LUẬN VÀ KIẾN NGHỊ (2-3 trang)
 
 1. Kết luận
-   → Tóm tắt những đóng góp chính của sáng kiến
-   → Điểm mới, điểm sáng tạo
+   → Tóm tắt những đóng góp chính
    → Giá trị thực tiễn
 
-2. Khuyến nghị  
+2. Kiến nghị, đề xuất
    → Với nhà trường
-   → Với tổ chuyên môn
-   → Với giáo viên
    → Với Phòng/Sở GD&ĐT
    → Hướng phát triển tiếp theo
 
@@ -1035,7 +1011,7 @@ YÊU CẦU DÀN Ý(NGẮN GỌN - CHỈ ĐẦU MỤC):
 ⚠️ QUAN TRỌNG: Dàn ý phải NGẮN GỌN, chỉ liệt kê CÁC ĐẦU MỤC CHÍNH.
 Nội dung chi tiết sẽ được triển khai ở các bước viết sau.
 
-✓ ${userInfo.includeSolution4_5 ? '5 GIẢI PHÁP (bao gồm 2 giải pháp mở rộng/nâng cao)' : 'CHỈ 3 GIẢI PHÁP'} - liệt kê TÊN giải pháp, không triển khai chi tiết
+✓ CHỈ 3 BIỆN PHÁP - liệt kê TÊN biện pháp, không triển khai chi tiết
 ✓ Mỗi phần chỉ ghi tiêu đề mục và các ý chính(1 - 2 dòng mỗi ý)
 ✓ KHÔNG viết đoạn văn dài trong dàn ý
 ✓ KHÔNG triển khai chi tiết nội dung - chỉ gợi ý hướng đi
@@ -1160,7 +1136,7 @@ QUAN TRỌNG:
   // Generate Next Section
   const generateNextSection = async () => {
     let currentStepPrompt = "";
-    let nextStepEnum = GenerationStep.PART_I_II;
+    let nextStepEnum = GenerationStep.PART_1;
     let shouldAppend = true; // Mặc định append nội dung vào fullDocument
 
     // Logic for OUTLINE step specifically handles manual edits synchronization
@@ -1168,25 +1144,28 @@ QUAN TRỌNG:
       // We inject the CURRENT fullDocument (which might have been edited by user) into the prompt
       // This ensures the AI uses the user's finalized outline.
       currentStepPrompt = `
-        BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái Bước 3(Viết Phần I & II - Đang thực hiện).
+        BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Phần 1 - Đặt vấn đề - Đang thực hiện).
         
-        Đây là bản DÀN Ý CHÍNH THỨC mà tôi đã chốt(tôi có thể đã chỉnh sửa trực tiếp). 
-        Hãy DÙNG CHÍNH XÁC NỘI DUNG NÀY để làm cơ sở triển khai các phần tiếp theo, không tự ý thay đổi cấu trúc của nó:
+        Đây là bản DÀN Ý CHÍNH THỨC mà tôi đã chốt (tôi có thể đã chỉnh sửa trực tiếp). 
+        Hãy DÙNG CHÍNH XÁC NỘI DUNG NÀY để làm cơ sở triển khai các phần tiếp theo:
 
---- BẮT ĐẦU DÀN Ý CHÍNH THỨC-- -
+--- BẮT ĐẦU DÀN Ý CHÍNH THỨC---
   ${state.fullDocument}
---- KẾT THÚC DÀN Ý CHÍNH THỨC-- -
+--- KẾT THÚC DÀN Ý CHÍNH THỨC---
 
   NHIỆM VỤ TIẾP THEO:
-        Hãy tiếp tục BƯỚC 3: Viết chi tiết PHẦN I(Đặt vấn đề) và PHẦN II(Cơ sở lý luận). 
+        Viết chi tiết PHẦN 1: ĐẶT VẤN ĐỀ theo cấu trúc:
+        
+        ## 1. Đặt vấn đề
+        ### 1.1. Lí do chọn đề tài
+        ### 1.2. Mục đích nghiên cứu
+        ### 1.3. Đối tượng nghiên cứu
         
         ⚠️ LƯU Ý FORMAT:
 - Viết từng câu xuống dòng riêng.
         - Tách đoạn rõ ràng.
-        - Không viết dính chữ.
-        - Menu Navigation: Đánh dấu Bước 2 đã xong(✅), Bước 3 đang làm(🔵).
         
-        Viết sâu sắc, học thuật, đúng cấu trúc đã đề ra.Lưu ý bám sát thông tin về trường và địa phương đã cung cấp.
+        Viết sâu sắc, học thuật, đúng cấu trúc đã đề ra.
 
         ⚠️ NHẮC LẠI THÔNG TIN QUAN TRỌNG (BẮT BUỘC BÁM SÁT):
         - Cấp học: ${userInfo.level}
@@ -1198,19 +1177,34 @@ QUAN TRỌNG:
         Mọi ví dụ, số liệu, thuật ngữ PHẢI phù hợp với cấp ${userInfo.level}, khối ${userInfo.grade}.
 
   ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Phần I (Đặt vấn đề) + Phần II (Cơ sở lý luận)', 'partI_II')} `;
+  ${getSectionPagePrompt('Phần 1 (Đặt vấn đề)', 'partI_II')} `;
 
-      nextStepEnum = GenerationStep.PART_I_II;
+      nextStepEnum = GenerationStep.PART_1;
     } else {
       // Standard flow for other steps
       const nextStepMap: Record<number, { prompt: string, nextStep: GenerationStep, skipAppend?: boolean }> = {
-        [GenerationStep.PART_I_II]: {
+        [GenerationStep.PART_1]: {
           prompt: `
-              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái Bước 4(Viết Phần III - Đang thực hiện).
+              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Phần 2 - Thực trạng - Đang thực hiện).
 
-              Tiếp tục BƯỚC 3(tiếp): Viết chi tiết PHẦN III(Thực trạng vấn đề). 
-              Nhớ tạo bảng số liệu khảo sát giả định logic phù hợp với đối tượng nghiên cứu là: ${userInfo.researchSubjects || "Học sinh"}.
-              Phân tích nguyên nhân và thực trạng tại ${userInfo.school}, ${userInfo.location} và điều kiện CSVC thực tế: ${userInfo.facilities}.
+              Tiếp tục viết chi tiết PHẦN 2: THỰC TRẠNG VẤN ĐỀ theo cấu trúc:
+              
+              ## 2. Thực trạng vấn đề
+              
+              ### 2.1. Cơ sở lý luận
+              - Lý thuyết giáo dục liên quan
+              - Văn bản pháp lý (định hướng GD hiện hành)
+              - Cơ sở khoa học của đề tài
+              
+              ### 2.2. Cơ sở thực tiễn
+              - Thực trạng dạy và học môn ${userInfo.subject} tại ${userInfo.school}
+              - Bảng số liệu khảo sát trước khi áp dụng (số lẻ, cụ thể)
+              - Phân tích nguyên nhân và thực trạng
+              
+              ⚠️ NHẮC LẠI: Cấp ${userInfo.level}, khối ${userInfo.grade}, môn ${userInfo.subject}.
+              Bảng số liệu Markdown chuẩn: | Tiêu đề | Số liệu |.
+              
+              🖼️ GỢI Ý HÌNH ẢNH MINH HỌA.
               
               ⚠️ NHẮC LẠI: Đây là SKKN cấp ${userInfo.level}, khối ${userInfo.grade}, môn ${userInfo.subject}.
               Mọi nội dung, ví dụ, số liệu, đối tượng khảo sát PHẢI phù hợp với cấp ${userInfo.level}.
@@ -1230,17 +1224,17 @@ QUAN TRỌNG:
 
   ${getPageLimitPrompt()}
   ${getSectionPagePrompt('Phần III (Thực trạng vấn đề)', 'partIII')} `,
-          nextStep: GenerationStep.PART_III
+          nextStep: GenerationStep.PART_2
         },
-        [GenerationStep.PART_III]: {
-          // ULTRA MODE INJECTION FOR PART IV START
+        [GenerationStep.PART_2]: {
+          // BIỆN PHÁP 1 - Mục 2.3
           prompt: `
-              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái Bước 5(Viết Phần IV - Đang thực hiện).
+              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Biện pháp 1 - Đang thực hiện).
 
   ${SOLUTION_MODE_PROMPT}
       
               ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-              🚀 THỰC THI NHIỆM VỤ(PHẦN IV - GIẢI PHÁP 1)
+              🚀 THỰC THI NHIỆM VỤ (MỤC 2.3 - BIỆN PHÁP 1)
               ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
               
               Thông tin đề tài: "${userInfo.topic}"
@@ -1271,16 +1265,16 @@ SGK: ${userInfo.textbook}
 
   ${getPageLimitPrompt()}
   ${getSectionPagePrompt('Giải pháp 1', 'perSolution')} `,
-          nextStep: GenerationStep.PART_IV_SOL1
+          nextStep: GenerationStep.BP1
         },
-        [GenerationStep.PART_IV_SOL1]: {
+        [GenerationStep.BP1]: {
           // Sau khi viết xong GP1 → Chuyển sang REVIEW GP1 (KHÔNG viết GP2 ở đây)
           prompt: `✅ HOÀN THÀNH GIẢI PHÁP 1. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.PART_IV_SOL1_REVIEW, // Chuyển sang review GP1
+          nextStep: GenerationStep.BP1_REVIEW, // Chuyển sang review GP1
           skipAppend: true // Không append vào fullDocument để tránh lặp nội dung
         },
         // GP1 Review → GP2
-        [GenerationStep.PART_IV_SOL1_REVIEW]: {
+        [GenerationStep.BP1_REVIEW]: {
           prompt: `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái(Viết Giải pháp 2 - Đang thực hiện).
 
@@ -1303,16 +1297,16 @@ SGK: ${userInfo.textbook}
 
   ${getPageLimitPrompt()}
   ${getSectionPagePrompt('Giải pháp 2', 'perSolution')} `,
-          nextStep: GenerationStep.PART_IV_SOL2
+          nextStep: GenerationStep.BP2
         },
         // GP2 → GP2 Review (KHÔNG viết GP3 ở đây)
-        [GenerationStep.PART_IV_SOL2]: {
+        [GenerationStep.BP2]: {
           prompt: `✅ HOÀN THÀNH GIẢI PHÁP 2. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.PART_IV_SOL2_REVIEW,
+          nextStep: GenerationStep.BP2_REVIEW,
           skipAppend: true // Không append vào fullDocument để tránh lặp nội dung
         },
         // GP2 Review → GP3 (Viết GP3 sau khi approve GP2)
-        [GenerationStep.PART_IV_SOL2_REVIEW]: {
+        [GenerationStep.BP2_REVIEW]: {
           prompt: `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái(Viết Giải pháp 3 - Đang thực hiện).
 
@@ -1334,136 +1328,151 @@ SGK: ${userInfo.textbook}
 
   ${getPageLimitPrompt()}
   ${getSectionPagePrompt('Giải pháp 3', 'perSolution')} `,
-          nextStep: GenerationStep.PART_IV_SOL3
+          nextStep: GenerationStep.BP3
         },
         // GP3 → GP3 Review (KHÔNG viết GP4 hoặc Phần V-VI ở đây)
-        [GenerationStep.PART_IV_SOL3]: {
+        [GenerationStep.BP3]: {
           prompt: `✅ HOÀN THÀNH GIẢI PHÁP 3. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.PART_IV_SOL3_REVIEW,
+          nextStep: GenerationStep.BP3_REVIEW,
           skipAppend: true // Không append vào fullDocument để tránh lặp nội dung
         },
-        // GP3 Review → GP4 hoặc PART_V_VI (Viết sau khi approve GP3)
-        [GenerationStep.PART_IV_SOL3_REVIEW]: userInfo.includeSolution4_5
-          ? {
-            prompt: `
-                BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái(Viết Giải pháp 4 - Đang thực hiện).
-
-                Tiếp tục giữ vững vai trò CHUYÊN GIA GIÁO DỤC(ULTRA MODE).
-                
-                Nhiệm vụ: Viết chi tiết GIẢI PHÁP 4(Mở rộng / Nâng cao) cho đề tài: "${userInfo.topic}".
-                
-                ⚠️ LƯU Ý: Đây là giải pháp MỞ RỘNG và NÂNG CAO.
-                Có thể là: Ứng dụng công nghệ / AI nâng cao, phát triển mở rộng đối tượng...
-                
-                Yêu cầu:
-1. Nội dung độc đáo, KHÔNG trùng lặp với Giải pháp 1, 2, 3.
-2. Tận dụng tối đa CSVC: ${userInfo.facilities}.
-3. BẮT BUỘC TUÂN THỦ FORMAT.
-                4. Phải có VÍ DỤ MINH HỌA cụ thể.
-
-  ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Giải pháp 4', 'perSolution')} `,
-            nextStep: GenerationStep.PART_IV_SOL4
-          }
-          : {
-            prompt: `
-                BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái(Kết luận & Khuyến nghị - Đang thực hiện).
-
-                Tiếp tục viết:
-
-5. KẾT QUẢ ĐẠT ĐƯỢC(4 - 5 trang):
-- 5.1.Mục đích thực nghiệm
-  - 5.2.Nội dung thực nghiệm
-    - 5.3.Tổ chức thực nghiệm(Bảng so sánh TRƯỚC - SAU với số liệu lẻ)
-
-6. ĐIỀU KIỆN ĐỂ SÁNG KIẾN ĐƯỢC NHÂN RỘNG(1 - 2 trang)
-                
-                KẾT LUẬN VÀ KHUYẾN NGHỊ(2 - 3 trang)
-                
-                TÀI LIỆU THAM KHẢO(8 - 12 tài liệu)
-                
-                Đảm bảo số liệu phần Kết quả phải LOGIC.Sử dụng số liệu lẻ(42.3 %, 67.8 %).
-                
-                🖼️ GỢI Ý HÌNH ẢNH MINH HỌA.
-
-  ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Kết quả + Kết luận + Khuyến nghị + Tài liệu tham khảo', 'partV_VI')} `,
-            nextStep: GenerationStep.PART_V_VI
-          },
-        // GP4 → GP4 Review (KHÔNG viết GP5 ở đây)
-        [GenerationStep.PART_IV_SOL4]: {
-          prompt: `✅ HOÀN THÀNH GIẢI PHÁP 4. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.PART_IV_SOL4_REVIEW,
-          skipAppend: true // Không append vào fullDocument để tránh lặp nội dung
-        },
-        // GP4 Review → GP5 (Viết GP5 sau khi approve GP4)
-        [GenerationStep.PART_IV_SOL4_REVIEW]: {
+        // BP3 Review → 2.4 Tính mới, tính sáng tạo (LUÔN LUÔN)
+        [GenerationStep.BP3_REVIEW]: {
           prompt: `
-              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái(Viết Giải pháp 5 - Đang thực hiện).
+              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết mục 2.4 Tính mới, tính sáng tạo - Đang thực hiện).
 
-              Tiếp tục giữ vững vai trò CHUYÊN GIA GIÁO DỤC(ULTRA MODE).
+              Tiếp tục giữ vững vai trò CHUYÊN GIA GIÁO DỤC.
               
-              Nhiệm vụ: Viết chi tiết GIẢI PHÁP 5(Mở rộng / Nâng cao cuối cùng) cho đề tài: "${userInfo.topic}".
+              Nhiệm vụ: Viết chi tiết MỤC 2.4 cho đề tài: "${userInfo.topic}".
               
-              ⚠️ LƯU Ý: Đây là giải pháp MỞ RỘNG cuối cùng.
+              CẤU TRÚC BẮT BUỘC:
               
-              Yêu cầu:
-1. Nội dung độc đáo, KHÔNG trùng lặp với các giải pháp trước.
-              2. Kết thúc bằng MỐI LIÊN HỆ GIỮA TẤT CẢ 5 GIẢI PHÁP(tính hệ thống, logic).
-              3. BẮT BUỘC TUÂN THỦ FORMAT.
-
-  ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Giải pháp 5', 'perSolution')} `,
-          nextStep: GenerationStep.PART_IV_SOL5
+              ## 2.4. Tính mới, tính sáng tạo
+              
+              ### 2.4.1. Tính mới của giải pháp
+              - So sánh với các biện pháp/giải pháp hiện có
+              - Điểm khác biệt nổi bật
+              - Giá trị mới mang lại cho giáo dục
+              
+              ### 2.4.2. Tính sáng tạo của giải pháp
+              - Sự sáng tạo trong cách tiếp cận
+              - Sáng tạo trong ứng dụng công nghệ/phương pháp
+              - Sáng tạo trong tổ chức hoạt động dạy học
+              
+              ⚠️ LƯU Ý:
+              - Phải liên hệ trực tiếp với 3 biện pháp đã viết ở mục 2.3
+              - Dùng số liệu cụ thể để chứng minh tính mới
+              - Bám sát đặc thù cấp ${userInfo.level}, môn ${userInfo.subject}
+              
+              ${getPageLimitPrompt()}`,
+          nextStep: GenerationStep.TINH_MOI
         },
-        // GP5 → GP5 Review (KHÔNG viết Phần V-VI ở đây)
-        [GenerationStep.PART_IV_SOL5]: {
-          prompt: `✅ HOÀN THÀNH GIẢI PHÁP 5. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.PART_IV_SOL5_REVIEW,
-          skipAppend: true // Không append vào fullDocument để tránh lặp nội dung
+        // 2.4 → Review Tính mới
+        [GenerationStep.TINH_MOI]: {
+          prompt: '✅ HOÀN THÀNH MỤC 2.4 TÍNH MỚI, TÍNH SÁNG TẠO. Vui lòng xem xét và duyệt trước khi tiếp tục.',
+          nextStep: GenerationStep.TINH_MOI_REVIEW,
+          skipAppend: true
         },
-        // GP5 Review → PART_V_VI (Viết Phần V-VI sau khi approve GP5)
-        [GenerationStep.PART_IV_SOL5_REVIEW]: {
+        // Review Tính mới → 3. Phạm vi ảnh hưởng
+        [GenerationStep.TINH_MOI_REVIEW]: {
           prompt: `
-              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái(Kết luận & Khuyến nghị - Đang thực hiện).
+              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Phần 3 - Phạm vi ảnh hưởng - Đang thực hiện).
 
-              Tiếp tục viết:
-
-5. KẾT QUẢ ĐẠT ĐƯỢC(4 - 5 trang):
-- 5.1.Mục đích thực nghiệm
-  - 5.2.Nội dung thực nghiệm
-    - 5.3.Tổ chức thực nghiệm(Bảng so sánh TRƯỚC - SAU với số liệu lẻ)
-
-6. ĐIỀU KIỆN ĐỂ SÁNG KIẾN ĐƯỢC NHÂN RỘNG(1 - 2 trang)
+              Tiếp tục giữ vững vai trò CHUYÊN GIA GIÁO DỤC.
               
-              KẾT LUẬN VÀ KHUYẾN NGHỊ(2 - 3 trang)
+              Nhiệm vụ: Viết chi tiết PHẦN 3 cho đề tài: "${userInfo.topic}".
               
-              TÀI LIỆU THAM KHẢO(8 - 12 tài liệu)
+              CẤU TRÚC BẮT BUỘC:
               
-              Đảm bảo số liệu phần Kết quả phải LOGIC.Sử dụng số liệu lẻ.
+              ## 3. Phạm vi ảnh hưởng, khả năng áp dụng giải pháp
+              
+              ### 3.1. Phạm vi ảnh hưởng
+              - Đối tượng được hưởng lợi (${userInfo.grade} tại ${userInfo.school})
+              - Phạm vi áp dụng: trong trường, cụm trường, huyện/tỉnh
+              - Tác động đến chất lượng dạy và học
+              
+              ### 3.2. Khả năng áp dụng
+              - Điều kiện cần thiết để áp dụng (CSVC, năng lực GV)
+              - Khả năng nhân rộng trong các trường cùng cấp
+              - Tính khả thi với điều kiện thực tế
+              
+              ### 3.3. Hiệu quả, lợi ích thu được từ giải pháp
+              - Kết quả thực nghiệm: Bảng so sánh TRƯỚC - SAU (số liệu lẻ: 68.9%, 42.3%)
+              - Bảng Markdown chuẩn với dữ liệu khảo sát
+              - Phân tích hiệu quả định lượng và định tính
+              - Lợi ích cho học sinh, giáo viên, nhà trường
+              
+              ⚠️ NHẮC LẠI: Cấp ${userInfo.level}, khối ${userInfo.grade}, môn ${userInfo.subject}.
+              Số liệu phải LOGIC, sử dụng số lẻ. Có bảng so sánh Markdown chuẩn.
               
               🖼️ GỢI Ý HÌNH ẢNH MINH HỌA.
-
-  ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Kết quả + Kết luận + Khuyến nghị + Tài liệu tham khảo', 'partV_VI')} `,
-          nextStep: GenerationStep.PART_V_VI
-        },
-        // PART_V_VI → COMPLETED
-        [GenerationStep.PART_V_VI]: {
-          prompt: `
-              ✅ SKKN ĐÃ HOÀN THÀNH!
               
-              Bạn đã viết xong toàn bộ nội dung chính của SKKN.
-              Bao gồm: Đặt vấn đề, Cơ sở lý luận, Thực trạng, Giải pháp, Kết quả và Kết luận.
+              ${getPageLimitPrompt()}`,
+          nextStep: GenerationStep.PHAM_VI
+        },
+        // Phạm vi → Review Phạm vi
+        [GenerationStep.PHAM_VI]: {
+          prompt: '✅ HOÀN THÀNH PHẦN 3 - PHẠM VI ẢNH HƯỞNG. Vui lòng xem xét và duyệt trước khi tiếp tục.',
+          nextStep: GenerationStep.PHAM_VI_REVIEW,
+          skipAppend: true
+        },
+        // Review Phạm vi → 4. Kết luận và kiến nghị
+        [GenerationStep.PHAM_VI_REVIEW]: {
+          prompt: `
+              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Phần 4 - Kết luận và kiến nghị - Đang thực hiện).
+
+              Tiếp tục giữ vững vai trò CHUYÊN GIA GIÁO DỤC.
+              
+              Nhiệm vụ: Viết chi tiết PHẦN 4 cho đề tài: "${userInfo.topic}".
+              
+              CẤU TRÚC BẮT BUỘC:
+              
+              ## 4. Kết luận và kiến nghị
+              
+              ### 4.1. Kết luận
+              - Tóm tắt lại vấn đề đã giải quyết
+              - Tổng kết 3 biện pháp đã thực hiện
+              - Đánh giá mức độ đạt mục tiêu nghiên cứu
+              
+              ### 4.2. Hiệu quả và ý nghĩa của giải pháp
+              - Hiệu quả thực tiễn (số liệu cụ thể)
+              - Ý nghĩa khoa học và sư phạm
+              - Đóng góp cho giáo dục tại ${userInfo.school} và địa phương
+              
+              ### 4.3. Kiến nghị, đề xuất
+              - Kiến nghị với nhà trường
+              - Kiến nghị với Phòng/Sở GD&ĐT
+              - Đề xuất hướng phát triển, nghiên cứu tiếp theo
+              
+              TÀI LIỆU THAM KHẢO (8-12 tài liệu)
+              - Sách, tạp chí khoa học giáo dục
+              - Văn bản pháp luật, thông tư
+              - Tài liệu điện tử (website uy tín)
+              
+              ⚠️ LƯU Ý: Kết luận phải bám sát nội dung đã viết. Kiến nghị phải khả thi.
+              
+              ${getPageLimitPrompt()}`,
+          nextStep: GenerationStep.KET_LUAN
+        },
+        // KẾT LUẬN → COMPLETED
+        [GenerationStep.KET_LUAN]: {
+          prompt: `
+              ✅ BIỆN PHÁP GVG ĐÃ HOÀN THÀNH!
+              
+              Bạn đã viết xong toàn bộ nội dung chính gồm 4 phần:
+              1. Đặt vấn đề
+              2. Thực trạng vấn đề (Cơ sở lý luận, Thực tiễn, 3 Biện pháp, Tính mới)
+              3. Phạm vi ảnh hưởng, khả năng áp dụng
+              4. Kết luận và kiến nghị
               
               📌 BÂY GIỜ BẠN CÓ THỂ:
 1. Xuất file Word để chỉnh sửa chi tiết
 2. Tạo PHỤ LỤC chi tiết bằng nút "TẠO PHỤ LỤC"
 3. Kiểm tra lại nội dung và định dạng
               
-              Chúc mừng bạn đã hoàn thành bản thảo SKKN!`,
+              Chúc mừng bạn đã hoàn thành bản thảo biện pháp GVG!`,
           nextStep: GenerationStep.COMPLETED,
-          skipAppend: true // Không append thông báo hoàn thành vào fullDocument
+          skipAppend: true
         }
       };
       const stepConfig = nextStepMap[state.step];
@@ -1542,11 +1551,11 @@ SGK: ${userInfo.textbook}
   // Xác định số giải pháp dựa trên step hiện tại
   const getSolutionNumberFromStep = (step: GenerationStep): number => {
     const stepToSolution: Record<number, number> = {
-      [GenerationStep.PART_IV_SOL1_REVIEW]: 1,
-      [GenerationStep.PART_IV_SOL2_REVIEW]: 2,
-      [GenerationStep.PART_IV_SOL3_REVIEW]: 3,
-      [GenerationStep.PART_IV_SOL4_REVIEW]: 4,
-      [GenerationStep.PART_IV_SOL5_REVIEW]: 5,
+      [GenerationStep.BP1_REVIEW]: 1,
+      [GenerationStep.BP2_REVIEW]: 2,
+      [GenerationStep.BP3_REVIEW]: 3,
+      [GenerationStep.TINH_MOI_REVIEW]: 4,
+      [GenerationStep.PHAM_VI_REVIEW]: 5,
     };
     return stepToSolution[step] || 0;
   };
@@ -1554,11 +1563,11 @@ SGK: ${userInfo.textbook}
   // Kiểm tra có phải step review không
   const isReviewStep = (step: GenerationStep): boolean => {
     return [
-      GenerationStep.PART_IV_SOL1_REVIEW,
-      GenerationStep.PART_IV_SOL2_REVIEW,
-      GenerationStep.PART_IV_SOL3_REVIEW,
-      GenerationStep.PART_IV_SOL4_REVIEW,
-      GenerationStep.PART_IV_SOL5_REVIEW,
+      GenerationStep.BP1_REVIEW,
+      GenerationStep.BP2_REVIEW,
+      GenerationStep.BP3_REVIEW,
+      GenerationStep.TINH_MOI_REVIEW,
+      GenerationStep.PHAM_VI_REVIEW,
     ].includes(step);
   };
 
@@ -2066,8 +2075,9 @@ Tổ: [Tổ chuyên môn]
             // Luôn ẩn step Phụ lục (15) và Hoàn tất (16)
             if (stepNum > 14) return null;
 
-            // Ẩn step Giải pháp 4,5 và Review GP4/5 (step 10-13) và Phần V-VI (step 14) nếu không chọn
-            if (stepNum >= 10 && stepNum <= 14 && !userInfo.includeSolution4_5) return null;
+            // Ẩn step Review Tính mới (11) và Review Phạm vi (13) và Kết luận (14) trong thanh sidebar để không quá dài
+            // Steps 10 (Tính mới), 12 (Phạm vi) sẽ hiển thị
+            if (stepNum === 11 || stepNum === 13) return null;
 
             let statusColor = "text-gray-400 border-gray-200";
             let icon = <div className="w-2 h-2 rounded-full bg-gray-300" />;
@@ -2332,7 +2342,7 @@ Tổ: [Tổ chuyên môn]
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4 lg:p-8 flex flex-col h-screen overflow-hidden relative">
+      <div className="flex-1 p-4 lg:p-8 flex flex-col h-screen overflow-y-auto relative">
 
         {/* Mobile Header */}
         <div className="lg:hidden mb-4 bg-gradient-to-r from-white to-sky-50 p-4 rounded-xl shadow-lg border border-sky-100 flex flex-col gap-2">
