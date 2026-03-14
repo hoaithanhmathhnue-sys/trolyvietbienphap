@@ -43,6 +43,7 @@ export interface UserInfo {
   includePracticalExamples: boolean; // Thêm nhiều bài toán thực tế, ví dụ minh họa
   includeStatistics: boolean; // Bổ sung bảng biểu, số liệu thống kê
   requirementsConfirmed: boolean; // Đã xác nhận các yêu cầu chưa
+  includeSolution4_5: boolean; // Viết thêm Giải pháp 4 và 5 (mặc định 3 GP)
 
 }
 
@@ -60,16 +61,21 @@ export enum GenerationStep {
   BP2_REVIEW = 7,
   BP3 = 8,
   BP3_REVIEW = 9,
+  // Giải pháp 4, 5 (tùy chọn)
+  BP4 = 10,
+  BP4_REVIEW = 11,
+  BP5 = 12,
+  BP5_REVIEW = 13,
   // Phần 2.4: Tính mới, tính sáng tạo
-  TINH_MOI = 10,
-  TINH_MOI_REVIEW = 11,
+  TINH_MOI = 14,
+  TINH_MOI_REVIEW = 15,
   // Phần 3: Phạm vi ảnh hưởng, khả năng áp dụng
-  PHAM_VI = 12,
-  PHAM_VI_REVIEW = 13,
+  PHAM_VI = 16,
+  PHAM_VI_REVIEW = 17,
   // Phần 4: Kết luận và kiến nghị
-  KET_LUAN = 14,
-  APPENDIX = 15,
-  COMPLETED = 16
+  KET_LUAN = 18,
+  APPENDIX = 19,
+  COMPLETED = 20
 }
 
 export interface ChatMessage {

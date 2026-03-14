@@ -468,9 +468,9 @@ GIẢI PHÁP [SỐ]: [TÊN GỌI CỤ THỂ, ẤN TƯỢNG]
 6. ĐIỀU KIỆN THỰC HIỆN & LƯU Ý (0.5 trang)
 `;
 
-export const STEPS_INFO = {
+export const STEPS_INFO: Record<number, { label: string; description: string }> = {
    [0]: { label: "Thông tin", description: "Thiết lập thông tin cơ bản" },
-   [1]: { label: "Lập Dàn Ý", description: "Xây dựng khung sườn biện pháp" },
+   [1]: { label: "Lập dàn ý", description: "Xây dựng khung sườn biện pháp" },
    [2]: { label: "1. Đặt vấn đề", description: "1.1 Lí do, 1.2 Mục đích, 1.3 Đối tượng" },
    [3]: { label: "2. Thực trạng vấn đề", description: "2.1 Cơ sở lý luận, 2.2 Cơ sở thực tiễn" },
    [4]: { label: "2.3. Giải pháp 1", description: "Nội dung giải pháp thứ nhất" },
@@ -479,13 +479,17 @@ export const STEPS_INFO = {
    [7]: { label: "Review GP2", description: "Xem và sửa giải pháp 2" },
    [8]: { label: "2.3. Giải pháp 3", description: "Nội dung giải pháp thứ ba" },
    [9]: { label: "Review GP3", description: "Xem và sửa giải pháp 3" },
-   [10]: { label: "2.4. Tính mới, sáng tạo", description: "2.4.1 Tính mới, 2.4.2 Tính sáng tạo" },
-   [11]: { label: "Review Tính mới", description: "Xem và sửa tính mới" },
-   [12]: { label: "3. Phạm vi ảnh hưởng", description: "3.1, 3.2 Khả năng, 3.3 Hiệu quả" },
-   [13]: { label: "Review Phạm vi", description: "Xem và sửa phạm vi" },
-   [14]: { label: "4. Kết luận và kiến nghị", description: "4.1, 4.2 Hiệu quả, 4.3 Kiến nghị" },
-   [15]: { label: "Tạo Phụ lục", description: "Tài liệu phụ lục chi tiết" },
-   [16]: { label: "Hoàn tất", description: "Đã xong" }
+   [10]: { label: "2.3. Giải pháp 4", description: "Nội dung giải pháp thứ tư" },
+   [11]: { label: "Review GP4", description: "Xem và sửa giải pháp 4" },
+   [12]: { label: "2.3. Giải pháp 5", description: "Nội dung giải pháp thứ năm" },
+   [13]: { label: "Review GP5", description: "Xem và sửa giải pháp 5" },
+   [14]: { label: "2.4. Tính mới, sáng tạo", description: "2.4.1 Tính mới, 2.4.2 Tính sáng tạo" },
+   [15]: { label: "Review Tính mới", description: "Xem và sửa tính mới" },
+   [16]: { label: "3. Phạm vi ảnh hưởng", description: "3.1, 3.2 Khả năng, 3.3 Hiệu quả" },
+   [17]: { label: "Review Phạm vi", description: "Xem và sửa phạm vi" },
+   [18]: { label: "4. Kết luận và kiến nghị", description: "4.1, 4.2 Hiệu quả, 4.3 Kiến nghị" },
+   [19]: { label: "Tạo Phụ lục", description: "Tài liệu phụ lục chi tiết" },
+   [20]: { label: "Hoàn tất", description: "Đã xong" }
 };
 
 // Danh sách cấp học bậc cao (Trung cấp, Cao đẳng, Đại học)

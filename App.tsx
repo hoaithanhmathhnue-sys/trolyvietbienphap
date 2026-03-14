@@ -156,6 +156,7 @@ const App: React.FC = () => {
     includePracticalExamples: false, // Thêm ví dụ thực tế
     includeStatistics: false, // Bổ sung bảng biểu thống kê
     requirementsConfirmed: false, // Đã xác nhận yêu cầu
+    includeSolution4_5: false, // Viết thêm Giải pháp 4 và 5
     customTemplate: undefined // Cấu trúc mẫu SKKN tùy chỉnh (đã trích xuất)
   });
 
@@ -1336,9 +1337,31 @@ SGK: ${userInfo.textbook}
           nextStep: GenerationStep.BP3_REVIEW,
           skipAppend: true // Không append vào fullDocument để tránh lặp nội dung
         },
-        // BP3 Review → 2.4 Tính mới, tính sáng tạo (LUÔN LUÔN)
+        // BP3 Review → GP4 (nếu includeSolution4_5) hoặc 2.4 Tính mới (nếu chỉ 3 GP)
         [GenerationStep.BP3_REVIEW]: {
-          prompt: `
+          prompt: userInfo.includeSolution4_5
+            ? `
+              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Giải pháp 4 - Đang thực hiện).
+
+              Tiếp tục giữ vững vai trò CHUYÊN GIA GIÁO DỤC (ULTRA MODE).
+              
+              Nhiệm vụ: Viết chi tiết GIẢI PHÁP 4 cho đề tài: "${userInfo.topic}".
+              
+              Yêu cầu:
+1. Nội dung độc đáo, KHÔNG trùng lặp với Giải pháp 1, 2 và 3.
+2. Tận dụng tối đa CSVC: ${userInfo.facilities}.
+3. BẮT BUỘC TUÂN THỦ FORMAT "YÊU CẦU ĐỊNH DẠNG OUTPUT":
+   - Xuống dòng sau mỗi câu.
+   - Xuống 2 dòng sau mỗi đoạn.
+   - Có khung "KẾT THÚC GIẢI PHÁP" ở cuối.
+4. Phải có VÍ DỤ MINH HỌA cụ thể theo SGK ${userInfo.textbook}.
+              
+              🖼️ GỢI Ý HÌNH ẢNH MINH HỌA (BẮT BUỘC):
+              Trong GIẢI PHÁP 4, hãy gợi ý 1-2 vị trí nên đặt hình ảnh minh họa.
+
+  ${getPageLimitPrompt()}
+  ${getSectionPagePrompt('Giải pháp 4', 'perSolution')} `
+            : `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết mục 2.4 Tính mới, tính sáng tạo - Đang thực hiện).
 
               Tiếp tục giữ vững vai trò CHUYÊN GIA GIÁO DỤC.
@@ -1361,6 +1384,74 @@ SGK: ${userInfo.textbook}
               
               ⚠️ LƯU Ý:
               - Phải liên hệ trực tiếp với 3 biện pháp đã viết ở mục 2.3
+              - Dùng số liệu cụ thể để chứng minh tính mới
+              - Bám sát đặc thù cấp ${userInfo.level}, môn ${userInfo.subject}
+              
+              ${getPageLimitPrompt()}`,
+          nextStep: userInfo.includeSolution4_5 ? GenerationStep.BP4 : GenerationStep.TINH_MOI
+        },
+        // GP4 → GP4 Review
+        [GenerationStep.BP4]: {
+          prompt: `✅ HOÀN THÀNH GIẢI PHÁP 4. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
+          nextStep: GenerationStep.BP4_REVIEW,
+          skipAppend: true
+        },
+        // GP4 Review → GP5
+        [GenerationStep.BP4_REVIEW]: {
+          prompt: `
+              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Giải pháp 5 - Đang thực hiện).
+
+              Tiếp tục giữ vững vai trò CHUYÊN GIA GIÁO DỤC (ULTRA MODE).
+              
+              Nhiệm vụ: Viết chi tiết GIẢI PHÁP 5 (GIẢI PHÁP CUỐI CÙNG) cho đề tài: "${userInfo.topic}".
+              
+              Yêu cầu:
+1. Nội dung độc đáo, KHÔNG trùng lặp với Giải pháp 1, 2, 3 và 4.
+2. Tận dụng tối đa CSVC: ${userInfo.facilities}.
+3. BẮT BUỘC TUÂN THỦ FORMAT "YÊU CẦU ĐỊNH DẠNG OUTPUT":
+   - Xuống dòng sau mỗi câu.
+   - Xuống 2 dòng sau mỗi đoạn.
+   - Có khung "KẾT THÚC GIẢI PHÁP" ở cuối.
+4. Phải có VÍ DỤ MINH HỌA cụ thể theo SGK ${userInfo.textbook}.
+              
+              🖼️ GỢI Ý HÌNH ẢNH MINH HỌA (BẮT BUỘC):
+              Trong GIẢI PHÁP 5, hãy gợi ý 1-2 vị trí nên đặt hình ảnh minh họa.
+
+  ${getPageLimitPrompt()}
+  ${getSectionPagePrompt('Giải pháp 5', 'perSolution')} `,
+          nextStep: GenerationStep.BP5
+        },
+        // GP5 → GP5 Review
+        [GenerationStep.BP5]: {
+          prompt: `✅ HOÀN THÀNH GIẢI PHÁP 5. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
+          nextStep: GenerationStep.BP5_REVIEW,
+          skipAppend: true
+        },
+        // GP5 Review → 2.4 Tính mới, tính sáng tạo
+        [GenerationStep.BP5_REVIEW]: {
+          prompt: `
+              BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết mục 2.4 Tính mới, tính sáng tạo - Đang thực hiện).
+
+              Tiếp tục giữ vững vai trò CHUYÊN GIA GIÁO DỤC.
+              
+              Nhiệm vụ: Viết chi tiết MỤC 2.4 cho đề tài: "${userInfo.topic}".
+              
+              CẤU TRÚC BẮT BUỘC:
+              
+              ## 2.4. Tính mới, tính sáng tạo
+              
+              ### 2.4.1. Tính mới của giải pháp
+              - So sánh với các biện pháp/giải pháp hiện có
+              - Điểm khác biệt nổi bật
+              - Giá trị mới mang lại cho giáo dục
+              
+              ### 2.4.2. Tính sáng tạo của giải pháp
+              - Sự sáng tạo trong cách tiếp cận
+              - Sáng tạo trong ứng dụng công nghệ/phương pháp
+              - Sáng tạo trong tổ chức hoạt động dạy học
+              
+              ⚠️ LƯU Ý:
+              - Phải liên hệ trực tiếp với 5 biện pháp đã viết ở mục 2.3
               - Dùng số liệu cụ thể để chứng minh tính mới
               - Bám sát đặc thù cấp ${userInfo.level}, môn ${userInfo.subject}
               
@@ -2072,12 +2163,15 @@ Tổ: [Tổ chuyên môn]
           {Object.entries(STEPS_INFO).map(([key, info]) => {
             const stepNum = parseInt(key);
 
-            // Luôn ẩn step Phụ lục (15) và Hoàn tất (16)
-            if (stepNum > 14) return null;
+            // Luôn ẩn step Phụ lục (19) và Hoàn tất (20)
+            if (stepNum > 18) return null;
 
-            // Ẩn step Review Tính mới (11) và Review Phạm vi (13) và Kết luận (14) trong thanh sidebar để không quá dài
-            // Steps 10 (Tính mới), 12 (Phạm vi) sẽ hiển thị
-            if (stepNum === 11 || stepNum === 13 || stepNum === 5 || stepNum === 7 || stepNum === 9) return null;
+            // Ẩn các step Review trong sidebar để không quá dài
+            // Reviews: 5 (GP1), 7 (GP2), 9 (GP3), 11 (GP4), 13 (GP5), 15 (Tính mới), 17 (Phạm vi)
+            if ([5, 7, 9, 11, 13, 15, 17].includes(stepNum)) return null;
+
+            // Ẩn GP4 (10) và GP5 (12) nếu người dùng KHÔNG tick "Viết thêm Giải pháp 4, 5"
+            if (!userInfo.includeSolution4_5 && (stepNum === 10 || stepNum === 12)) return null;
 
             let statusColor = "text-gray-400 border-gray-200";
             let icon = <div className="w-2 h-2 rounded-full bg-gray-300" />;
