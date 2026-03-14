@@ -2058,7 +2058,7 @@ Tổ: [Tổ chuyên môn]
   // Render Logic
   const renderSidebar = () => {
     return (
-      <div className="w-full lg:w-80 bg-gradient-to-b from-white to-sky-50 border-r border-sky-100 p-6 flex-shrink-0 flex flex-col h-full overflow-y-auto shadow-[4px_0_24px_rgba(56,189,248,0.08)]">
+      <div className="w-full lg:w-80 bg-gradient-to-b from-white to-sky-50 border-r border-sky-100 p-6 flex-shrink-0 flex flex-col h-full overflow-y-auto main-scroll shadow-[4px_0_24px_rgba(56,189,248,0.08)]">
         <div className="mb-8">
           <h1 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500 flex items-center gap-2" style={{ fontFamily: 'Nunito, sans-serif' }}>
             <Wand2 className="h-6 w-6 text-blue-500" />
@@ -2472,7 +2472,7 @@ Tổ: [Tổ chuyên môn]
         })()}
 
         {state.step === GenerationStep.INPUT_FORM ? (
-          <div className="flex-1 flex flex-col items-center overflow-y-auto">
+          <div className="flex-1 flex flex-col items-center">
             {/* Tab Navigation */}
             <div className="w-full max-w-4xl flex gap-2 mb-6 bg-white/80 backdrop-blur-sm p-1.5 rounded-2xl shadow-sm border border-gray-200">
               <button
