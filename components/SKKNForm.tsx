@@ -707,14 +707,108 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
               </div>
             </div>
 
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <InputGroup label="Tên trường / Đơn vị" icon={School} required>
+                <InputWithHistory
+                  name="school"
+                  value={userInfo.school}
+                  onChange={handleChange}
+                  className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full pl-10 text-sm border-gray-300 rounded-md p-3 border text-gray-900 placeholder-gray-500"
+                  placeholder="VD: Trường THPT Nguyễn Du"
+                />
+              </InputGroup>
+              <InputGroup label="Địa điểm (Huyện, Tỉnh)" icon={MapPin} required>
+                <InputWithHistory
+                  name="location"
+                  value={userInfo.location}
+                  onChange={handleChange}
+                  className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full pl-10 text-sm border-gray-300 rounded-md p-3 border text-gray-900 placeholder-gray-500"
+                  placeholder="VD: Quận 1, TP.HCM"
+                />
+              </InputGroup>
+            </div>
+
+            <InputGroup label="Điều kiện CSVC (Tivi, Máy chiếu, WiFi...)" icon={Monitor} required>
+              <InputWithHistory
+                name="facilities"
+                value={userInfo.facilities}
+                onChange={handleChange}
+                className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full pl-10 text-sm border-gray-300 rounded-md p-3 border text-gray-900 placeholder-gray-500"
+                placeholder="VD: Phòng máy chiếu, Tivi thông minh, Internet ổn định..."
+              />
+            </InputGroup>
 
           </div>
         </div>
 
-        {/* SECTION 2: REFERENCE DOCUMENTS & TEMPLATE */}
+        {/* SECTION 2: SUPPLEMENTARY INFO */}
         <div>
           <h3 className="text-lg font-bold text-sky-800 border-b border-sky-100 pb-2 mb-4 uppercase tracking-wide flex items-center">
-            2. Tài liệu tham khảo
+            2. Thông tin bổ sung
+            <span className="ml-2 text-xs bg-sky-100 text-sky-800 py-1 px-2 rounded-full font-normal capitalize normal-case tracking-normal">
+              (Khuyến dùng để tăng chi tiết)
+            </span>
+          </h3>
+
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <InputGroup label="Sách giáo khoa" icon={BookOpen}>
+                <InputWithHistory
+                  name="textbook"
+                  value={userInfo.textbook}
+                  onChange={handleChange}
+                  className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full pl-10 text-sm border-gray-300 rounded-md p-3 border text-gray-900 placeholder-gray-500"
+                  placeholder="VD: Kết nối tri thức, Cánh diều..."
+                />
+              </InputGroup>
+              <InputGroup label="Đối tượng nghiên cứu" icon={Users}>
+                <InputWithHistory
+                  name="researchSubjects"
+                  value={userInfo.researchSubjects}
+                  onChange={handleChange}
+                  className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full pl-10 text-sm border-gray-300 rounded-md p-3 border text-gray-900 placeholder-gray-500"
+                  placeholder="VD: 45 HS lớp 12A (thực nghiệm)..."
+                />
+              </InputGroup>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <InputGroup label="Thời gian thực hiện" icon={Calendar}>
+                <InputWithHistory
+                  name="timeframe"
+                  value={userInfo.timeframe}
+                  onChange={handleChange}
+                  className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full pl-10 text-sm border-gray-300 rounded-md p-3 border text-gray-900 placeholder-gray-500"
+                  placeholder="VD: Năm học 2024-2025"
+                />
+              </InputGroup>
+              <InputGroup label="Ứng dụng AI/Công nghệ" icon={Cpu}>
+                <InputWithHistory
+                  name="applyAI"
+                  value={userInfo.applyAI}
+                  onChange={handleChange}
+                  className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full pl-10 text-sm border-gray-300 rounded-md p-3 border text-gray-900 placeholder-gray-500"
+                  placeholder="VD: Sử dụng ChatGPT, Canva, Padlet..."
+                />
+              </InputGroup>
+            </div>
+
+            <InputGroup label="Đặc thù / Trọng tâm đề tài" icon={Target}>
+              <InputWithHistory
+                name="focus"
+                value={userInfo.focus}
+                onChange={handleChange}
+                className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full pl-10 text-sm border-gray-300 rounded-md p-3 border text-gray-900 placeholder-gray-500"
+                placeholder="VD: Phát triển năng lực tự học, Chuyển đổi số..."
+              />
+            </InputGroup>
+          </div>
+        </div>
+
+        {/* SECTION 3: REFERENCE DOCUMENTS & TEMPLATE */}
+        <div>
+          <h3 className="text-lg font-bold text-sky-800 border-b border-sky-100 pb-2 mb-4 uppercase tracking-wide flex items-center">
+            3. Tài liệu tham khảo
             <span className="ml-2 text-xs bg-sky-100 text-sky-800 py-1 px-2 rounded-full font-normal capitalize normal-case tracking-normal">
               (Tùy chọn - Giúp AI bám sát nội dung)
             </span>
@@ -950,10 +1044,10 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
           </div>
         </div>
 
-        {/* SECTION 3: SPECIAL REQUIREMENTS */}
+        {/* SECTION 4: SPECIAL REQUIREMENTS */}
         <div>
           <h3 className="text-lg font-bold text-sky-800 border-b border-sky-100 pb-2 mb-4 uppercase tracking-wide flex items-center">
-            3. Yêu cầu khác
+            4. Yêu cầu khác
             <span className="ml-2 text-xs bg-purple-100 text-purple-800 py-1 px-2 rounded-full font-normal capitalize normal-case tracking-normal">
               (Tùy chọn - AI sẽ tuân thủ nghiêm ngặt)
             </span>
