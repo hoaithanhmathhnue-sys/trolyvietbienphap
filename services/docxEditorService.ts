@@ -23,7 +23,7 @@ function escapeXml(unsafe: string) {
 function createRedRunElement(xmlDoc: Document, text: string): Node {
     const escapedText = escapeXml(text);
     const tempXml = `<w:r xmlns:w="${W_NS}">
-        <w:rPr><w:color w:val="FF0000"/><w:b/><w:i/></w:rPr>
+        <w:rPr><w:color w:val="FF0000"/><w:i/></w:rPr>
         <w:t xml:space="preserve">${escapedText}</w:t>
     </w:r>`;
     const tempDoc = new DOMParser().parseFromString(tempXml, "application/xml");
