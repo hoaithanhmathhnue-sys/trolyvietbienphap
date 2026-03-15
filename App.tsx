@@ -2487,7 +2487,7 @@ Tổ: [Tổ chuyên môn]
                 : 'text-gray-500 hover:bg-sky-50 hover:text-sky-700'
             }`}
           >
-            <PenTool className="w-5 h-5" /> 📝 VIẾT SÁNG KIẾN MỚI
+            <PenTool className="w-5 h-5" /> 📝 VIẾT BIỆN PHÁP MỚI
           </button>
           
           <button
