@@ -182,6 +182,7 @@ const App: React.FC = () => {
     school: '',
     location: '',
     facilities: '',
+    teachingMethod: '',
     textbook: '',
     researchSubjects: '',
     timeframe: '',

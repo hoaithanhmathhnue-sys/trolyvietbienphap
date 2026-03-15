@@ -414,7 +414,8 @@ export const analyzeTitleSKKN = async (
   title: string,
   subject?: string,
   level?: string,
-  selectedModel?: string
+  selectedModel?: string,
+  teachingMethod?: string
 ): Promise<TitleAnalysisResult> => {
   const ai = new GoogleGenAI({ apiKey });
 
@@ -424,6 +425,16 @@ export const analyzeTitleSKKN = async (
 - Tên đề tài: "${title}"
 ${subject ? `- Môn học/Lĩnh vực: ${subject}` : ''}
 ${level ? `- Cấp học: ${level}` : ''}
+${teachingMethod ? `- Phương pháp dạy học dự định áp dụng: ${teachingMethod}` : ''}
+
+${teachingMethod ? `
+## YÊU CẦU ĐẶC BIỆT VỀ KẾT HỢP PHƯƠNG PHÁP CỤ THỂ:
+Người dùng đã chọn một phương pháp dạy học là "${teachingMethod}".
+Nhiệm vụ của bạn là:
+1. Đánh giá sự logic, phù hợp giữa Tên đề tài và Phương pháp dạy học này.
+2. Nếu phù hợp: Đề xuất các Tên thay thế (ở phần suggestions) sao cho bao hàm TRỰC TIẾP HOẶC GIÁN TIẾP phương pháp này, giúp tên đề tài sắc bén và mang tính thực chiến hơn.
+3. Nếu KHÔNG phù hợp (Ví dụ môn Thể dục nhưng dùng Phỏng vấn nhân vật AI): Hãy chỉ ra sự bất hợp lý ở phần "overallVerdict" hoặc "problems" và mớm một tên/phương pháp thay thế phù hợp hơn.
+` : ''}
 
 ## QUY TRÌNH KIỂM TRA 3 LỚP:
 

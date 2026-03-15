@@ -5,6 +5,7 @@ import { InputWithHistory, TextareaWithHistory } from './InputWithHistory';
 import { saveFormToHistory } from '../services/inputHistory';
 import { HIGHER_ED_LEVELS, HIGHER_ED_GRADES } from '../constants';
 import { SUBJECTS_DATA, SUBJECT_GROUPS, searchSubjects, getSubjectsByGroup } from '../data/subjectsData';
+import { TEACHING_METHODS } from '../data/teachingMethods';
 import { analyzeDocumentForSKKN, extractSKKNStructure, analyzeTitleSKKN } from '../services/geminiService';
 import TitleAnalysisPanel from './TitleAnalysisPanel';
 import { BookOpen, School, GraduationCap, PenTool, MapPin, Calendar, Users, Cpu, Target, Monitor, FileUp, Sparkles, ClipboardPaste, Loader2, FileText, Search, X, CheckCircle, List, Save, ChevronDown } from 'lucide-react';
@@ -478,7 +479,8 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
         userInfo.topic,
         userInfo.subject,
         userInfo.level,
-        selectedModel
+        selectedModel,
+        userInfo.teachingMethod
       );
       setTitleAnalysis(result);
     } catch (error: any) {
@@ -519,8 +521,8 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
 
           <div className="space-y-5">
             <InputGroup label="Tên đề tài Biện pháp" icon={PenTool} required>
-              <div className="flex gap-3 items-center">
-                <div className="flex-1">
+              <div className="flex flex-col md:flex-row gap-3 items-start md:items-center">
+                <div className="flex-1 w-full relative">
                   <InputWithHistory
                     name="topic"
                     value={userInfo.topic}
@@ -530,6 +532,24 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
                     required
                   />
                 </div>
+                
+                <div className="w-full md:w-64 relative shrink-0">
+                  <select
+                    name="teachingMethod"
+                    value={userInfo.teachingMethod || ''}
+                    onChange={handleChange}
+                    className="bg-gray-50 focus:bg-white focus:ring-sky-500 focus:border-sky-500 block w-full text-sm border-gray-300 rounded-md p-3 border text-gray-900 appearance-none cursor-pointer"
+                  >
+                    <option value="">-- Chọn PP dạy học (Tùy chọn) --</option>
+                    {TEACHING_METHODS.map((method, idx) => (
+                      <option key={idx} value={method}>{method}</option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
+                    <ChevronDown size={14} />
+                  </div>
+                </div>
+
                 <button
                   type="button"
                   onClick={handleAnalyzeTitle}

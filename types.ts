@@ -24,6 +24,7 @@ export interface UserInfo {
   facilities: string; // Điều kiện cơ sở vật chất
 
   // Bổ sung
+  teachingMethod: string; // Phương pháp dạy học
   textbook: string;
   researchSubjects: string; // Đối tượng nghiên cứu
   timeframe: string; // Thời gian thực hiện
