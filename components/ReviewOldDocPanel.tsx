@@ -102,14 +102,6 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
     }
     
     setIsAnalyzing(true);
-  const startAnalysis = async () => {
-    if (!originalContent) return;
-    if (!apiKey) {
-      alert("Vui lòng nhập API Key để dùng tính năng Khám Bệnh AI.");
-      return;
-    }
-    
-    setIsAnalyzing(true);
     
     try {
        const result = await analyzeOldDocument(apiKey, originalContent, selectedModel);
@@ -121,14 +113,13 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
        setIsAnalyzing(false);
     }
   };
-  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 mb-8 max-w-4xl mx-auto">
       <div className="bg-gradient-to-r from-red-600 to-rose-600 px-6 py-4">
         <div className="flex items-center gap-3">
           <Stethoscope className="w-6 h-6 text-white" />
-          <h2 className="text-xl font-bold text-white">Thẩm định và sửa SKKN cũ</h2>
+          <h2 className="text-xl font-bold text-white">THẨM ĐỊNH VÀ SỬA BIỆN PHÁP CŨ</h2>
         </div>
         <p className="text-red-100 text-sm mt-1">AI phân tích điểm yếu và tự động nâng cấp báo cáo cũ của bạn thành phiên bản GVG xuất sắc.</p>
       </div>
@@ -145,7 +136,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
                    <div className="mb-4">
                      <UploadCloud className="w-12 h-12 text-gray-400 mx-auto" />
                    </div>
-                   <h3 className="text-lg font-medium text-gray-900 mb-1">Tải file Báo cáo / SKKN cũ lên đây</h3>
+                   <h3 className="text-lg font-medium text-gray-900 mb-1">Tải file Báo cáo / Biện pháp cũ lên đây</h3>
                    <p className="text-sm text-gray-500 mb-4">Hỗ trợ định dạng .docx, .pdf (văn bản)</p>
                    <button
                      onClick={() => fileInputRef.current?.click()}
@@ -198,7 +189,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
           <div className="space-y-6 animate-fade-in-up">
             <div className="flex items-center justify-between">
                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                 <ShieldAlert className="w-5 h-5 text-red-500" /> Kết quả khám SKKN
+                 <ShieldAlert className="w-5 h-5 text-red-500" /> Kết quả thẩm định Biện pháp
                </h3>
                <button 
                   onClick={() => setAnalysisResult(null)}

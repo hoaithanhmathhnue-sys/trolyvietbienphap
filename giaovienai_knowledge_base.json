@@ -1,0 +1,992 @@
+{
+  "meta": {
+    "ten_tai_lieu": "Kho dữ liệu giáo dục AI — Trần Hoài Thanh",
+    "phien_ban": "2.0",
+    "ngay_tao": "2026-03-15",
+    "muc_dich": "Nạp vào app viết biện pháp giáo dục và sáng kiến kinh nghiệm (SKKN)",
+    "website": "giaovienai.vercel.app",
+    "thong_ke": {
+      "phuong_phap_day_hoc": 28,
+      "prompts_thuc_chien": 65,
+      "y_tuong_app": 11
+    }
+  },
+  "A_phuong_phap_day_hoc_AI": {
+    "mo_ta": "Các phương pháp dạy học sáng tạo ứng dụng AI — dùng làm biện pháp cụ thể trong SKKN",
+    "phuong_phap": [
+      {
+        "ten": "CẨM NANG ĐỔI MỚI PP DẠY HỌC - BỔ SUNG 6 KỸ THUẬT AI THỰC CHIẾN",
+        "muc_tieu": "",
+        "ky_nang_ren_luyen": "",
+        "cong_cu_su_dung": "",
+        "quy_trinh_4_buoc": [],
+        "super_prompt_mau": "",
+        "full_text": "CẨM NANG ĐỔI MỚI PP DẠY HỌC - BỔ SUNG 6 KỸ THUẬT AI THỰC CHIẾN\n📘 CẨM NANG ĐỔI MỚI DẠY HỌC - PHẦN BỔ SUNG\n🚀 6 KỸ THUẬT ỨNG DỤNG AI THỰC CHIẾN & SÁNG TẠO\nChào mừng quý thầy cô đến với phần bổ sung của bộ Cẩm nang. Nếu phần trước chúng ta đã làm quen với \"Truyện tranh tương tác\", thì ở phần này, chúng ta sẽ đi sâu vào 6 kỹ thuật nâng cao hơn, giải quyết các bài toán khó như: dạy phân hóa, ghi nhớ từ khóa, và tạo hứng thú qua âm thanh/hình ảnh.\nTất cả các phương pháp dưới đây đều tuân thủ quy trình 4 BƯỚC CHUẨN để thầy cô dễ dàng áp dụng ngay vào tiết dạy ngày mai!"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 1: BÀI TẬP TỰ SINH THEO MỨC ĐỘ (DIFFERENTIATED INSTRUCTION)",
+        "muc_tieu": "Dạy học phân hóa, đảm bảo học sinh yếu không nản, học sinh giỏi không chán.",
+        "ky_nang_ren_luyen": "Tự đánh giá năng lực, tư duy giải quyết vấn đề.",
+        "cong_cu_su_dung": "Google Gemini/ChatGPT, Máy in.",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Sử dụng \"Siêu Prompt\" bên dưới để yêu cầu AI tạo ra bộ câu hỏi theo 4 mức độ: Nhận biết - Thông hiểu - Vận dụng - Vận dụng cao.",
+          "XỬ LÝ KỸ THUẬT Copy kết quả từ AI sang Word. Tách thành các phiếu bài tập riêng biệt (Ví dụ: Phiếu Cơ Bản, Phiếu Nâng Cao). In trên giấy màu khác nhau (Ví dụ: Màu Xanh = Dễ, Màu Vàng = Trung bình, Màu Đỏ = Khó).",
+          "TỔ CHỨC LỚP HỌC Quyền lựa chọn: Cho phép học sinh tự chọn màu phiếu bài tập phù hợp với khả năng của mình. Thử thách: Khuyến khích học sinh làm xong phiếu Xanh có thể đổi lấy phiếu Vàng để cộng điểm thưởng.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC AI đã tạo sẵn đáp án chi tiết. Thầy cô chiếu đáp án lên bảng. Học sinh đổi chéo bài chấm cho nhau (Peer review). III. MẪU \"SIÊU PROMPT\" markdown Bạn là chuyên gia sư phạm về [MÔN HỌC]. Hãy tạo cho tôi một bộ bài tập về chủ đ"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 1: BÀI TẬP TỰ SINH THEO MỨC ĐỘ (DIFFERENTIATED INSTRUCTION)\nI. GIỚI THIỆU CHUNG\nThay vì soạn một đề chung cho cả lớp, AI giúp thầy cô tạo ra 4-5 mã đề với độ khó khác nhau chỉ trong 30 giây.\nMục tiêu: Dạy học phân hóa, đảm bảo học sinh yếu không nản, học sinh giỏi không chán.\nKỹ năng rèn luyện: Tự đánh giá năng lực, tư duy giải quyết vấn đề.\nCông cụ: Google Gemini/ChatGPT, Máy in.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nSử dụng \"Siêu Prompt\" bên dưới để yêu cầu AI tạo ra bộ câu hỏi theo 4 mức độ: Nhận biết - Thông hiểu - Vận dụng - Vận dụng cao.\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nCopy kết quả từ AI sang Word.\nTách thành các phiếu bài tập riêng biệt (Ví dụ: Phiếu Cơ Bản, Phiếu Nâng Cao).\nIn trên giấy màu khác nhau (Ví dụ: Màu Xanh = Dễ, Màu Vàng = Trung bình, Màu Đỏ = Khó).\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nQuyền lựa chọn: Cho phép học sinh tự chọn màu phiếu bài tập phù hợp với khả năng của mình.\nThử thách: Khuyến khích học sinh làm xong phiếu Xanh có thể đổi lấy phiếu Vàng để cộng điểm thưởng.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nAI đã tạo sẵn đáp án chi tiết. Thầy cô chiếu đáp án lên bảng.\nHọc sinh đổi chéo bài chấm cho nhau (Peer review).\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Bạn là chuyên gia sư phạm về [MÔN HỌC]. Hãy tạo cho tôi một bộ bài tập về chủ đề: [TÊN BÀI HỌC/CHỦ ĐỀ].\n \n Yêu cầu đầu ra:\n 1. Tạo 4 nhóm câu hỏi trắc nghiệm (mỗi nhóm 3 câu):\n    - Nhóm 1: Mức độ Nhận biết (Cực dễ, ghi nhớ).\n    - Nhóm 2: Mức độ Thông hiểu (Hiểu bản chất).\n    - Nhóm 3: Mức độ Vận dụng"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 2: THẺ GHI NHỚ FLASHCARD THÔNG MINH",
+        "muc_tieu": "Ghi nhớ nhanh từ khóa, công thức, sự kiện lịch sử.",
+        "ky_nang_ren_luyen": "Phản xạ nhanh, ghi nhớ liên tưởng.",
+        "cong_cu_su_dung": "Google Gemini, Giấy bìa cứng, Kéo.",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Dùng AI để tạo nội dung cho 2 mặt của Flashcard: Mặt trước (Từ khóa) - Mặt sau (Định nghĩa + Gợi ý vui/Thơ lục bát dễ nhớ).",
+          "XỬ LÝ KỸ THUẬT In nội dung ra giấy bìa. Mặt trước in to rõ. Mặt sau in nhỏ hơn kèm hình minh họa (nếu có). Cắt thành các thẻ chữ nhật kích thước 5x8cm.",
+          "TỔ CHỨC LỚP HỌC Hoạt động \"Quiz & Trade\": Mỗi HS cầm 1 thẻ. Đi tìm bạn khác, đố bạn nội dung thẻ của mình. Nếu bạn trả lời đúng -> Đổi thẻ cho nhau -> Đi tìm người khác. Sau 5 phút, ai sở hữu nhiều thẻ mới nhất hoặc trả lời được nhiều nhất sẽ thắng.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên gọi ngẫu nhiên học sinh đọc to câu thơ/gợi ý vui trên thẻ cuối cùng các em đang cầm. III. MẪU \"SIÊU PROMPT\" markdown Tôi muốn tạo bộ Flashcard ôn tập cho bài: [TÊN BÀI]. Hãy liệt kê 10 từ khóa/khái niệm quan trọng "
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 2: THẺ GHI NHỚ FLASHCARD THÔNG MINH\nI. GIỚI THIỆU CHUNG\nBiến việc học từ vựng hoặc định nghĩa khô khan thành trò chơi đấu trí.\nMục tiêu: Ghi nhớ nhanh từ khóa, công thức, sự kiện lịch sử.\nKỹ năng rèn luyện: Phản xạ nhanh, ghi nhớ liên tưởng.\nCông cụ: Google Gemini, Giấy bìa cứng, Kéo.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nDùng AI để tạo nội dung cho 2 mặt của Flashcard: Mặt trước (Từ khóa) - Mặt sau (Định nghĩa + Gợi ý vui/Thơ lục bát dễ nhớ).\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nIn nội dung ra giấy bìa.\nMặt trước in to rõ. Mặt sau in nhỏ hơn kèm hình minh họa (nếu có).\nCắt thành các thẻ chữ nhật kích thước 5x8cm.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nHoạt động \"Quiz & Trade\": Mỗi HS cầm 1 thẻ. Đi tìm bạn khác, đố bạn nội dung thẻ của mình. Nếu bạn trả lời đúng -> Đổi thẻ cho nhau -> Đi tìm người khác.\nSau 5 phút, ai sở hữu nhiều thẻ mới nhất hoặc trả lời được nhiều nhất sẽ thắng.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên gọi ngẫu nhiên học sinh đọc to câu thơ/gợi ý vui trên thẻ cuối cùng các em đang cầm.\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Tôi muốn tạo bộ Flashcard ôn tập cho bài: [TÊN BÀI]. Hãy liệt kê 10 từ khóa/khái niệm quan trọng nhất.\n \n Với mỗi từ khóa, hãy trình bày theo format sau:\n 1. Từ khóa: [Tên]\n 2. Định nghĩa ngắn gọn: [Dưới 15 từ]\n 3. Mẹo nhớ vui: [Một câu thơ lục bát hoặc so sánh hài hước để dễ nhớ]\n 4. Ví dụ thực tế: [1 ví dụ gần gũi]\n \n Hãy trình bày dưới dạng bảng để tôi dễ copy vào Excel và in ấn.\nIV. LƯU Ý THỰC CHIẾN 💡\nÉp plastic các thẻ này để tái sử"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 3: PODCAST KIẾN THỨC 5 PHÚT",
+        "muc_tieu": "Đa dạng hóa hình thức tiếp nhận thông tin, tạo không khí thư giãn.",
+        "ky_nang_ren_luyen": "Kỹ năng nghe hiểu, tóm tắt thông tin.",
+        "cong_cu_su_dung": "Google Gemini (viết kịch bản) + Công cụ Text-to-Speech (Vbee, FPT.AI hoặc Edge Read Aloud).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Yêu cầu AI viết kịch bản đối thoại giữa 2 nhân vật (Ví dụ: Một MC hài hước và một Giáo sư biết tuốt) về chủ đề bài học.",
+          "XỬ LÝ KỸ THUẬT Copy kịch bản vào công cụ chuyển văn bản thành giọng nói (hoặc giáo viên và 1 HS giọng tốt tự thu âm bằng điện thoại). Chèn thêm nhạc nền nhẹ nhàng (dùng CapCut hoặc Canva). Xuất ra file MP3.",
+          "TỔ CHỨC LỚP HỌC Hoạt động \"Radio Lớp Học\": Vào đầu giờ hoặc cuối giờ, tắt đèn, yêu cầu HS nhắm mắt và nghe đoạn Podcast 5 phút. Yêu cầu HS ghi lại 3 từ khóa quan trọng nhất nghe được vào giấy note.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên đặt câu hỏi: \"MC đã hỏi Giáo sư về vấn đề gì?\", \"Giáo sư đã giải thích như thế nào?\". III. MẪU \"SIÊU PROMPT\" markdown Hãy viết kịch bản Podcast dài khoảng 5 phút (khoảng 800 từ) về chủ đề: [TÊN CHỦ ĐỀ]. Nhân vật: 1"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 3: PODCAST KIẾN THỨC 5 PHÚT\nI. GIỚI THIỆU CHUNG\nHọc qua kênh thính giác (Audio). Phù hợp cho các bài học lịch sử, văn học hoặc tổng kết chương.\nMục tiêu: Đa dạng hóa hình thức tiếp nhận thông tin, tạo không khí thư giãn.\nKỹ năng rèn luyện: Kỹ năng nghe hiểu, tóm tắt thông tin.\nCông cụ: Google Gemini (viết kịch bản) + Công cụ Text-to-Speech (Vbee, FPT.AI hoặc Edge Read Aloud).\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nYêu cầu AI viết kịch bản đối thoại giữa 2 nhân vật (Ví dụ: Một MC hài hước và một Giáo sư biết tuốt) về chủ đề bài học.\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nCopy kịch bản vào công cụ chuyển văn bản thành giọng nói (hoặc giáo viên và 1 HS giọng tốt tự thu âm bằng điện thoại).\nChèn thêm nhạc nền nhẹ nhàng (dùng CapCut hoặc Canva). Xuất ra file MP3.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nHoạt động \"Radio Lớp Học\": Vào đầu giờ hoặc cuối giờ, tắt đèn, yêu cầu HS nhắm mắt và nghe đoạn Podcast 5 phút.\nYêu cầu HS ghi lại 3 từ khóa quan trọng nhất nghe được vào giấy note.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên đặt câu hỏi: \"MC đã hỏi Giáo sư về vấn đề gì?\", \"Giáo sư đã giải thích như thế nào?\".\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Hãy viết kịch bản Podcast dài khoảng 5 phút (khoảng 800 từ) về chủ đề: [TÊN CHỦ ĐỀ].\n \n Nhân vật:\n 1. MC Tò Mò: Trẻ trung, hay hỏi những câu ngây ngô nhưng đúng trọng tâm.\n 2. Giáo Sư Biết Tuốt: Giọng điềm đạm, giải thích dễ hiểu, hay dùng ví dụ hài hước.\n \n Nội dung: Giải thích các khái niệm cốt lõi của bài học một cách đời thường nhất, tránh dù"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 4: PHỎNG VẤN NHÂN VẬT LỊCH SỬ/KHOA HỌC (AI ROLEPLAY)",
+        "muc_tieu": "Tạo sự đồng cảm, hiểu sâu bối cảnh và tư duy của nhân vật.",
+        "ky_nang_ren_luyen": "Kỹ năng đặt câu hỏi, tư duy phản biện.",
+        "cong_cu_su_dung": "Máy tính kết nối máy chiếu, Google Gemini.",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Sử dụng Prompt để \"nhập vai\" cho AI trở thành nhân vật (Newton, Nguyễn Trãi, Bạch Đằng...).",
+          "XỬ LÝ KỸ THUẬT Kết nối laptop với máy chiếu/TV lớp học. Phóng to màn hình chat.",
+          "TỔ CHỨC LỚP HỌC Hoạt động \"Ghế Nóng\": Mời đại diện học sinh lên đặt câu hỏi cho nhân vật trên màn hình. Ví dụ: \"Thưa ngài Newton, ngài cảm thấy thế nào khi quả táo rơi trúng đầu?\", \"Thưa bác Hồ, trong những năm tháng bôn ba, điều gì làm bác nhớ nhất ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên nhận xét về câu trả lời của AI (đúng/sai so với lịch sử) và chốt lại các mốc sự kiện quan trọng. III. MẪU \"SIÊU PROMPT\" markdown Kể từ bây giờ, hãy đóng vai là [TÊN NHÂN VẬT: Vd: Nhà thơ Xuân Diệu]. Bối cảnh: Bạn đ"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 4: PHỎNG VẤN NHÂN VẬT LỊCH SỬ/KHOA HỌC (AI ROLEPLAY)\nI. GIỚI THIỆU CHUNG\nBiến lớp học thành một buổi \"Talkshow\" xuyên không gian thời gian.\nMục tiêu: Tạo sự đồng cảm, hiểu sâu bối cảnh và tư duy của nhân vật.\nKỹ năng rèn luyện: Kỹ năng đặt câu hỏi, tư duy phản biện.\nCông cụ: Máy tính kết nối máy chiếu, Google Gemini.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nSử dụng Prompt để \"nhập vai\" cho AI trở thành nhân vật (Newton, Nguyễn Trãi, Bạch Đằng...).\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nKết nối laptop với máy chiếu/TV lớp học.\nPhóng to màn hình chat.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nHoạt động \"Ghế Nóng\": Mời đại diện học sinh lên đặt câu hỏi cho nhân vật trên màn hình.\nVí dụ: \"Thưa ngài Newton, ngài cảm thấy thế nào khi quả táo rơi trúng đầu?\", \"Thưa bác Hồ, trong những năm tháng bôn ba, điều gì làm bác nhớ nhất về quê hương?\".\nGiáo viên gõ câu hỏi của HS vào ô chat và để AI trả lời.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên nhận xét về câu trả lời của AI (đúng/sai so với lịch sử) và chốt lại các mốc sự kiện quan trọng.\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Kể từ bây giờ, hãy đóng vai là [TÊN NHÂN VẬT: Vd: Nhà thơ Xuân Diệu].\n Bối cảnh: Bạn đang ở trong lớp học năm 2026 để giao lưu với học sinh.\n \n Yêu cầu nhập vai:\n 1. Xưng hô: \"Ta\" - \"Các em\" (hoặc phù hợp với nhân vật).\n 2. Tính cách: [Mô tả tính cách: Vd: Nồng nàn, sôi nổi, yêu đời].\n 3. Kiến thức: Chỉ trả lời dựa trên những gì nhân vật đã biết/đã trải qua trong thời đại của họ.\n 4. Nhiệm vụ: Trả lời các câu hỏi của học si"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 5: BẢN ĐỒ TƯ DUY ĐỘNG TƯƠNG TÁC",
+        "muc_tieu": "Hệ thống hóa kiến thức, nhìn thấy bức tranh toàn cảnh.",
+        "ky_nang_ren_luyen": "Tư duy tổng hợp, phân tích cấu trúc.",
+        "cong_cu_su_dung": "Google Gemini + Website markmap.js.org (Miễn phí, không cần đăng nhập).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Yêu cầu AI tóm tắt bài học dưới dạng Markdown code (cấu trúc cây).",
+          "XỬ LÝ KỸ THUẬT Copy đoạn code AI tạo ra. Dán vào trang web markmap.js.org. Web sẽ tự động vẽ thành Mindmap đẹp mắt. Chụp màn hình hoặc chiếu trực tiếp lên bảng.",
+          "TỔ CHỨC LỚP HỌC Hoạt động \"Điền Khuyết Mindmap\": Giáo viên dùng công cụ che bớt các nhánh cấp 2, cấp 3. Yêu cầu các nhóm thảo luận để tìm ra từ khóa còn thiếu trong các nhánh đó.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên mở dần các nhánh đã che để chốt kiến thức. Gửi file ảnh Mindmap vào nhóm lớp để HS ôn tập. III. MẪU \"SIÊU PROMPT\" markdown Hãy tóm tắt nội dung bài: [TÊN BÀI] dưới dạng sơ đồ tư duy (Mindmap). Yêu cầu định dạng: - "
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 5: BẢN ĐỒ TƯ DUY ĐỘNG TƯƠNG TÁC\nI. GIỚI THIỆU CHUNG\nSử dụng AI để tóm tắt bài học thành cấu trúc cây, sau đó chuyển thành bản đồ tư duy ngay lập tức.\nMục tiêu: Hệ thống hóa kiến thức, nhìn thấy bức tranh toàn cảnh.\nKỹ năng rèn luyện: Tư duy tổng hợp, phân tích cấu trúc.\nCông cụ: Google Gemini + Website markmap.js.org (Miễn phí, không cần đăng nhập).\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nYêu cầu AI tóm tắt bài học dưới dạng Markdown code (cấu trúc cây).\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nCopy đoạn code AI tạo ra.\nDán vào trang web markmap.js.org. Web sẽ tự động vẽ thành Mindmap đẹp mắt.\nChụp màn hình hoặc chiếu trực tiếp lên bảng.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nHoạt động \"Điền Khuyết Mindmap\": Giáo viên dùng công cụ che bớt các nhánh cấp 2, cấp 3.\nYêu cầu các nhóm thảo luận để tìm ra từ khóa còn thiếu trong các nhánh đó.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên mở dần các nhánh đã che để chốt kiến thức.\nGửi file ảnh Mindmap vào nhóm lớp để HS ôn tập.\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Hãy tóm tắt nội dung bài: [TÊN BÀI] dưới dạng sơ đồ tư duy (Mindmap).\n \n Yêu cầu định dạng:\n - Sử dụng cú pháp Markdown (dùng các dấu #, ##, ###, -).\n - Nội dung ngắn gọn, súc tích (dạng từ khóa).\n - Cấu trúc:\n # Tên Bài Học\n ## Ý chính 1\n - Chi tiết 1.1\n - Chi tiết 1.2\n ## Ý chính 2\n - Chi tiết 2.1\n ...\n Hãy viết code markdown đó vào trong một block code để tôi copy.\nIV. LƯU Ý THỰC CHIẾN 💡\nKỹ thuật này cực kỳ hiệu quả cho các tiết Ôn tập chương hoặc Tổng kết cuối bài. Tiết kiệm 90% "
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 6: VIDEO GIẢI THÍCH ANIMATED (WHITEBOARD ANIMATION)",
+        "muc_tieu": "Hiểu sâu quy trình, mô tả lại kiến thức bằng hình ảnh động.",
+        "ky_nang_ren_luyen": "Tư duy hình ảnh, kể chuyện (storytelling).",
+        "cong_cu_su_dung": "Google Gemini + Giấy A4 + Điện thoại.",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Giáo viên (hoặc nhóm HS) yêu cầu AI viết kịch bản phân cảnh (Storyboard) cho một video giải thích kiến thức (Vd: Cơ chế nguyên phân, Diễn biến chiến dịch...).",
+          "XỬ LÝ KỸ THUẬT AI sẽ chia bảng làm 2 cột: Cột 1 (Lời thoại/Lời bình) - Cột 2 (Hình ảnh minh họa cần vẽ). Học sinh vẽ các hình đơn giản (người que, hình khối) ra giấy hoặc bảng con theo mô tả của AI.",
+          "TỔ CHỨC LỚP HỌC Hoạt động \"Stop Motion Người Thật\": Một bạn đọc lời bình (Cột 1). Một bạn khác di chuyển các hình vẽ/vật thể trên bàn (Cột 2) khớp với lời đọc. Một bạn dùng điện thoại quay lại từ trên xuống.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Chiếu video sản phẩm của các nhóm lên TV. Cả lớp bình chọn video giải thích dễ hiểu và sáng tạo nhất. III. MẪU \"SIÊU PROMPT\" markdown Tôi muốn làm một video dạng Whiteboard Animation (vẽ tay trên bảng trắng) để giải thích về"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 6: VIDEO GIẢI THÍCH ANIMATED (WHITEBOARD ANIMATION)\nI. GIỚI THIỆU CHUNG\nHọc sinh không chỉ xem video, mà tham gia vào quá trình lên ý tưởng cho video.\nMục tiêu: Hiểu sâu quy trình, mô tả lại kiến thức bằng hình ảnh động.\nKỹ năng rèn luyện: Tư duy hình ảnh, kể chuyện (storytelling).\nCông cụ: Google Gemini + Giấy A4 + Điện thoại.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nGiáo viên (hoặc nhóm HS) yêu cầu AI viết kịch bản phân cảnh (Storyboard) cho một video giải thích kiến thức (Vd: Cơ chế nguyên phân, Diễn biến chiến dịch...).\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nAI sẽ chia bảng làm 2 cột: Cột 1 (Lời thoại/Lời bình) - Cột 2 (Hình ảnh minh họa cần vẽ).\nHọc sinh vẽ các hình đơn giản (người que, hình khối) ra giấy hoặc bảng con theo mô tả của AI.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nHoạt động \"Stop Motion Người Thật\":\nMột bạn đọc lời bình (Cột 1).\nMột bạn khác di chuyển các hình vẽ/vật thể trên bàn (Cột 2) khớp với lời đọc.\nMột bạn dùng điện thoại quay lại từ trên xuống.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nChiếu video sản phẩm của các nhóm lên TV.\nCả lớp bình chọn video giải thích dễ hiểu và sáng tạo nhất.\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Tôi muốn làm một video dạng Whiteboard Animation (vẽ tay trên bảng trắng) để giải thích về: [TÊN KHÁI NIỆM/QUY TRÌNH].\n \n Hãy giúp tôi viết Kịch bản phân cảnh (Storyboard) gồm 5 phân cảnh. Trình bày dạng bảng:\n - Cột 1 (Thời gian): Khoảng 15-20s mỗi cảnh.\n - Cột 2 (Hình ảnh): Mô tả chi tiết những gì cần vẽ (nét vẽ đơn giản, dễ thương, ẩn dụ).\n - Cộ"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 1 : BÀI TẬP TỰ SINH THEO MỨC ĐỘ (DIFFERENTIATED INSTRUCTION)",
+        "muc_tieu": "Dạy học phân hóa, đảm bảo học sinh yếu không nản, học sinh giỏi không chán.",
+        "ky_nang_ren_luyen": "Tự đánh giá năng lực, tư duy giải quyết vấn đề.",
+        "cong_cu_su_dung": "Google Gemini/ChatGPT, Máy in.",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Sử dụng \"Siêu Prompt\" bên dưới để yêu cầu AI tạo ra bộ câu hỏi theo 4 mức độ : Nhận biết - Thông hiểu - Vận dụng - Vận dụng cao.",
+          "XỬ LÝ KỸ THUẬT Copy kết quả từ AI sang Word. Tách thành các phiếu bài tập riêng biệt (Ví dụ : Phiếu Cơ Bản, Phiếu Nâng Cao). In trên giấy màu khác nhau (Ví dụ : Màu Xanh = Dễ, Màu Vàng = Trung bình, Màu Đỏ = Khó).",
+          "TỔ CHỨC LỚP HỌC Quyền lựa chọn: Cho phép học sinh tự chọn màu phiếu bài tập phù hợp với khả năng của mình. Thử thách: Khuyến khích học sinh làm xong phiếu Xanh có thể đổi lấy phiếu Vàng để cộng điểm thưởng.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC AI đã tạo sẵn đáp án chi tiết. Thầy cô chiếu đáp án lên bảng. Học sinh đổi chéo bài chấm cho nhau (Peer review). III. MẪU \"SIÊU PROMPT\" markdown Bạn là chuyên gia sư phạm về [MÔN HỌC]. Hãy tạo cho tôi một bộ bài tập về chủ đ"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 1 : BÀI TẬP TỰ SINH THEO MỨC ĐỘ (DIFFERENTIATED INSTRUCTION)\nI. GIỚI THIỆU CHUNG\nThay vì soạn một đề chung cho cả lớp, AI giúp thầy cô tạo ra 4-5 mã đề với độ khó khác nhau chỉ trong 30 giây.\nMục tiêu : Dạy học phân hóa, đảm bảo học sinh yếu không nản, học sinh giỏi không chán.\nKỹ năng rèn luyện : Tự đánh giá năng lực, tư duy giải quyết vấn đề.\nCông cụ : Google Gemini/ChatGPT, Máy in.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nSử dụng \"Siêu Prompt\" bên dưới để yêu cầu AI tạo ra bộ câu hỏi theo 4 mức độ : Nhận biết - Thông hiểu - Vận dụng - Vận dụng cao.\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nCopy kết quả từ AI sang Word.\nTách thành các phiếu bài tập riêng biệt (Ví dụ : Phiếu Cơ Bản, Phiếu Nâng Cao).\nIn trên giấy màu khác nhau (Ví dụ : Màu Xanh = Dễ, Màu Vàng = Trung bình, Màu Đỏ = Khó).\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nQuyền lựa chọn: Cho phép học sinh tự chọn màu phiếu bài tập phù hợp với khả năng của mình.\nThử thách: Khuyến khích học sinh làm xong phiếu Xanh có thể đổi lấy phiếu Vàng để cộng điểm thưởng.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nAI đã tạo sẵn đáp án chi tiết. Thầy cô chiếu đáp án lên bảng.\nHọc sinh đổi chéo bài chấm cho nhau (Peer review).\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Bạn là chuyên gia sư phạm về [MÔN HỌC]. Hãy tạo cho tôi một bộ bài tập về chủ đề: [TÊN BÀI HỌC/CHỦ ĐỀ].\n \n Yêu cầu đầu ra:\n 1. Tạo 4 nhóm câu hỏi trắc nghiệm (mỗi nhóm 3 câu):\n    - Nhóm 1: Mức độ Nhận biết (Cực dễ, ghi nhớ).\n    - Nhóm 2: Mức độ Thông hiểu (Hiểu bản chất).\n    - Nhóm 3: Mức độ V"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 2 : THẺ GHI NHỚ FLASHCARD THÔNG MINH (SỐ HÓA)",
+        "muc_tieu": "Ghi nhớ nhanh từ khóa, công thức, sự kiện lịch sử qua 3 chế độ chơi",
+        "ky_nang_ren_luyen": "Phản xạ nhanh, ghi nhớ liên tưởng, tư duy logic",
+        "cong_cu_su_dung": "Google Gemini + Ứng dụng web Flashcard (miễn phí, không cần cài đặt)",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Sử dụng \"Siêu Prompt\" bên dưới để AI tạo nội dung flashcard tự động. Cách thực hiện: Truy cập Google Gemini hoặc ChatGPT Dán prompt (mục III bên dưới), thay [TÊN BÀI] bằng chủ đề cụ thể AI sẽ trả về bảng dữ liệu với 4 cột: Từ",
+          "XỬ LÝ KỸ THUẬT (SỐ HÓA) Option A: Sử dụng App có sẵn (Khuyến nghị) Mở ứng dụng Flashcard Thông Minh (link : [URL app]) Chọn \"✨ Tạo Bộ Thẻ Mới\" → Tab \"AI Hỗ Trợ\" Nhập: Chủ đề bài học : VD \"Cách mạng tháng Mười Nga\" Môn học : Lịch sử Số lượng thẻ : 10 ",
+          "TỔ CHỨC LỚP HỌC (3 CHỂ ĐỘ) 🎮 Chế độ 1 : Luyện Tập Cá Nhân (Study Mode) Phù hợp : Ôn tập cá nhân, làm quen kiến thức mới Cách chơi: Học sinh mở app trên điện thoại/máy tính Chọn bộ thẻ → \"Luyện Tập Cá Nhân\" Thẻ hiển thị mặt trước (câu hỏi) Click/Tap đ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Đánh giá tự động bởi App: Số thẻ đã học hôm nay Tỷ lệ ghi nhớ (%) Thẻ nào học sinh hay nhầm nhất Thời gian học trung bình Giáo viên chốt kiến thức : Chiếu bảng xếp hạng lên màn hình Gọi Top 3 lên chia sẻ : \"Em nhớ thẻ nào nh"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 2 : THẺ GHI NHỚ FLASHCARD THÔNG MINH (SỐ HÓA)\nI. GIỚI THIỆU CHUNG\nBiến việc học từ vựng hoặc định nghĩa khô khan thành trò chơi tương tác số hóa với ứng dụng web Flashcard thông minh.\nƯu điểm vượt trội so với thẻ giấy truyền thống:\n✅ Tiết kiệm 90% thời gian: Không cần in ấn, cắt dán, ép plastic\n✅ Tương tác cao: Lật thẻ 3D, swipe, âm thanh phản hồi\n✅ Theo dõi tiến độ: Biết chính xác học sinh nào đã nhớ, chưa nhớ\n✅ Gamification: Điểm số, streak, huy hiệu tạo động lực học\n✅ Chia sẻ dễ dàng : 1 link QR code, toàn lớp truy cập\n✅ Học mọi lúc mọi nơi: Trên điện thoại, máy tính, tablet\nThông tin cơ bản :\nMục tiêu : Ghi nhớ nhanh từ khóa, công thức, sự kiện lịch sử qua 3 chế độ chơi\nKỹ năng rèn luyện : Phản xạ nhanh, ghi nhớ liên tưởng, tư duy logic\nCông cụ : Google Gemini + Ứng dụng web Flashcard (miễn phí, không cần cài đặt)\nThời gian chuẩn bị: 5-10 phút (giảm từ 30-60 phút với thẻ giấy)\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nSử dụng \"Siêu Prompt\" bên dưới để AI tạo nội dung flashcard tự động.\nCách thực hiện:\nTruy cập Google Gemini hoặc ChatGPT\nDán prompt (mục III bên dưới), thay [TÊN BÀI] bằng chủ đề cụ thể\nAI sẽ trả về bảng dữ liệu với 4 cột: Từ khóa | Định nghĩa | Mẹo nhớ | Ví dụ\nCopy toàn bộ kết quả\nVí dụ output từ AI:\nBƯỚC 2: XỬ LÝ KỸ THUẬT (SỐ HÓA)\nOption A: Sử dụng App có sẵn (Khuyến nghị)\nMở ứng dụng Flashcard Thông Minh (link : [URL app])\nChọn \"✨ Tạo Bộ Thẻ Mới\" → Tab \"AI Hỗ Trợ\"\nNhập:\nChủ đề bài học : VD \"Cách mạng tháng Mười Nga\"\nMôn học : Lị"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 3: PODCAST KIẾN THỨC 5 PHÚT",
+        "muc_tieu": "Đa dạng hóa hình thức tiếp nhận thông tin, tạo không khí thư giãn.",
+        "ky_nang_ren_luyen": "Kỹ năng nghe hiểu, tóm tắt thông tin.",
+        "cong_cu_su_dung": "Google Gemini (viết kịch bản) + Công cụ Text-to-Speech (Vbee, FPT. AI hoặc Edge Read Aloud).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Yêu cầu AI viết kịch bản đối thoại giữa 2 nhân vật (Ví dụ : Một MC hài hước và một Giáo sư biết tuốt) về chủ đề bài học.",
+          "XỬ LÝ KỸ THUẬT Copy kịch bản vào công cụ chuyển văn bản thành giọng nói (hoặc giáo viên và 1 HS giọng tốt tự thu âm bằng điện thoại). Chèn thêm nhạc nền nhẹ nhàng (dùng CapCut hoặc Canva). Xuất ra file MP3.",
+          "TỔ CHỨC LỚP HỌC Hoạt động \"Radio Lớp Học\": Vào đầu giờ hoặc cuối giờ, tắt đèn, yêu cầu HS nhắm mắt và nghe đoạn Podcast 5 phút. Yêu cầu HS ghi lại 3 từ khóa quan trọng nhất nghe được vào giấy note.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên đặt câu hỏi : \"MC đã hỏi Giáo sư về vấn đề gì ?\", \"Giáo sư đã giải thích như thế nào ?\". III. MẪU \"SIÊU PROMPT\" markdown Hãy viết kịch bản Podcast dài khoảng 5 phút (khoảng 800 từ) về chủ đề: [TÊN CHỦ ĐỀ]. Nhân vật"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 3: PODCAST KIẾN THỨC 5 PHÚT\nI. GIỚI THIỆU CHUNG\nHọc qua kênh thính giác (Audio). Phù hợp cho các bài học lịch sử, văn học hoặc tổng kết chương.\nMục tiêu : Đa dạng hóa hình thức tiếp nhận thông tin, tạo không khí thư giãn.\nKỹ năng rèn luyện : Kỹ năng nghe hiểu, tóm tắt thông tin.\nCông cụ : Google Gemini (viết kịch bản) + Công cụ Text-to-Speech (Vbee, FPT. AI hoặc Edge Read Aloud).\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nYêu cầu AI viết kịch bản đối thoại giữa 2 nhân vật (Ví dụ : Một MC hài hước và một Giáo sư biết tuốt) về chủ đề bài học.\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nCopy kịch bản vào công cụ chuyển văn bản thành giọng nói (hoặc giáo viên và 1 HS giọng tốt tự thu âm bằng điện thoại).\nChèn thêm nhạc nền nhẹ nhàng (dùng CapCut hoặc Canva). Xuất ra file MP3.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nHoạt động \"Radio Lớp Học\": Vào đầu giờ hoặc cuối giờ, tắt đèn, yêu cầu HS nhắm mắt và nghe đoạn Podcast 5 phút.\nYêu cầu HS ghi lại 3 từ khóa quan trọng nhất nghe được vào giấy note.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên đặt câu hỏi : \"MC đã hỏi Giáo sư về vấn đề gì ?\", \"Giáo sư đã giải thích như thế nào ?\".\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Hãy viết kịch bản Podcast dài khoảng 5 phút (khoảng 800 từ) về chủ đề: [TÊN CHỦ ĐỀ].\n \n Nhân vật:\n 1. MC Tò Mò: Trẻ trung, hay hỏi những câu ngây ngô nhưng đúng trọng tâm.\n 2. Giáo Sư Biết Tuốt: Giọng điềm đạm, giải thích dễ hiểu, hay dùng ví dụ hài hước.\n \n Nội dung: Giải thích các khái niệm cốt lõi của bài học một cách đời thường nhất, "
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 4 : PHỎNG VẤN NHÂN VẬT LỊCH SỬ/KHOA HỌC (AI ROLEPLAY)",
+        "muc_tieu": "Tạo sự đồng cảm, hiểu sâu bối cảnh và tư duy của nhân vật.",
+        "ky_nang_ren_luyen": "Kỹ năng đặt câu hỏi, tư duy phản biện.",
+        "cong_cu_su_dung": "Máy tính kết nối máy chiếu, Google Gemini.",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Sử dụng Prompt để \"nhập vai\" cho AI trở thành nhân vật (Newton, Nguyễn Trãi, Bạch Đằng...).",
+          "XỬ LÝ KỸ THUẬT Kết nối laptop với máy chiếu/TV lớp học. Phóng to màn hình chat.",
+          "TỔ CHỨC LỚP HỌC Hoạt động \"Ghế Nóng\": Mời đại diện học sinh lên đặt câu hỏi cho nhân vật trên màn hình. Ví dụ : \"Thưa ngài Newton, ngài cảm thấy thế nào khi quả táo rơi trúng đầu ?\", \"Thưa bác Hồ, trong những năm tháng bôn ba, điều gì làm bác nhớ nhấ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên nhận xét về câu trả lời của AI (đúng/sai so với lịch sử) và chốt lại các mốc sự kiện quan trọng. III. MẪU \"SIÊU PROMPT\" markdown Kể từ bây giờ, hãy đóng vai là [TÊN NHÂN VẬT: Vd: Nhà thơ Xuân Diệu]. Bối cảnh: Bạn đ"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 4 : PHỎNG VẤN NHÂN VẬT LỊCH SỬ/KHOA HỌC (AI ROLEPLAY)\nI. GIỚI THIỆU CHUNG\nBiến lớp học thành một buổi \"Talkshow\" xuyên không gian thời gian.\nMục tiêu : Tạo sự đồng cảm, hiểu sâu bối cảnh và tư duy của nhân vật.\nKỹ năng rèn luyện : Kỹ năng đặt câu hỏi, tư duy phản biện.\nCông cụ : Máy tính kết nối máy chiếu, Google Gemini.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nSử dụng Prompt để \"nhập vai\" cho AI trở thành nhân vật (Newton, Nguyễn Trãi, Bạch Đằng...).\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nKết nối laptop với máy chiếu/TV lớp học.\nPhóng to màn hình chat.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nHoạt động \"Ghế Nóng\": Mời đại diện học sinh lên đặt câu hỏi cho nhân vật trên màn hình.\nVí dụ : \"Thưa ngài Newton, ngài cảm thấy thế nào khi quả táo rơi trúng đầu ?\", \"Thưa bác Hồ, trong những năm tháng bôn ba, điều gì làm bác nhớ nhất về quê hương ?\".\nGiáo viên gõ câu hỏi của HS vào ô chat và để AI trả lời.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên nhận xét về câu trả lời của AI (đúng/sai so với lịch sử) và chốt lại các mốc sự kiện quan trọng.\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Kể từ bây giờ, hãy đóng vai là [TÊN NHÂN VẬT: Vd: Nhà thơ Xuân Diệu].\n Bối cảnh: Bạn đang ở trong lớp học năm 2026 để giao lưu với học sinh.\n \n Yêu cầu nhập vai:\n 1. Xưng hô: \"Ta\" - \"Các em\" (hoặc phù hợp với nhân vật).\n 2. Tính cách: [Mô tả tính cách: Vd: Nồng nàn, sôi nổi, yêu đời].\n 3. Kiến thức: Chỉ trả lời dựa trên những gì nhân vật đã biết/đã trải qua trong thời đại của họ.\n 4. Nhiệm vụ: Trả lời các câu hỏi của"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 5: BẢN ĐỒ TƯ DUY ĐỘNG TƯƠNG TÁC",
+        "muc_tieu": "Hệ thống hóa kiến thức, nhìn thấy bức tranh toàn cảnh.",
+        "ky_nang_ren_luyen": "Tư duy tổng hợp, phân tích cấu trúc.",
+        "cong_cu_su_dung": "Google Gemini + Website markmap.js.org (Miễn phí, không cần đăng nhập).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Yêu cầu AI tóm tắt bài học dưới dạng Markdown code (cấu trúc cây).",
+          "XỬ LÝ KỸ THUẬT Copy đoạn code AI tạo ra. Dán vào trang web markmap.js.org. Web sẽ tự động vẽ thành Mindmap đẹp mắt. Chụp màn hình hoặc chiếu trực tiếp lên bảng.",
+          "TỔ CHỨC LỚP HỌC Hoạt động \"Điền Khuyết Mindmap\": Giáo viên dùng công cụ che bớt các nhánh cấp 2, cấp 3. Yêu cầu các nhóm thảo luận để tìm ra từ khóa còn thiếu trong các nhánh đó.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên mở dần các nhánh đã che để chốt kiến thức. Gửi file ảnh Mindmap vào nhóm lớp để HS ôn tập. III. MẪU \"SIÊU PROMPT\" markdown Hãy tóm tắt nội dung bài: [TÊN BÀI] dưới dạng sơ đồ tư duy (Mindmap). Yêu cầu định dạng: - "
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 5: BẢN ĐỒ TƯ DUY ĐỘNG TƯƠNG TÁC\nI. GIỚI THIỆU CHUNG\nSử dụng AI để tóm tắt bài học thành cấu trúc cây, sau đó chuyển thành bản đồ tư duy ngay lập tức.\nMục tiêu : Hệ thống hóa kiến thức, nhìn thấy bức tranh toàn cảnh.\nKỹ năng rèn luyện : Tư duy tổng hợp, phân tích cấu trúc.\nCông cụ : Google Gemini + Website markmap.js.org (Miễn phí, không cần đăng nhập).\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nYêu cầu AI tóm tắt bài học dưới dạng Markdown code (cấu trúc cây).\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nCopy đoạn code AI tạo ra.\nDán vào trang web markmap.js.org. Web sẽ tự động vẽ thành Mindmap đẹp mắt.\nChụp màn hình hoặc chiếu trực tiếp lên bảng.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nHoạt động \"Điền Khuyết Mindmap\": Giáo viên dùng công cụ che bớt các nhánh cấp 2, cấp 3.\nYêu cầu các nhóm thảo luận để tìm ra từ khóa còn thiếu trong các nhánh đó.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên mở dần các nhánh đã che để chốt kiến thức.\nGửi file ảnh Mindmap vào nhóm lớp để HS ôn tập.\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Hãy tóm tắt nội dung bài: [TÊN BÀI] dưới dạng sơ đồ tư duy (Mindmap).\n \n Yêu cầu định dạng:\n - Sử dụng cú pháp Markdown (dùng các dấu #, ##, ###, -).\n - Nội dung ngắn gọn, súc tích (dạng từ khóa).\n - Cấu trúc:\n # Tên Bài Học\n ## Ý chính 1\n - Chi tiết 1.1\n - Chi tiết 1.2\n ## Ý chính 2\n - Chi tiết 2.1\n ...\n Hãy viết code markdown đó vào trong một block code để tôi copy.\nIV. LƯU Ý THỰC CHIẾN 💡\nKỹ thuật này cực kỳ hiệu quả cho các tiết Ôn tập chương hoặc Tổng kết cuối bài. Tiết kiệm 9"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 6: VIDEO GIẢI THÍCH ANIMATED (WHITEBOARD ANIMATION)",
+        "muc_tieu": "Hiểu sâu quy trình, mô tả lại kiến thức bằng hình ảnh động.",
+        "ky_nang_ren_luyen": "Tư duy hình ảnh, kể chuyện (storytelling).",
+        "cong_cu_su_dung": "Google Gemini + Giấy A4 + Điện thoại.",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Giáo viên (hoặc nhóm HS) yêu cầu AI viết kịch bản phân cảnh (Storyboard) cho một video giải thích kiến thức (Vd : Cơ chế nguyên phân, Diễn biến chiến dịch...).",
+          "XỬ LÝ KỸ THUẬT AI sẽ chia bảng làm 2 cột : Cột 1 (Lời thoại/Lời bình) - Cột 2 (Hình ảnh minh họa cần vẽ). Học sinh vẽ các hình đơn giản (người que, hình khối) ra giấy hoặc bảng con theo mô tả của AI.",
+          "TỔ CHỨC LỚP HỌC Hoạt động \"Stop Motion Người Thật\": Một bạn đọc lời bình (Cột 1). Một bạn khác di chuyển các hình vẽ/vật thể trên bàn (Cột 2) khớp với lời đọc. Một bạn dùng điện thoại quay lại từ trên xuống.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Chiếu video sản phẩm của các nhóm lên TV. Cả lớp bình chọn video giải thích dễ hiểu và sáng tạo nhất. III. MẪU \"SIÊU PROMPT\" markdown Tôi muốn làm một video dạng Whiteboard Animation (vẽ tay trên bảng trắng) để giải thích về"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 6: VIDEO GIẢI THÍCH ANIMATED (WHITEBOARD ANIMATION)\nI. GIỚI THIỆU CHUNG\nHọc sinh không chỉ xem video, mà tham gia vào quá trình lên ý tưởng cho video.\nMục tiêu : Hiểu sâu quy trình, mô tả lại kiến thức bằng hình ảnh động.\nKỹ năng rèn luyện : Tư duy hình ảnh, kể chuyện (storytelling).\nCông cụ : Google Gemini + Giấy A4 + Điện thoại.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nGiáo viên (hoặc nhóm HS) yêu cầu AI viết kịch bản phân cảnh (Storyboard) cho một video giải thích kiến thức (Vd : Cơ chế nguyên phân, Diễn biến chiến dịch...).\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nAI sẽ chia bảng làm 2 cột : Cột 1 (Lời thoại/Lời bình) - Cột 2 (Hình ảnh minh họa cần vẽ).\nHọc sinh vẽ các hình đơn giản (người que, hình khối) ra giấy hoặc bảng con theo mô tả của AI.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nHoạt động \"Stop Motion Người Thật\":\nMột bạn đọc lời bình (Cột 1).\nMột bạn khác di chuyển các hình vẽ/vật thể trên bàn (Cột 2) khớp với lời đọc.\nMột bạn dùng điện thoại quay lại từ trên xuống.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nChiếu video sản phẩm của các nhóm lên TV.\nCả lớp bình chọn video giải thích dễ hiểu và sáng tạo nhất.\nIII. MẪU \"SIÊU PROMPT\"\nmarkdown\n Tôi muốn làm một video dạng Whiteboard Animation (vẽ tay trên bảng trắng) để giải thích về: [TÊN KHÁI NIỆM/QUY TRÌNH].\n \n Hãy giúp tôi viết Kịch bản phân cảnh (Storyboard) gồm 5 phân cảnh. Trình bày dạng bảng:\n - Cột 1 (Thời gian): Khoảng 15-20s mỗi cảnh.\n - Cột 2 (Hình ảnh): Mô tả chi tiết những gì cần vẽ (nét vẽ đơn giản, dễ thương, ẩn dụ).\n"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 7 : NOTEBOOKLM - TẠO PODCAST TƯƠNG TÁC TỪ TÀI LIỆU HỌC TẬP",
+        "muc_tieu": "Tạo trải nghiệm học tập đa giác quan, phù hợp với học sinh học tốt qua nghe (auditory learners)",
+        "ky_nang_ren_luyen": "Nghe hiểu, tóm tắt thông tin, đặt câu hỏi phản biện",
+        "cong_cu_su_dung": "Google NotebookLM (miễn phí, không cần cài đặt)",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Truy cập notebooklm.google.com (đăng nhập bằng tài khoản Google) Tạo Notebook mới, đặt tên theo bài học (VD : \"Cách mạng Tháng Mười Nga\") Upload tài liệu nguồn : Bài giảng (PDF/Word) Slide PowerPoint Link video YouTube về chủ",
+          "XỬ LÝ KỸ THUẬT Nghe thử podcast, kiểm tra nội dung có chính xác không Nếu muốn điều chỉnh, thêm ghi chú hướng dẫn vào Notebook (VD : \"Tập trung vào nguyên nhân chiến tranh, bỏ qua chi tiết nhỏ\") Tạo lại podcast với hướng dẫn mới Tải xuống file MP3 ho",
+          "TỔ CHỨC LỚP HỌC 🎧 Hoạt động 1 : \"Radio Lớp Học Thông Minh\" Chiếu podcast lên loa lớp, học sinh nghe trong 10 phút đầu giờ Phát phiếu học tập với 3 câu hỏi : Hai MC đã thảo luận về vấn đề chính nào ? Có điểm nào em chưa hiểu, cần giải thích thêm ? Em ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên chốt lại 3 ý chính từ podcast Gửi link podcast vào nhóm lớp để học sinh ôn tập ở nhà Khuyến khích học sinh nghe lại khi đi xe buýt, trước khi ngủ III. MẪU \"SIÊU PROMPT\" (TÙY CHỈNH PODCAST) Nếu muốn podcast tập trun"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 7 : NOTEBOOKLM - TẠO PODCAST TƯƠNG TÁC TỪ TÀI LIỆU HỌC TẬP\nI. GIỚI THIỆU CHUNG\nNotebookLM của Google biến tài liệu học tập thành podcast đối thoại sinh động giữa hai \"MC ảo\", giúp học sinh tiếp thu kiến thức qua kênh thính giác một cách tự nhiên và thú vị. Đây là bước tiến vượt bậc so với phương pháp Text-to-Speech truyền thống.\nĐiểm đột phá:\n✅ Tự động tạo nội dung đối thoại: AI phân tích tài liệu và tự động viết kịch bản đối thoại giữa hai giọng nói (nam/nữ), thảo luận về các khái niệm quan trọng như hai người bạn đang trò chuyện\n✅ Giọng đọc tự nhiên : Không còn giọng robot cứng nhắc, mà là giọng nói có cảm xúc, ngữ điệu, thậm chí có cả tiếng cười và lời bình luận tự nhiên\n✅ Tương tác thông minh : Học sinh có thể đặt câu hỏi trực tiếp vào tài liệu và nhận câu trả lời ngay lập tức, kèm trích dẫn nguồn chính xác\n✅ Hỗ trợ đa định dạng: Upload PDF, Word, PowerPoint, link YouTube, hoặc dán văn bản trực tiếp\nThông tin cơ bản :\nMục tiêu : Tạo trải nghiệm học tập đa giác quan, phù hợp với học sinh học tốt qua nghe (auditory learners)\nKỹ năng rèn luyện : Nghe hiểu, tóm tắt thông tin, đặt câu hỏi phản biện\nCông cụ : Google NotebookLM (miễn phí, không cần cài đặt)\nThời gian chuẩn bị: 3-5 phút (AI tự động tạo podcast 5-15 phút)\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nTruy cập notebooklm.google.com (đăng nhập bằng tài khoản Google)\nTạo Notebook mới, đặt tên theo bài học (VD : \"Cách mạng Tháng Mười Nga\")\nUpload tài liệu nguồn :\nBài giảng (PDF/Word)\nSlide Power"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 8 : CURIPOD - TẠO BÀI GIẢNG TƯƠNG TÁC TỰ ĐỘNG",
+        "muc_tieu": "Tạo bài giảng tương tác chất lượng cao trong 5 phút",
+        "ky_nang_ren_luyen": "Tư duy phản biện, hợp tác, sáng tạo",
+        "cong_cu_su_dung": "Curipod (miễn phí cho giáo viên, có phiên bản Pro)",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Truy cập curipod.com → Đăng ký tài khoản giáo viên (miễn phí) Chọn \"Create with AI\" (Tạo bằng AI) Nhập thông tin : Chủ đề: VD \"Định luật Newton\" Cấp độ: Lớp 10 Thời lượng: 30 phút Mục tiêu học tập : \"Học sinh hiểu và áp dụng ",
+          "XỬ LÝ KỸ THUẬT Xem trước bài giảng, chỉnh sửa nội dung nếu cần Thêm hình ảnh/video từ thư viện có sẵn hoặc upload riêng Tùy chỉnh loại hoạt động tương tác : Poll: Bỏ phiếu nhanh (VD : \"Bạn nghĩ định luật nào quan trọng nhất ?\") Draw: Vẽ sơ đồ (VD : \"",
+          "TỔ CHỨC LỚP HỌC 📱 Chuẩn bị: Giáo viên chiếu slide lên màn hình/TV Học sinh truy cập curipod.com/join trên điện thoại/máy tính Nhập mã lớp học → Tham gia 🎯 Dạy học: Giáo viên điều khiển slide trên máy tính Khi đến slide tương tác: Học sinh thấy câu hỏ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Curipod tự động tạo báo cáo: Tỷ lệ trả lời đúng/sai từng câu Học sinh nào tham gia tích cực nhất Câu hỏi nào khó nhất (nhiều người sai) Giáo viên dùng dữ liệu này để : Giải thích lại phần nhiều học sinh nhầm Khen thưởng học "
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 8 : CURIPOD - TẠO BÀI GIẢNG TƯƠNG TÁC TỰ ĐỘNG\nI. GIỚI THIỆU CHUNG\nCuripod là nền tảng AI chuyên biến bất kỳ chủ đề nào thành bài giảng slide tương tác hoàn chỉnh, tích hợp sẵn các hoạt động kiểm tra hiểu (polls, quiz, vẽ, thảo luận) ngay trong slide. Đây là giải pháp hoàn hảo cho giáo viên bận rộn cần bài giảng chất lượng cao trong thời gian ngắn.\nĐiểm đột phá:\n✅ Backward Design (Thiết kế ngược): AI bắt đầu từ mục tiêu học tập, sau đó xây dựng nội dung và hoạt động phù hợp\n✅ Tương tác tích hợp: Mỗi 3-4 slide kiến thức sẽ có 1 slide hoạt động (quiz, vẽ, thảo luận) để duy trì sự tập trung\n✅ Real-time Feedback: Giáo viên thấy ngay câu trả lời của từng học sinh trên dashboard\n✅ Tự động điều chỉnh tốc độ: Nếu nhiều học sinh trả lời sai, AI đề xuất dừng lại giải thích thêm\nThông tin cơ bản :\nMục tiêu : Tạo bài giảng tương tác chất lượng cao trong 5 phút\nKỹ năng rèn luyện : Tư duy phản biện, hợp tác, sáng tạo\nCông cụ : Curipod (miễn phí cho giáo viên, có phiên bản Pro)\nThời gian chuẩn bị: 5-10 phút (AI tạo bài giảng 30-45 phút)\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nTruy cập curipod.com → Đăng ký tài khoản giáo viên (miễn phí)\nChọn \"Create with AI\" (Tạo bằng AI)\nNhập thông tin :\nChủ đề: VD \"Định luật Newton\"\nCấp độ: Lớp 10\nThời lượng: 30 phút\nMục tiêu học tập : \"Học sinh hiểu và áp dụng được 3 định luật Newton\"\nBấm \"Generate\" → Chờ 1-2 phút\nAI tạo ra bộ slide hoàn chỉnh gồm :\nSlide mở đầu (hook question)\n6-8 slide nội dung chính\n3-4 slide hoạt động tươn"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 9 : BRISK TEACHING - TRỢ LÝ AI SỐNG NGAY TRÊN TRÌNH DUYỆT",
+        "muc_tieu": "Giảm 50%",
+        "ky_nang_ren_luyen": "(Dành cho giáo viên) Quản lý",
+        "cong_cu_su_dung": "Brisk Teaching (tiện ích Chrome, miễn phí cho giáo viên)",
+        "quy_trinh_4_buoc": [
+          "CÀI ĐẶT & THIẾT LẬP Mở Chrome → Truy cập Chrome Web Store Tìm \"Brisk Teaching\" → Cài đặt (miễn phí) Đăng nhập bằng tài khoản Google (tài khoản trường) Brisk sẽ xuất hiện dưới dạng biểu tượng nhỏ ở góc phải màn hình",
+          "CÁC TÍNH NĂNG THỰC CHIẾN 🔥 Tính năng 1 : \"Boost Any Content\" (Tăng cường bất kỳ nội dung nào) Kịch bản: Giáo viên tìm được bài báo hay trên mạng, muốn biến thành bài tập Cách làm : Mở bài báo trên trình duyệt Click biểu tượng Brisk → Chọn \"Create Act",
+          "TỔ CHỨC LỚP HỌC Brisk không trực tiếp tương tác với học sinh, mà giúp giáo viên chuẩn bị tài liệu nhanh hơn. Tài liệu được tạo ra sẽ dùng theo quy trình dạy học thông thường.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Brisk lưu lịch sử tất cả tài liệu đã tạo → Giáo viên dễ dàng tái sử dụng năm sau Tính năng \"Analytics\" (Pro) cho biết giáo viên tiết kiệm được bao nhiêu giờ mỗi tuần III. MẪU \"SIÊU PROMPT\" (TÙY CHỈNH OUTPUT) Khi dùng Brisk, "
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 9 : BRISK TEACHING - TRỢ LÝ AI SỐNG NGAY TRÊN TRÌNH DUYỆT\nI. GIỚI THIỆU CHUNG\nBrisk Teaching là tiện ích mở rộng Chrome hoạt động như một \"trợ lý ảo\" luôn sẵn sàng bên cạnh giáo viên. Khác với các công cụ AI cần mở tab riêng, Brisk \"sống\" ngay trên bất kỳ trang web nào giáo viên đang xem, giúp chuyển đổi nội dung thành tài liệu học tập chỉ bằng 1 cú click.\nĐiểm đột phá:\n✅ Contextual AI (AI theo ngữ cảnh): Brisk hiểu giáo viên đang làm gì và đề xuất hành động phù hợp\n✅ One-Click Magic: Chuyển bài báo thành quiz, video YouTube thành phiếu học tập, Google Docs thành rubric chấm điểm\n✅ Tích hợp sâu Google Workspace : Làm việc trực tiếp với Google Classroom, Docs, Slides\n✅ Feedback Generator: Tự động viết nhận xét cho bài làm của học sinh (cá nhân hóa, mang tính xây dựng)\nThông tin cơ bản :\nMục tiêu : Giảm 50% thời gian công việc hành chính, tăng thời gian tương tác với học sinh\nKỹ năng rèn luyện : (Dành cho giáo viên) Quản lý thời gian, tối ưu hóa quy trình làm việc\nCông cụ : Brisk Teaching (tiện ích Chrome, miễn phí cho giáo viên)\nThời gian chuẩn bị: 30 giây - 2 phút/tác vụ\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1 : CÀI ĐẶT & THIẾT LẬP\nMở Chrome → Truy cập Chrome Web Store\nTìm \"Brisk Teaching\" → Cài đặt (miễn phí)\nĐăng nhập bằng tài khoản Google (tài khoản trường)\nBrisk sẽ xuất hiện dưới dạng biểu tượng nhỏ ở góc phải màn hình\nBƯỚC 2: CÁC TÍNH NĂNG THỰC CHIẾN\n🔥 Tính năng 1 : \"Boost Any Content\" (Tăng cường bất kỳ nội dung nào)\nKịch bản: Giáo viên tìm được bài báo hay trên mạng"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 10 : MAGIC SCHOOL AI - BỘ CÔNG CỤ ĐA NĂNG CHO GIÁO VIÊN",
+        "muc_tieu": "Giải quyết mọi bài toán giáo dục bằng AI chuyên biệt",
+        "ky_nang_ren_luyen": "(Dành cho giáo viên) Quản lý",
+        "cong_cu_su_dung": "MagicSchool AI (miễn phí cho giáo viên, có phiên bản School/District)",
+        "quy_trinh_4_buoc": [
+          "ĐĂNG KÝ & KHÁM PHÁ Truy cập magicschool.ai → Đăng ký tài khoản giáo viên (miễn phí) Chọn vai trò: Teacher / Admin / Coach Khám phá thư viện 60+ công cụ, được phân loại : Planning: Soạn giáo án, tạo mục tiêu học tập Student Support: Tạo IEP, hỗ trợ họ",
+          "10 CÔNG CỤ THỰC CHIẾN NHẤT 🎯 Công cụ 1 : \"Lesson Plan Generator\" (Tạo giáo án tự động) Input: Chủ đề: \"Phương trình bậc hai\" Lớp: 9 Thời lượng: 45 phút Mục tiêu : \"Học sinh giải được phương trình bậc hai bằng công thức nghiệm\" Output: Giáo án đầy đủ ",
+          "TỔ CHỨC LỚP HỌC MagicSchool chủ yếu hỗ trợ giáo viên chuẩn bị tài liệu, không trực tiếp tương tác với học sinh. Tài liệu tạo ra sẽ được dùng trong quy trình dạy học thông thường.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC MagicSchool lưu lịch sử tất cả tài liệu đã tạo → Dễ dàng tái sử dụng Tính năng \"My Library\" giúp tổ chức tài liệu theo môn học, chủ đề Có thể chia sẻ tài liệu với đồng nghiệp qua link III. MẪU \"SIÊU PROMPT\" Hầu hết công cụ M"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 10 : MAGIC SCHOOL AI - BỘ CÔNG CỤ ĐA NĂNG CHO GIÁO VIÊN\nI. GIỚI THIỆU CHUNG\nMagicSchool AI là \"bộ công cụ Doraemon\" dành cho giáo viên, tích hợp hơn 60 công cụ AI chuyên biệt cho mọi khâu công việc : từ soạn giáo án, tạo đề kiểm tra, viết email phụ huynh, đến tạo IEP (Individualized Education Program) cho học sinh khuyết tật. Đây là nền tảng toàn diện nhất hiện nay, được thiết kế riêng cho giáo dục.\nĐiểm đột phá:\n✅ 60+ công cụ chuyên biệt : Mỗi công cụ giải quyết 1 bài toán cụ thể (không phải AI tổng quát)\n✅ Trained on Education Best Practices: AI được huấn luyện trên hàng triệu giáo án, đề thi thực tế\n✅ Differentiation Engine: Tự động tạo 3-4 phiên bản bài tập cho học sinh ở các trình độ khác nhau\n✅ FERPA Compliant: Tuân thủ luật bảo mật dữ liệu học sinh (an toàn tuyệt đối)\nThông tin cơ bản :\nMục tiêu : Giải quyết mọi bài toán giáo dục bằng AI chuyên biệt\nKỹ năng rèn luyện : (Dành cho giáo viên) Quản lý thời gian, thiết kế bài học, giao tiếp với phụ huynh\nCông cụ : MagicSchool AI (miễn phí cho giáo viên, có phiên bản School/District)\nThời gian chuẩn bị: 1-5 phút/công cụ\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: ĐĂNG KÝ & KHÁM PHÁ\nTruy cập magicschool.ai → Đăng ký tài khoản giáo viên (miễn phí)\nChọn vai trò: Teacher / Admin / Coach\nKhám phá thư viện 60+ công cụ, được phân loại :\nPlanning: Soạn giáo án, tạo mục tiêu học tập\nStudent Support: Tạo IEP, hỗ trợ học sinh khó khăn\nAssessment: Tạo đề kiểm tra, rubric chấm điểm\nCommunication: Viết email phụ huynh, thông báo lớp\nProdu"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 11: GEMINI IN CLASSROOM - HỆ SINH THÁI AI TÍCH HỢP GOOGLE",
+        "muc_tieu": "Tăng cường hiệu quả dạy học trong hệ sinh thái Google",
+        "ky_nang_ren_luyen": "Tự học, tư duy phản biện, quản lý",
+        "cong_cu_su_dung": "Google Classroom + Gemini (miễn phí cho trường có Education Plus license)",
+        "quy_trinh_4_buoc": [
+          "KÍCH HOẠT GEMINI IN CLASSROOM Đăng nhập Google Classroom bằng tài khoản trường Vào \"Settings\" → \"AI Features\" Bật \"Gemini in Classroom\" (nếu trường có license) Chọn mức độ cho phép học sinh tương tác : Teacher-only: Chỉ giáo viên dùng AI Teacher-led:",
+          "CÁC TÍNH NĂNG THỰC CHIẾN 📚 Tính năng 1 : \"Practice Sets\" (Bộ bài tập luyện tập tự động) Kịch bản: Giáo viên muốn học sinh luyện tập Toán, AI tự động chấm và gợi ý bước tiếp theo Cách làm : Trong Classroom, chọn \"Create\" → \"Practice Set\" Chọn chủ đề: ",
+          "TỔ CHỨC LỚP HỌC Gemini in Classroom hoạt động ngầm, hỗ trợ cả giáo viên và học sinh trong suốt quá trình dạy học. Không cần tổ chức hoạt động riêng.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Gemini tự động tạo báo cáo hàng tuần gửi cho giáo viên Giáo viên dựa vào báo cáo để điều chỉnh kế hoạch dạy học III. MẪU \"SIÊU PROMPT\" (TÙY CHỈNH AI BEHAVIOR) Giáo viên có thể tùy chỉnh cách AI tương tác với học sinh : markd"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 11: GEMINI IN CLASSROOM - HỆ SINH THÁI AI TÍCH HỢP GOOGLE\nI. GIỚI THIỆU CHUNG\nGemini in Classroom là bộ công cụ AI được Google tích hợp sâu vào Google Classroom, giúp giáo viên tạo tài liệu học tập tương tác, phân tích dữ liệu học sinh, và cá nhân hóa trải nghiệm học tập ngay trong môi trường quen thuộc. Đây là giải pháp lý tưởng cho các trường đang sử dụng Google Workspace for Education.\nĐiểm đột phá:\n✅ Native Integration (Tích hợp tự nhiên) : Không cần chuyển qua app khác, mọi thứ diễn ra ngay trong Classroom\n✅ Grounded in Class Materials (Dựa trên tài liệu lớp học) : AI chỉ sử dụng tài liệu giáo viên đã upload, không \"bịa đặt\"\n✅ Teacher-Led AI Experiences: Giáo viên kiểm soát 100%, học sinh chỉ tương tác với AI theo cách giáo viên thiết lập\n✅ Analytics Dashboard: Theo dõi tiến độ học sinh real-time, AI đề xuất can thiệp khi cần\nThông tin cơ bản :\nMục tiêu : Tăng cường hiệu quả dạy học trong hệ sinh thái Google\nKỹ năng rèn luyện : Tự học, tư duy phản biện, quản lý thời gian\nCông cụ : Google Classroom + Gemini (miễn phí cho trường có Education Plus license)\nThời gian chuẩn bị: 5-10 phút\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: KÍCH HOẠT GEMINI IN CLASSROOM\nĐăng nhập Google Classroom bằng tài khoản trường\nVào \"Settings\" → \"AI Features\"\nBật \"Gemini in Classroom\" (nếu trường có license)\nChọn mức độ cho phép học sinh tương tác :\nTeacher-only: Chỉ giáo viên dùng AI\nTeacher-led: Học sinh dùng AI theo hướng dẫn giáo viên\nStudent-initiated: Học sinh tự do hỏi AI (cần giám sát)\nBƯ"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 11: \"PHÒNG TẬP GYM TƯ DUY\" VỚI AI COACH",
+        "muc_tieu": "Phát triển 3 loại tư duy cốt lõi (phân tích, sáng tạo, phản biện) qua bài tập micro hàng ngày.",
+        "ky_nang_ren_luyen": "Tư duy phản xạ nhanh, giải quyết vấn đề đa chiều, kiên trì.",
+        "cong_cu_su_dung": "ChatGPT/Gemini, Notion (theo dõi tiến độ), Kahoot (đo lường).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Giáo viên yêu cầu AI tạo \"Bài tập разминка tư duy\" 5 phút cho đầu giờ. Mỗi bài tập nhắm vào một \"nhóm cơ tư duy\" khác nhau: Logic (giải đố), Sáng tạo (brainstorm ý tưởng điên rồ), Phản biện (tìm lỗi trong lập luận).",
+          "XỬ LÝ KỸ THUẬT Tạo một \"Sổ tay Gym Tư duy\" trên Notion hoặc Google Sheets. Mỗi học sinh có một trang riêng ghi lại: Ngày tập, loại bài tập, điểm số, cảm nhận. AI sẽ phân tích xu hướng và đề xuất bài tập tiếp theo.",
+          "TỔ CHỨC LỚP HỌC Khởi động: 5 phút đầu tiết, học sinh làm bài tập AI giao (cá nhân hoặc nhóm). Chia sẻ: 3 học sinh tình nguyện chia sẻ cách giải và tư duy của mình. Feedback AI: Giáo viên nhập câu trả lời vào AI, AI đưa ra nhận xét và gợi ý cải thiện.",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Cuối tuần, AI tạo \"Báo cáo Gym Tư duy\" cho từng học sinh: Điểm mạnh, điểm yếu, xu hướng tiến bộ. Giáo viên trao \"Huy chương\" cho học sinh có sự tiến bộ vượt bậc (không chỉ điểm cao). III. MẪU \"SIÊU PROMPT\" Bạn là HLV Tư duy "
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 11: \"PHÒNG TẬP GYM TƯ DUY\" VỚI AI COACH \n(AI THINKING GYM)\nI. GIỚI THIỆU CHUNG\nGiống như tập gym để có cơ bắp, học sinh cần \"tập luyện tư duy\" hàng ngày. AI đóng vai trò như một HLV cá nhân, thiết kế bài tập tư duy phù hợp với \"cơ\" yếu của từng học sinh (logic, sáng tạo, phản biện).\nMục tiêu: Phát triển 3 loại tư duy cốt lõi (phân tích, sáng tạo, phản biện) qua bài tập micro hàng ngày.\nKỹ năng rèn luyện: Tư duy phản xạ nhanh, giải quyết vấn đề đa chiều, kiên trì.\nCông cụ: ChatGPT/Gemini, Notion (theo dõi tiến độ), Kahoot (đo lường).\nThời gian chuẩn bị: 3 phút.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI \nGiáo viên yêu cầu AI tạo \"Bài tập разминка tư duy\" 5 phút cho đầu giờ. Mỗi bài tập nhắm vào một \"nhóm cơ tư duy\" khác nhau: Logic (giải đố), Sáng tạo (brainstorm ý tưởng điên rồ), Phản biện (tìm lỗi trong lập luận).\nBƯỚC 2: XỬ LÝ KỸ THUẬT \nTạo một \"Sổ tay Gym Tư duy\" trên Notion hoặc Google Sheets. Mỗi học sinh có một trang riêng ghi lại: Ngày tập, loại bài tập, điểm số, cảm nhận. AI sẽ phân tích xu hướng và đề xuất bài tập tiếp theo.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nKhởi động: 5 phút đầu tiết, học sinh làm bài tập AI giao (cá nhân hoặc nhóm).\nChia sẻ: 3 học sinh tình nguyện chia sẻ cách giải và tư duy của mình.\nFeedback AI: Giáo viên nhập câu trả lời vào AI, AI đưa ra nhận xét và gợi ý cải thiện.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC \nCuối tuần, AI tạo \"Báo cáo Gym Tư duy\" cho từng học sinh: Điểm mạnh, điểm yếu, xu hướng tiến bộ. Giáo viên trao \"Huy chương\" cho h"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 12: \"PHIÊN TÒA TRÍ THỨC\" VỚI AI LÀM THẨM PHÁN (AI KNOWLEDGE COURT)",
+        "muc_tieu": "Học sâu qua tranh luận, hiểu đa chiều vấn đề, rèn",
+        "ky_nang_ren_luyen": "Tư duy phản biện, thu thập chứng cứ, thuyết trình.",
+        "cong_cu_su_dung": "ChatGPT/Claude (vai Thẩm phán), Google Docs (hồ sơ vụ án).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Chọn một \"Luận điểm gây tranh cãi\" trong bài học (Ví dụ: \"Khủng long tuyệt chủng vì thiên thạch hay vì biến đổi khí hậu?\", \"Nhân vật Thúy Kiều có đáng trách không?\"). Yêu cầu AI tạo \"Hồ sơ vụ án\" với 2 bên: Bên Bảo vệ và Bên ",
+          "XỬ LÝ KỸ THUẬT Cài đặt AI ở chế độ \"Thẩm phán trung lập\". AI sẽ đánh giá từng lập luận dựa trên: Độ chính xác khoa học, Logic mạch lạc, Bằng chứng thuyết phục. AI không được thiên vị bất kỳ bên nào.",
+          "TỔ CHỨC LỚP HỌC Phân vai: Chia lớp thành 2 đội (Bảo vệ vs Công tố). Mỗi đội có 10 phút chuẩn bị lập luận từ tài liệu AI cung cấp. Tranh tụng: Mỗi bên trình bày 3 phút, sau đó có 2 phút phản bác lẫn nhau. Phán quyết: Giáo viên nhập toàn bộ lập luận và",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC AI tổng kết: \"Điểm mạnh của mỗi bên\", \"Lỗi logic phổ biến\", \"Bài học rút ra\". Giáo viên nhấn mạnh rằng trong khoa học, nhiều vấn đề không có đáp án tuyệt đối, quan trọng là cách lập luận. III. MẪU \"SIÊU PROMPT\" Bạn là Thẩm p"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 12: \"PHIÊN TÒA TRÍ THỨC\" VỚI AI LÀM THẨM PHÁN (AI KNOWLEDGE COURT)\nI. GIỚI THIỆU CHUNG\nBiến lớp học thành phòng xử án, nơi các \"luận điểm tri thức\" bị đưa ra xét xử. AI đóng vai Thẩm phán công bằng, học sinh là luật sư bảo vệ hoặc công tố viên tấn công một quan điểm/lý thuyết.\nMục tiêu: Học sâu qua tranh luận, hiểu đa chiều vấn đề, rèn kỹ năng lập luận có căn cứ.\nKỹ năng rèn luyện: Tư duy phản biện, thu thập chứng cứ, thuyết trình.\nCông cụ: ChatGPT/Claude (vai Thẩm phán), Google Docs (hồ sơ vụ án).\nThời gian chuẩn bị: 10 phút.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI Chọn một \"Luận điểm gây tranh cãi\" trong bài học (Ví dụ: \"Khủng long tuyệt chủng vì thiên thạch hay vì biến đổi khí hậu?\", \"Nhân vật Thúy Kiều có đáng trách không?\"). Yêu cầu AI tạo \"Hồ sơ vụ án\" với 2 bên: Bên Bảo vệ và Bên Công tố, mỗi bên có 5 bằng chứng.\nBƯỚC 2: XỬ LÝ KỸ THUẬT Cài đặt AI ở chế độ \"Thẩm phán trung lập\". AI sẽ đánh giá từng lập luận dựa trên: Độ chính xác khoa học, Logic mạch lạc, Bằng chứng thuyết phục. AI không được thiên vị bất kỳ bên nào.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nPhân vai: Chia lớp thành 2 đội (Bảo vệ vs Công tố). Mỗi đội có 10 phút chuẩn bị lập luận từ tài liệu AI cung cấp.\nTranh tụng: Mỗi bên trình bày 3 phút, sau đó có 2 phút phản bác lẫn nhau.\nPhán quyết: Giáo viên nhập toàn bộ lập luận vào AI. AI đưa ra \"Phán quyết\" kèm lý do chi tiết.\nKháng cáo: Bên thua có quyền \"kháng cáo\" bằng cách đưa ra 1 bằng chứng mới. AI sẽ xem xét lại.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN T"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 13: \"STUDIO PODCAST HỌC ĐƯỜNG\" VỚI AI LÀM BIÊN TẬP VIÊN (AI PODCAST STUDIO)",
+        "muc_tieu": "Học sâu qua việc dạy lại (Learning by Teaching), phát triển",
+        "ky_nang_ren_luyen": "Tổng hợp thông tin, kể chuyện, kỹ năng thuyết trình.",
+        "cong_cu_su_dung": "NotebookLM (tạo podcast tự động), Suno AI (nhạc nền), Canva (thiết kế cover).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Học sinh chọn một chủ đề trong bài học muốn \"podcasting\". Yêu cầu AI viết kịch bản podcast 5-7 phút theo format: Mở đầu hấp dẫn (hook) → Giải thích kiến thức đơn giản → Ví dụ thực tế → Câu hỏi tương tác với người nghe → Kết t",
+          "XỬ LÝ KỸ THUẬT Sử dụng NotebookLM: Upload tài liệu bài học, công cụ sẽ tự động tạo podcast 2 người đối thoại. Hoặc học sinh tự thu âm bằng điện thoại, dùng AI loại bỏ tiếng ồn và thêm nhạc nền từ Suno AI.",
+          "TỔ CHỨC LỚP HỌC Sản xuất: Học sinh làm việc theo nhóm 3-4 người, phân vai: Host chính, khách mời, biên tập viên. Phát sóng: Mỗi nhóm phát podcast của mình (5-7 phút) cho cả lớp nghe. Tương tác: Lớp đặt câu hỏi hoặc bình luận qua \"Hotline\" (giấy note ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC AI phân tích podcast theo 4 tiêu chí: Độ chính xác nội dung, Tính sáng tạo, Kỹ năng truyền đạt, Khả năng thu hút. Bình chọn \"Podcast của tháng\" để đăng lên Spotify/YouTube lớp. III. MẪU \"SIÊU PROMPT\" Bạn là Biên tập viên Pod"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 13: \"STUDIO PODCAST HỌC ĐƯỜNG\" VỚI AI LÀM BIÊN TẬP VIÊN (AI PODCAST STUDIO)\nI. GIỚI THIỆU CHUNG\nHọc sinh tạo podcast giải thích kiến thức bài học theo phong cách riêng. AI đóng vai biên tập viên, giúp cải thiện kịch bản, gợi ý câu hỏi thú vị và tạo nhạc nền.\nMục tiêu: Học sâu qua việc dạy lại (Learning by Teaching), phát triển kỹ năng truyền thông.\nKỹ năng rèn luyện: Tổng hợp thông tin, kể chuyện, kỹ năng thuyết trình.\nCông cụ: NotebookLM (tạo podcast tự động), Suno AI (nhạc nền), Canva (thiết kế cover).\nThời gian chuẩn bị: 15 phút.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI Học sinh chọn một chủ đề trong bài học muốn \"podcasting\". Yêu cầu AI viết kịch bản podcast 5-7 phút theo format: Mở đầu hấp dẫn (hook) → Giải thích kiến thức đơn giản → Ví dụ thực tế → Câu hỏi tương tác với người nghe → Kết thúc ấn tượng.\nBƯỚC 2: XỬ LÝ KỸ THUẬT Sử dụng NotebookLM: Upload tài liệu bài học, công cụ sẽ tự động tạo podcast 2 người đối thoại. Hoặc học sinh tự thu âm bằng điện thoại, dùng AI loại bỏ tiếng ồn và thêm nhạc nền từ Suno AI.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nSản xuất: Học sinh làm việc theo nhóm 3-4 người, phân vai: Host chính, khách mời, biên tập viên.\nPhát sóng: Mỗi nhóm phát podcast của mình (5-7 phút) cho cả lớp nghe.\nTương tác: Lớp đặt câu hỏi hoặc bình luận qua \"Hotline\" (giấy note dán lên bảng).\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC AI phân tích podcast theo 4 tiêu chí: Độ chính xác nội dung, Tính sáng tạo, Kỹ năng truyền đạt, Khả năng thu hút. Bình chọn \"Podcast "
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 14: \"BỆNH VIỆN TRI THỨC\" - AI CHẨN ĐOÁN LỖI HỌC TẬP (AI LEARNING CLINIC)",
+        "muc_tieu": "Cá nhân hóa việc sửa lỗi, giúp học sinh hiểu rõ nguyên nhân sai thay vì chỉ biết đáp án đúng.",
+        "ky_nang_ren_luyen": "Tự nhận thức, phân tích lỗi, tư duy metacognition.",
+        "cong_cu_su_dung": "ChatGPT/Gemini, Google Forms (phiếu khám), Notion (hồ sơ bệnh án).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Sau mỗi bài kiểm tra, giáo viên thu thập các lỗi phổ biến. Yêu cầu AI phân loại lỗi thành các \"bệnh học tập\" (Ví dụ: \"Hội chứng nhầm lẫn khái niệm\", \"Chứng yếu nền tảng\", \"Bệnh đọc đề không kỹ\").",
+          "XỬ LÝ KỸ THUẬT Tạo \"Phiếu khám bệnh\" trên Google Forms: Học sinh điền bài làm sai của mình, AI sẽ phân tích và đưa ra chẩn đoán. Mỗi học sinh nhận một \"Hồ sơ bệnh án\" riêng trên Notion với lộ trình điều trị cá nhân.",
+          "TỔ CHỨC LỚP HỌC Khám bệnh: Học sinh \"đến khám\" (nhập lỗi vào AI), AI đưa ra chẩn đoán chi tiết. Kê đơn: AI tạo \"Đơn thuốc\" gồm 3-5 bài tập điều trị, mỗi bài nhắm vào một khía cạnh của lỗi. Tái khám: Sau 1 tuần, học sinh làm lại bài tập tương tự để ki",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC AI tạo \"Báo cáo sức khỏe học tập\" cho cả lớp: Những \"bệnh\" phổ biến nhất, tỷ lệ hồi phục, những ca \"điều trị thành công\" đáng khen ngợi. Giáo viên tổ chức \"Lễ xuất viện\" cho những học sinh đã khắc phục hoàn toàn lỗi. III. MẪ"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 14: \"BỆNH VIỆN TRI THỨC\" - AI CHẨN ĐOÁN LỖI HỌC TẬP (AI LEARNING CLINIC)\nI. GIỚI THIỆU CHUNG\nBiến việc sửa lỗi thành một trải nghiệm \"khám bệnh\". AI đóng vai bác sĩ chuyên khoa, chẩn đoán \"bệnh học tập\" của học sinh (hiểu sai khái niệm, lỗi logic, thiếu kiến thức nền) và kê \"đơn thuốc\" (bài tập điều trị).\nMục tiêu: Cá nhân hóa việc sửa lỗi, giúp học sinh hiểu rõ nguyên nhân sai thay vì chỉ biết đáp án đúng.\nKỹ năng rèn luyện: Tự nhận thức, phân tích lỗi, tư duy metacognition.\nCông cụ: ChatGPT/Gemini, Google Forms (phiếu khám), Notion (hồ sơ bệnh án).\nThời gian chuẩn bị: 5 phút.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI Sau mỗi bài kiểm tra, giáo viên thu thập các lỗi phổ biến. Yêu cầu AI phân loại lỗi thành các \"bệnh học tập\" (Ví dụ: \"Hội chứng nhầm lẫn khái niệm\", \"Chứng yếu nền tảng\", \"Bệnh đọc đề không kỹ\").\nBƯỚC 2: XỬ LÝ KỸ THUẬT Tạo \"Phiếu khám bệnh\" trên Google Forms: Học sinh điền bài làm sai của mình, AI sẽ phân tích và đưa ra chẩn đoán. Mỗi học sinh nhận một \"Hồ sơ bệnh án\" riêng trên Notion với lộ trình điều trị cá nhân.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nKhám bệnh: Học sinh \"đến khám\" (nhập lỗi vào AI), AI đưa ra chẩn đoán chi tiết.\nKê đơn: AI tạo \"Đơn thuốc\" gồm 3-5 bài tập điều trị, mỗi bài nhắm vào một khía cạnh của lỗi.\nTái khám: Sau 1 tuần, học sinh làm lại bài tập tương tự để kiểm tra đã \"khỏi bệnh\" chưa.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC AI tạo \"Báo cáo sức khỏe học tập\" cho cả lớp: Những \"bệnh\" phổ biến nhất, tỷ lệ hồi phục, những ca \"điều t"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 15: \"PHÒNG THÍ NGHIỆM TƯƠNG LAI\" - AI MÔ PHỎNG KẾT QUẢ (AI FUTURE LAB)",
+        "muc_tieu": "Phát triển tư duy dự đoán, hiểu mối quan hệ nhân quả, rèn trách nhiệm với tương lai.",
+        "ky_nang_ren_luyen": "Tư duy hệ thống, phân tích dữ liệu, ra quyết định.",
+        "cong_cu_su_dung": "Claude/Gemini (mô phỏng phức tạp), Miro (vẽ sơ đồ hệ thống).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Giáo viên đưa ra một tình huống giả định (Ví dụ: \"Nếu toàn bộ xe máy ở Việt Nam chuyển sang xe điện trong 5 năm tới thì điều gì sẽ xảy ra?\", \"Nếu AI thay thế 50% giáo viên thì giáo dục sẽ thay đổi như thế nào?\"). Yêu cầu AI t",
+          "XỬ LÝ KỸ THUẬT Sử dụng AI để phân tích các yếu tố ảnh hưởng (kinh tế, xã hội, môi trường, công nghệ) và dự đoán kết quả dựa trên dữ liệu thực tế. Tạo sơ đồ hệ thống trên Miro để học sinh thấy rõ mối liên hệ.",
+          "TỔ CHỨC LỚP HỌC Đặt giả thuyết: Chia lớp thành các nhóm, mỗi nhóm đưa ra một giả thuyết về tương lai liên quan đến bài học. Mô phỏng: Nhập giả thuyết vào AI, AI tạo báo cáo mô phỏng chi tiết với số liệu và biểu đồ. Tranh luận: Các nhóm thảo luận về k",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC AI tổng hợp tất cả các giả thuyết và kết quả mô phỏng thành một \"Báo cáo Tương lai Lớp học\". Giáo viên dẫn dắt học sinh nhận ra rằng: Tương lai không cố định, mà phụ thuộc vào quyết định của chúng ta hôm nay. III. MẪU \"SIÊU "
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 15: \"PHÒNG THÍ NGHIỆM TƯƠNG LAI\" - AI MÔ PHỎNG KẾT QUẢ (AI FUTURE LAB)\nI. GIỚI THIỆU CHUNG\nHọc sinh đưa ra giả thuyết về tương lai (khoa học, xã hội, môi trường), AI mô phỏng kết quả dựa trên dữ liệu thực tế. Đây là cách tuyệt vời để học sinh hiểu về tư duy hệ thống và hậu quả dài hạn.\nMục tiêu: Phát triển tư duy dự đoán, hiểu mối quan hệ nhân quả, rèn trách nhiệm với tương lai.\nKỹ năng rèn luyện: Tư duy hệ thống, phân tích dữ liệu, ra quyết định.\nCông cụ: Claude/Gemini (mô phỏng phức tạp), Miro (vẽ sơ đồ hệ thống).\nThời gian chuẩn bị: 10 phút.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI Giáo viên đưa ra một tình huống giả định (Ví dụ: \"Nếu toàn bộ xe máy ở Việt Nam chuyển sang xe điện trong 5 năm tới thì điều gì sẽ xảy ra?\", \"Nếu AI thay thế 50% giáo viên thì giáo dục sẽ thay đổi như thế nào?\"). Yêu cầu AI tạo \"Báo cáo mô phỏng tương lai\" với 3 kịch bản: Lạc quan, Trung lập, Bi quan.\nBƯỚC 2: XỬ LÝ KỸ THUẬT Sử dụng AI để phân tích các yếu tố ảnh hưởng (kinh tế, xã hội, môi trường, công nghệ) và dự đoán kết quả dựa trên dữ liệu thực tế. Tạo sơ đồ hệ thống trên Miro để học sinh thấy rõ mối liên hệ.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nĐặt giả thuyết: Chia lớp thành các nhóm, mỗi nhóm đưa ra một giả thuyết về tương lai liên quan đến bài học.\nMô phỏng: Nhập giả thuyết vào AI, AI tạo báo cáo mô phỏng chi tiết với số liệu và biểu đồ.\nTranh luận: Các nhóm thảo luận về kết quả mô phỏng: \"Có hợp lý không?\", \"Chúng ta có thể làm gì để tạo ra kết quả tốt hơn?\".\nBƯỚC 4: ĐÁNH "
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 7: THỬ THÁCH \"THÁM TỬ AI\" (AI MYSTERY SOLVING)",
+        "muc_tieu": "Vận dụng kiến thức vào tình huống thực tế, rèn luyện tư duy logic và",
+        "ky_nang_ren_luyen": "Phân tích dữ liệu, suy luận, làm việc nhóm.",
+        "cong_cu_su_dung": "Google Gemini/ChatGPT, máy chiếu.",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Sử dụng AI để thiết kế một \"Vụ án tri thức\". Ví dụ: Trong môn Hóa học, đó là một vụ ngộ độc thực phẩm; trong môn Lịch sử, đó là một tài liệu bị mất cắp hoặc một âm mưu chưa lời giải.",
+          "XỬ LÝ KỸ THUẬT Giáo viên thiết lập AI ở chế độ \"Nhân chứng\" hoặc \"Cơ sở dữ liệu hiện trường\". AI chỉ trả lời khi học sinh đưa ra câu hỏi đúng trọng tâm và có căn cứ kiến thức.",
+          "TỔ CHỨC LỚP HỌC Giao nhiệm vụ: Chia lớp thành các đội thám tử. Phát \"Hồ sơ vụ án\" (do AI tạo ra). Thẩm vấn: Mỗi đội có 3 lượt đặt câu hỏi cho AI. Để đặt câu hỏi, học sinh phải giải thích tại sao họ hỏi câu đó dựa trên kiến thức đã học. Phá án: Các độ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên yêu cầu AI tiết lộ đáp án và giải thích mối liên hệ với bài học. Khen thưởng đội có suy luận logic nhất. III. MẪU \"SIÊU PROMPT\" Bạn là một nhân chứng trong một vụ án liên quan đến [CHỦ ĐỀ BÀI HỌC]. Hãy tạo ra một k"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 7: THỬ THÁCH \"THÁM TỬ AI\" (AI MYSTERY SOLVING)\nI. GIỚI THIỆU CHUNG\nBiến một bài học khô khan thành một vụ án hoặc một bí ẩn cần lời giải. Học sinh đóng vai thám tử, sử dụng kiến thức môn học để thẩm vấn AI và tìm ra sự thật.\nMục tiêu: Vận dụng kiến thức vào tình huống thực tế, rèn luyện tư duy logic và kỹ năng đặt câu hỏi.\nKỹ năng rèn luyện: Phân tích dữ liệu, suy luận, làm việc nhóm.\nCông cụ: Google Gemini/ChatGPT, máy chiếu.\nThời gian chuẩn bị: 5 phút.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nSử dụng AI để thiết kế một \"Vụ án tri thức\". Ví dụ: Trong môn Hóa học, đó là một vụ ngộ độc thực phẩm; trong môn Lịch sử, đó là một tài liệu bị mất cắp hoặc một âm mưu chưa lời giải.\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nGiáo viên thiết lập AI ở chế độ \"Nhân chứng\" hoặc \"Cơ sở dữ liệu hiện trường\". AI chỉ trả lời khi học sinh đưa ra câu hỏi đúng trọng tâm và có căn cứ kiến thức.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nGiao nhiệm vụ: Chia lớp thành các đội thám tử. Phát \"Hồ sơ vụ án\" (do AI tạo ra).\nThẩm vấn: Mỗi đội có 3 lượt đặt câu hỏi cho AI. Để đặt câu hỏi, học sinh phải giải thích tại sao họ hỏi câu đó dựa trên kiến thức đã học.\nPhá án: Các đội nộp bản báo cáo phá án, chỉ rõ \"thủ phạm\" (khái niệm/sự kiện/chất hóa học...) và bằng chứng.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên yêu cầu AI tiết lộ đáp án và giải thích mối liên hệ với bài học. Khen thưởng đội có suy luận logic nhất.\nIII. MẪU \"SIÊU PROMPT\"\nBạn là một nhân chứng trong một vụ án liên quan đến [CHỦ ĐỀ BÀI HỌC]. \nHãy tạo r"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 8: TRANH BIỆN VỚI \"PHẢN BIỆN GIA AI\" (AI SOCRATIC DEBATER)",
+        "muc_tieu": "Phát triển tư duy phản biện,",
+        "ky_nang_ren_luyen": "Giao tiếp, thuyết phục, nhận diện lỗi logic.",
+        "cong_cu_su_dung": "ChatGPT/Gemini (sử dụng giọng nói nếu có thể).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Xác định một chủ đề gây tranh cãi trong bài học (Ví dụ: \"Việc sử dụng năng lượng hạt nhân là nên hay không?\", \"Nhân vật Cám trong Tấm Cám đáng thương hay đáng trách?\").",
+          "XỬ LÝ KỸ THUẬT Cài đặt AI đóng vai một người phản biện không khoan nhượng nhưng lịch sự, luôn tìm ra điểm yếu trong câu trả lời của học sinh.",
+          "TỔ CHỨC LỚP HỌC Đối đầu: Mời một học sinh (hoặc đại diện nhóm) đưa ra luận điểm đầu tiên. AI phản đòn: Giáo viên nhập luận điểm vào AI. AI sẽ đưa ra các câu hỏi xoáy hoặc bằng chứng ngược lại. Tiếp chiêu: Học sinh phải tìm dữ liệu, dẫn chứng từ sách ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Cuối buổi, yêu cầu AI nhận xét về kỹ năng tranh biện của học sinh: \"Lập luận nào mạnh nhất?\", \"Lỗi logic nào học sinh hay mắc phải?\". Giáo viên tổng kết lại các kiến thức cốt lõi. III. MẪU \"SIÊU PROMPT\" Bạn là một chuyên gia"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 8: TRANH BIỆN VỚI \"PHẢN BIỆN GIA AI\" (AI SOCRATIC DEBATER)\nI. GIỚI THIỆU CHUNG\nThay vì tranh biện giữa học sinh với nhau, học sinh sẽ đối đầu với một \"Phản biện gia\" cực kỳ sắc bén là AI. Mục tiêu là giúp học sinh nhận ra các lỗ hổng trong lập luận của chính mình.\nMục tiêu: Phát triển tư duy phản biện, kỹ năng lập luận và bảo vệ quan điểm.\nKỹ năng rèn luyện: Giao tiếp, thuyết phục, nhận diện lỗi logic.\nCông cụ: ChatGPT/Gemini (sử dụng giọng nói nếu có thể).\nThời gian chuẩn bị: 2 phút.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nXác định một chủ đề gây tranh cãi trong bài học (Ví dụ: \"Việc sử dụng năng lượng hạt nhân là nên hay không?\", \"Nhân vật Cám trong Tấm Cám đáng thương hay đáng trách?\").\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nCài đặt AI đóng vai một người phản biện không khoan nhượng nhưng lịch sự, luôn tìm ra điểm yếu trong câu trả lời của học sinh.\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nĐối đầu: Mời một học sinh (hoặc đại diện nhóm) đưa ra luận điểm đầu tiên.\nAI phản đòn: Giáo viên nhập luận điểm vào AI. AI sẽ đưa ra các câu hỏi xoáy hoặc bằng chứng ngược lại.\nTiếp chiêu: Học sinh phải tìm dữ liệu, dẫn chứng từ sách giáo khoa hoặc internet để phản hồi lại AI.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nCuối buổi, yêu cầu AI nhận xét về kỹ năng tranh biện của học sinh: \"Lập luận nào mạnh nhất?\", \"Lỗi logic nào học sinh hay mắc phải?\". Giáo viên tổng kết lại các kiến thức cốt lõi.\nIII. MẪU \"SIÊU PROMPT\"\nBạn là một chuyên gia phản biện theo phương pháp Socratic. \nTôi sẽ đưa ra một quan "
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 9: \"HỌA SĨ KHÁI NIỆM\" (AI VISUAL CONCEPT ART)",
+        "muc_tieu": "Chuyển đổi kiến thức từ dạng văn bản sang dạng hình ảnh, kích thích sáng tạo.",
+        "ky_nang_ren_luyen": "Tư duy hình ảnh, mô tả ngôn ngữ (Prompt Engineering).",
+        "cong_cu_su_dung": "Canva AI, Bing Image Creator, hoặc Leonardo.ai.",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Giáo viên chọn ra các từ khóa/khái niệm khó hình dung (Ví dụ: \"Sự lạm phát\", \"Liên kết cộng hóa trị\", \"Nỗi buồn của chiến tranh\", \"Đa dạng sinh học\").",
+          "XỬ LÝ KỸ THUẬT Hướng dẫn học sinh cách viết \"Prompt\" (lệnh) để AI vẽ ảnh. Công thức: [Đối tượng] + [Bối cảnh] + [Phong cách nghệ thuật] + [Cảm xúc].",
+          "TỔ CHỨC LỚP HỌC Sáng tác: Học sinh làm việc theo cặp. Nhiệm vụ là tạo ra một bức ảnh thể hiện đúng nhất bản chất của khái niệm được giao. Triển lãm: Các bức ảnh được chiếu lên màn hình hoặc dán lên \"Bức tường Padlet\". Thuyết minh: Học sinh phải giải ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên và cả lớp bình chọn bức ảnh \"lột tả\" được kiến thức xuất sắc nhất. Giáo viên dùng chính những hình ảnh đó để giảng giải lại những điểm khó của bài học. III. MẪU \"SIÊU PROMPT\" (DÀNH CHO HS) Hãy đóng vai một họa sĩ t"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 9: \"HỌA SĨ KHÁI NIỆM\" (AI VISUAL CONCEPT ART)\nI. GIỚI THIỆU CHUNG\nHọc sinh sử dụng AI tạo ảnh để hình ảnh hóa các khái niệm trừu tượng. Đây là cách tuyệt vời để kiểm tra xem học sinh có thực sự hiểu bản chất vấn đề hay chỉ đang học vẹt.\nMục tiêu: Chuyển đổi kiến thức từ dạng văn bản sang dạng hình ảnh, kích thích sáng tạo.\nKỹ năng rèn luyện: Tư duy hình ảnh, mô tả ngôn ngữ (Prompt Engineering).\nCông cụ: Canva AI, Bing Image Creator, hoặc Leonardo.ai.\nThời gian chuẩn bị: 5 phút.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nGiáo viên chọn ra các từ khóa/khái niệm khó hình dung (Ví dụ: \"Sự lạm phát\", \"Liên kết cộng hóa trị\", \"Nỗi buồn của chiến tranh\", \"Đa dạng sinh học\").\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nHướng dẫn học sinh cách viết \"Prompt\" (lệnh) để AI vẽ ảnh. Công thức: [Đối tượng] + [Bối cảnh] + [Phong cách nghệ thuật] + [Cảm xúc].\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nSáng tác: Học sinh làm việc theo cặp. Nhiệm vụ là tạo ra một bức ảnh thể hiện đúng nhất bản chất của khái niệm được giao.\nTriển lãm: Các bức ảnh được chiếu lên màn hình hoặc dán lên \"Bức tường Padlet\".\nThuyết minh: Học sinh phải giải thích: \"Tại sao chi tiết này trong ảnh lại đại diện cho khái niệm X?\".\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên và cả lớp bình chọn bức ảnh \"lột tả\" được kiến thức xuất sắc nhất. Giáo viên dùng chính những hình ảnh đó để giảng giải lại những điểm khó của bài học.\nIII. MẪU \"SIÊU PROMPT\" (DÀNH CHO HS)\nHãy đóng vai một họa sĩ tài ba. Tôi muốn bạn vẽ một bức tranh minh họa cho khá"
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 10: \"NHÀ DU HÀNH THỜI GIAN AI\" (AI TIME TRAVELER'S DIARY)",
+        "muc_tieu": "Hiểu sâu bối cảnh lịch sử/khoa học, rèn luyện",
+        "ky_nang_ren_luyen": "Kể chuyện (Storytelling), nghiên cứu lịch sử, tư duy đa chiều.",
+        "cong_cu_su_dung": "Google Gemini (tra cứu bối cảnh) + Canva (thiết kế nhật ký/bài đăng).",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Yêu cầu AI mô tả chi tiết một ngày bình thường tại một thời điểm cụ thể (Ví dụ: Một buổi sáng tại kinh thành Thăng Long thời Lê Sơ, hoặc một ngày trong phòng thí nghiệm của Marie Curie).",
+          "XỬ LÝ KỸ THUẬT Sử dụng AI để tạo ra các \"tình huống phát sinh\" trong thời đại đó (Ví dụ: Một sắc lệnh mới của vua, một phát hiện tình cờ trong thí nghiệm).",
+          "TỔ CHỨC LỚP HỌC Nhập vai: Mỗi học sinh chọn một danh tính (người lính, người thợ thủ công, nhà khoa học trẻ...). Sáng tác: Dựa trên bối cảnh AI cung cấp, học sinh viết một \"Bài đăng Facebook\" hoặc \"Trang nhật ký\" của nhân vật đó về sự kiện đang học. ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Giáo viên chọn ra những bài viết có chi tiết lịch sử/khoa học chính xác nhất. AI sẽ đóng vai \"Nhà sử học tương lai\" để nhận xét về độ chân thực của các tác phẩm. III. MẪU \"SIÊU PROMPT\" Hãy đưa tôi đến [THỜI ĐIỂM/ĐỊA ĐIỂM]. M"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 10: \"NHÀ DU HÀNH THỜI GIAN AI\" (AI TIME TRAVELER'S DIARY)\nI. GIỚI THIỆU CHUNG\nHọc sinh không chỉ học về lịch sử hay khoa học, mà \"sống\" trong đó. AI đóng vai trò là \"Cổng thời gian\", cung cấp bối cảnh, âm thanh và ngôn ngữ của một thời đại cụ thể để học sinh nhập vai sáng tạo nội dung.\nMục tiêu: Hiểu sâu bối cảnh lịch sử/khoa học, rèn luyện kỹ năng viết sáng tạo và sự đồng cảm.\nKỹ năng rèn luyện: Kể chuyện (Storytelling), nghiên cứu lịch sử, tư duy đa chiều.\nCông cụ: Google Gemini (tra cứu bối cảnh) + Canva (thiết kế nhật ký/bài đăng).\nThời gian chuẩn bị: 10 phút.\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nYêu cầu AI mô tả chi tiết một ngày bình thường tại một thời điểm cụ thể (Ví dụ: Một buổi sáng tại kinh thành Thăng Long thời Lê Sơ, hoặc một ngày trong phòng thí nghiệm của Marie Curie).\nBƯỚC 2: XỬ LÝ KỸ THUẬT\nSử dụng AI để tạo ra các \"tình huống phát sinh\" trong thời đại đó (Ví dụ: Một sắc lệnh mới của vua, một phát hiện tình cờ trong thí nghiệm).\nBƯỚC 3: TỔ CHỨC LỚP HỌC\nNhập vai: Mỗi học sinh chọn một danh tính (người lính, người thợ thủ công, nhà khoa học trẻ...).\nSáng tác: Dựa trên bối cảnh AI cung cấp, học sinh viết một \"Bài đăng Facebook\" hoặc \"Trang nhật ký\" của nhân vật đó về sự kiện đang học.\nTương tác: Học sinh đọc bài của nhau và dùng AI để đóng vai các nhân vật khác vào \"comment\" tương tác dưới các bài đăng đó.\nBƯỚC 4: ĐÁNH GIÁ & CHỐT KIẾN THỨC\nGiáo viên chọn ra những bài viết có chi tiết lịch sử/khoa học chính xác nhất. AI sẽ đóng vai "
+      },
+      {
+        "ten": "PHƯƠNG PHÁP 2: THẺ GHI NHỚ FLASHCARD THÔNG MINH (SỐ HÓA)",
+        "muc_tieu": "Ghi nhớ nhanh từ khóa, công thức, sự kiện lịch sử qua 3 chế độ chơi",
+        "ky_nang_ren_luyen": "Phản xạ nhanh, ghi nhớ liên tưởng, tư duy logic",
+        "cong_cu_su_dung": "Google Gemini + Ứng dụng web Flashcard (miễn phí, không cần cài đặt)",
+        "quy_trinh_4_buoc": [
+          "SÁNG TẠO HỌC LIỆU VỚI AI Sử dụng \"Siêu Prompt\" bên dưới để AI tạo nội dung flashcard tự động. Cách thực hiện: Truy cập Google Gemini hoặc ChatGPT Dán prompt (mục III bên dưới), thay [TÊN BÀI] bằng chủ đề cụ thể AI sẽ trả về bảng dữ liệu với 4 cột: Từ",
+          "XỬ LÝ KỸ THUẬT (SỐ HÓA) Option A: Sử dụng App có sẵn (Khuyến nghị) Mở ứng dụng Flashcard Thông Minh (link: [URL app]) Chọn \"✨ Tạo Bộ Thẻ Mới\" → Tab \"AI Hỗ Trợ\" Nhập: Chủ đề bài học: VD \"Cách mạng tháng Mười Nga\" Môn học: Lịch sử Số lượng thẻ: 10 (kéo",
+          "TỔ CHỨC LỚP HỌC (3 CHỂ ĐỘ) 🎮 Chế độ 1: Luyện Tập Cá Nhân (Study Mode) Phù hợp: Ôn tập cá nhân, làm quen kiến thức mới Cách chơi: Học sinh mở app trên điện thoại/máy tính Chọn bộ thẻ → \"Luyện Tập Cá Nhân\" Thẻ hiển thị mặt trước (câu hỏi) Click/Tap để ",
+          "ĐÁNH GIÁ & CHỐT KIẾN THỨC Đánh giá tự động bởi App: Số thẻ đã học hôm nay Tỷ lệ ghi nhớ (%) Thẻ nào học sinh hay nhầm nhất Thời gian học trung bình Giáo viên chốt kiến thức: Chiếu bảng xếp hạng lên màn hình Gọi Top 3 lên chia sẻ: \"Em nhớ thẻ nào nhất"
+        ],
+        "super_prompt_mau": "",
+        "full_text": "PHƯƠNG PHÁP 2: THẺ GHI NHỚ FLASHCARD THÔNG MINH (SỐ HÓA)\nI. GIỚI THIỆU CHUNG\nBiến việc học từ vựng hoặc định nghĩa khô khan thành trò chơi tương tác số hóa với ứng dụng web Flashcard thông minh.\nƯu điểm vượt trội so với thẻ giấy truyền thống:\n✅ Tiết kiệm 90% thời gian: Không cần in ấn, cắt dán, ép plastic\n✅ Tương tác cao: Lật thẻ 3D, swipe, âm thanh phản hồi\n✅ Theo dõi tiến độ: Biết chính xác học sinh nào đã nhớ, chưa nhớ\n✅ Gamification: Điểm số, streak, huy hiệu tạo động lực học\n✅ Chia sẻ dễ dàng: 1 link QR code, toàn lớp truy cập\n✅ Học mọi lúc mọi nơi: Trên điện thoại, máy tính, tablet\nThông tin cơ bản:\nMục tiêu: Ghi nhớ nhanh từ khóa, công thức, sự kiện lịch sử qua 3 chế độ chơi\nKỹ năng rèn luyện: Phản xạ nhanh, ghi nhớ liên tưởng, tư duy logic\nCông cụ: Google Gemini + Ứng dụng web Flashcard (miễn phí, không cần cài đặt)\nThời gian chuẩn bị: 5-10 phút (giảm từ 30-60 phút với thẻ giấy)\nII. QUY TRÌNH THỰC HIỆN\nBƯỚC 1: SÁNG TẠO HỌC LIỆU VỚI AI\nSử dụng \"Siêu Prompt\" bên dưới để AI tạo nội dung flashcard tự động.\nCách thực hiện:\nTruy cập Google Gemini hoặc ChatGPT\nDán prompt (mục III bên dưới), thay [TÊN BÀI] bằng chủ đề cụ thể\nAI sẽ trả về bảng dữ liệu với 4 cột: Từ khóa | Định nghĩa | Mẹo nhớ | Ví dụ\nCopy toàn bộ kết quả\nBƯỚC 2: XỬ LÝ KỸ THUẬT (SỐ HÓA)\nOption A: Sử dụng App có sẵn (Khuyến nghị)\nMở ứng dụng Flashcard Thông Minh (link: [URL app])\nChọn \"✨ Tạo Bộ Thẻ Mới\" → Tab \"AI Hỗ Trợ\"\nNhập:\nChủ đề bài học: VD \"Cách mạng tháng Mười Nga\"\nMôn học: Lịch sử\nSố lượng thẻ: 10 (kéo t"
+      }
+    ]
+  },
+  "B_prompts_thuc_chien": {
+    "mo_ta": "Bộ prompt AI thực chiến cho giáo viên — phân loại theo mục đích sử dụng",
+    "tong_so": 65,
+    "theo_danh_muc": {
+      "soạn_giáo_án": [
+        {
+          "tieu_de": "PROMPT 1: Tạo giáo án theo 4 bước (Mục tiêu–Hoạt động–Đánh giá–Điều chỉnh)",
+          "danh_muc": "soạn_giáo_án",
+          "noi_dung_prompt": "Bạn là chuyên gia sư phạm. Hãy tạo giáo án 1 tiết cho môn [Môn], lớp [Lớp], bài [Tên bài].\nYêu cầu:\n1) Mục tiêu theo 3 mức (Nhận biết/Thông hiểu/Vận dụng).\n2) Hoạt động theo tiến trình 4 bước: Khởi động–Hình thành kiến thức–Luyện tập–Vận dụng.\n3) Kèm câu hỏi gợi mở và dự kiến phản hồi sai của HS.\n4) Đánh giá: phiếu quan sát + 3 câu exit ticket.\n5) Điều chỉnh cho HS yếu/giỏi."
+        },
+        {
+          "tieu_de": "PROMPT 2: Giáo án theo mô hình 5E",
+          "danh_muc": "soạn_giáo_án",
+          "noi_dung_prompt": "Thiết kế giáo án theo mô hình 5E (Engage–Explore–Explain–Elaborate–Evaluate) cho bài [Tên bài] môn [Môn] lớp [Lớp].\nMỗi E cần: mục tiêu, thời lượng, vật liệu/dụng cụ, câu hỏi dẫn dắt, sản phẩm học tập.\nKèm rubric chấm sản phẩm."
+        },
+        {
+          "tieu_de": "PROMPT 3: Kế hoạch tuần (5 ngày) bám chương trình",
+          "danh_muc": "soạn_giáo_án",
+          "noi_dung_prompt": "Lập kế hoạch dạy học 5 ngày cho môn [Môn], lớp [Lớp], chủ đề [Chủ đề].\nMỗi ngày: mục tiêu, nội dung chính, hoạt động trọng tâm, bài tập về nhà, tiêu chí đánh giá.\nTối ưu để giảm thời gian soạn của giáo viên."
+        },
+        {
+          "tieu_de": "PROMPT 8: Dạy học theo dự án (PBL) 2 tuần",
+          "danh_muc": "soạn_giáo_án",
+          "noi_dung_prompt": "Thiết kế dự án học tập 2 tuần cho chủ đề [Chủ đề] lớp [Lớp].\nYêu cầu: câu hỏi lớn (driving question), các mốc công việc theo tuần, sản phẩm cuối, rubric, và checklist cho giáo viên theo dõi."
+        },
+        {
+          "tieu_de": "PROMPT 12: Tạo kế hoạch dạy thay (dự phòng)",
+          "danh_muc": "soạn_giáo_án",
+          "noi_dung_prompt": "Tôi cần 1 kế hoạch dạy thay 35–45 phút cho lớp [Lớp] môn [Môn], chủ đề [Chủ đề], trong trường hợp giáo viên vắng.\nYêu cầu: dễ triển khai, ít chuẩn bị, có hoạt động nhóm và có đánh giá nhanh cuối giờ.\nPHẦN 2 — KIỂM TRA, ĐÁNH GIÁ, NHẬN XÉT (12 PROMPT)"
+        },
+        {
+          "tieu_de": "PROMPT 1: Giáo án 1 tiết chuẩn",
+          "danh_muc": "soạn_giáo_án",
+          "noi_dung_prompt": "plaintext\nBạn là trợ lý giáo viên chuyên nghiệp với 15 năm kinh nghiệm.\n \nHãy tạo giáo án 1 tiết (45 phút) cho:\n- Môn: [Tên môn học]\n- Lớp: [Số lớp]\n- Bài: [Tên bài học]\n- Mục tiêu cụ thể: [Nếu có]\n \nCấu trúc bắt buộc:\n \n1. THÔNG TIN CHUNG\n   - Môn học, lớp, thời gian\n   - Phương pháp dạy học chính\n \n2. MỤC TIÊU BÀI HỌC\n   - Kiến thức: Học sinh biết/hiểu được...\n   - Kỹ năng: Học sinh làm được...\n   - Thái độ: Học sinh có thái độ...\n \n3. CHUẨN BỊ\n   - Giáo viên: Tài liệu, đồ dùng dạy học\n   - Học sinh: SGK, vở, dụng cụ học tập\n \n4. HOẠT ĐỘNG DẠY HỌC\n \n   A. KHỞI ĐỘNG (5 phút)\n   - Hoạt động: ["
+        },
+        {
+          "tieu_de": "PROMPT 2: Giáo án dạy học theo dự án (PBL)",
+          "danh_muc": "soạn_giáo_án",
+          "noi_dung_prompt": "plaintext\nBạn là chuyên gia về Dạy học theo Dự án (Project-Based Learning).\n \nThiết kế dự án học tập cho:\n- Môn: [Môn học]\n- Lớp: [Số lớp]\n- Chủ đề: [Chủ đề dự án]\n- Thời gian: [Số tiết]\n \nCấu trúc:\n \n1. THÔNG TIN DỰ ÁN\n   - Tên dự án: [Tên hấp dẫn]\n   - Câu hỏi dẫn dắt (Driving Question): [Câu hỏi mở, thực tế]\n   - Sản phẩm cuối: [Mô tả cụ thể]\n \n2. MỤC TIÊU\n   - Kiến thức: [3-5 mục tiêu]\n   - Kỹ năng: [Kỹ năng thế kỷ 21]\n   - Thái độ: [Giá trị hình thành]\n \n3. QUY TRÌNH THỰC HIỆN (5E Model)\n \n   ENGAGE (Khơi gợi) - Tiết 1\n   - Tình huống thực tế: [Mô tả]\n   - Câu hỏi kích thích: [3-5 câu]\n  "
+        },
+        {
+          "tieu_de": "PROMPT 41: Kế hoạch giảng dạy tuần",
+          "danh_muc": "soạn_giáo_án",
+          "noi_dung_prompt": "plaintext\nTạo kế hoạch giảng dạy tuần cho:\n- Môn: [Môn học]\n- Lớp: [Số lớp]\n- Tuần: [Tuần thứ mấy]\n- Số tiết: [Số tiết/tuần]\n \nCấu trúc:\n \n1. TỔNG QUAN TUẦN\n   - Chủ đề chính: [Chủ đề]\n   - Mục tiêu tuần: [3-5 mục tiêu]\n   - Trọng tâm: [Điều quan trọng nhất]\n \n2. KẾ HOẠCH TỪNG TIẾT\n \n   ┌─ TIẾT 1: [Ngày/Thứ] ─────────────┐\n   │ Bài: [Tên bài]                    │\n   │ Mục tiêu: [Mục tiêu tiết học]     │\n   │ Hoạt động chính:                  │\n   │   - Khởi động: [Hoạt động]        │\n   │   - Bài mới: [Hoạt động]          │\n   │   - Luyện tập: [Hoạt động]        │\n   │ Chuẩn bị: [Vật liệu cần "
+        }
+      ],
+      "tạo_đề_kiểm_tra": [
+        {
+          "tieu_de": "PROMPT 13: Tạo ma trận đề (test blueprint)",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Hãy lập ma trận đề kiểm tra cho môn [Môn], lớp [Lớp], phạm vi [Phạm vi].\nGồm: chuẩn kiến thức-kỹ năng, mức độ (NB/TH/VD/VDC), số câu, điểm.\nKèm đề mẫu 45 phút và đáp án."
+        },
+        {
+          "tieu_de": "PROMPT 14: Tạo câu hỏi trắc nghiệm chất lượng",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Tạo 20 câu trắc nghiệm 4 lựa chọn cho bài [Tên bài].\nYêu cầu: có bẫy hợp lý, phân hóa (8 dễ, 8 vừa, 4 khó), giải thích vì sao đúng và vì sao sai."
+        },
+        {
+          "tieu_de": "PROMPT 15: Tạo câu hỏi tự luận theo rubric",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Tạo 3 câu tự luận cho bài [Tên bài] lớp [Lớp].\nMỗi câu có thang điểm chi tiết (rubric) và 2 bài mẫu: tối đa điểm và trung bình + nhận xét cải thiện."
+        },
+        {
+          "tieu_de": "PROMPT 16: Tạo đề kiểm tra ngắn 10 phút",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Tạo bài kiểm tra 10 phút cho bài [Tên bài], gồm 5 câu (kết hợp trắc nghiệm + tự luận ngắn).\nKèm đáp án và tiêu chí chấm nhanh."
+        },
+        {
+          "tieu_de": "PROMPT 22: Sinh câu hỏi phân hóa theo năng lực",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Với bài [Tên bài], hãy tạo bộ câu hỏi theo 3 nhóm: HS yếu (gợi mở từng bước), HS trung bình, HS khá giỏi (mở rộng).\nMỗi nhóm 6 câu, kèm gợi ý đáp án."
+        },
+        {
+          "tieu_de": "PROMPT 23: Tạo câu hỏi theo Bloom",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Tạo 12 câu hỏi theo thang Bloom (Nhớ–Hiểu–Vận dụng–Phân tích–Đánh giá–Sáng tạo) cho bài [Tên bài].\nMỗi mức 2 câu, phù hợp lớp [Lớp]."
+        },
+        {
+          "tieu_de": "PROMPT 24: Tạo đề ôn thi theo chủ đề + kế hoạch ôn",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Tạo đề ôn tập theo 5 chủ đề cho môn [Môn] lớp [Lớp], mục tiêu [giữa kỳ/cuối kỳ].\nKèm kế hoạch ôn 2 tuần: mỗi ngày làm gì, câu nào trọng tâm, cách tự kiểm tra tiến bộ.\nPHẦN 3 — QUẢN LÝ LỚP, GVCN, PHỤ HUYNH (10 PROMPT)"
+        },
+        {
+          "tieu_de": "PROMPT 39: Ngân hàng câu hỏi cho Kahoot/Quizizz",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Tạo 25 câu hỏi (kèm đáp án) cho Kahoot/Quizizz về bài [Tên bài].\nPhân hóa: 10 dễ, 10 vừa, 5 khó. Mỗi câu có giải thích 1 câu."
+        },
+        {
+          "tieu_de": "PROMPT 45: Khung yêu cầu AI hỏi lại để rõ đề",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Trước khi trả lời, hãy hỏi tôi 5 câu để làm rõ: môn/lớp/mục tiêu/bối cảnh lớp/thiết bị.\nSau đó mới tạo sản phẩm. Nếu thiếu thông tin, hãy đưa 2 phương án."
+        },
+        {
+          "tieu_de": "PROMPT 46: Khung kiểm tra tính chính xác",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "Hãy rà soát nội dung bạn vừa tạo cho bài [Tên bài].\n1) Chỉ ra 5 điểm có thể sai hoặc gây hiểu nhầm.\n2) Đề xuất cách kiểm chứng.\n3) Viết phiên bản đã sửa, rõ ràng hơn."
+        },
+        {
+          "tieu_de": "PROMPT 11: Đề thi trắc nghiệm chuẩn",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "plaintext\nTạo đề thi trắc nghiệm cho:\n- Môn: [Môn học]\n- Lớp: [Số lớp]\n- Chương/Bài: [Phạm vi kiểm tra]\n- Số câu: [Số lượng câu hỏi]\n- Thời gian: [Phút]\n \nCấu trúc đề thi:\n \n1. THÔNG TIN ĐỀ\n   - Tên trường, môn, lớp, thời gian\n   - Hướng dẫn làm bài\n \n2. CÂU HỎI (Phân bổ theo Bloom's Taxonomy)\n \n   PHẦN 1: BIẾT/HIỂU (40% - Mức độ 1-2)\n   [Số câu] câu hỏi kiểm tra kiến thức cơ bản\n \n   PHẦN 2: VẬN DỤNG (40% - Mức độ 3-4)\n   [Số câu] câu hỏi áp dụng kiến thức vào tình huống\n \n   PHẦN 3: VẬN DỤNG CAO (20% - Mức độ 5-6)\n   [Số câu] câu hỏi tư duy phản biện, sáng tạo\n \n3. FORMAT MỖI CÂU HỎI:\n \nCâu "
+        },
+        {
+          "tieu_de": "PROMPT 12: Đề thi tự luận theo Bloom",
+          "danh_muc": "tạo_đề_kiểm_tra",
+          "noi_dung_prompt": "plaintext\nTạo đề thi tự luận cho:\n- Môn: [Môn học]\n- Lớp: [Số lớp]\n- Chương/Bài: [Phạm vi]\n- Thời gian: [Phút]\n \nCấu trúc:\n \n1. THÔNG TIN ĐỀ\n   - Tên trường, môn, lớp, thời gian\n   - Hướng dẫn làm bài\n \n2. CÂU HỎI (6 mức độ Bloom)\n \n   CÂU 1: NHẬN BIẾT (1 điểm)\n   [Câu hỏi yêu cầu nhớ lại kiến thức]\n   Ví dụ: \"Định nghĩa khái niệm X là gì?\"\n \n   CÂU 2: HIỂU (2 điểm)\n   [Câu hỏi yêu cầu giải thích]\n   Ví dụ: \"Giải thích tại sao X xảy ra?\"\n \n   CÂU 3: VẬN DỤNG (2 điểm)\n   [Câu hỏi yêu cầu áp dụng vào tình huống]\n   Ví dụ: \"Áp dụng công thức X để giải bài toán sau...\"\n \n   CÂU 4: PHÂN TÍCH (2 điể"
+        }
+      ],
+      "đánh_giá_học_sinh": [
+        {
+          "tieu_de": "PROMPT 18: Nhận xét cá nhân hóa cho 10 học sinh",
+          "danh_muc": "đánh_giá_học_sinh",
+          "noi_dung_prompt": "Dựa trên bảng sau (HS | điểm | điểm mạnh | điểm cần cải thiện):\n[paste bảng]\nHãy viết nhận xét cá nhân hóa cho từng HS (2–3 câu), giọng tích cực, có 1 lời khen cụ thể và 1 gợi ý hành động tuần tới."
+        },
+        {
+          "tieu_de": "PROMPT 20: Tạo rubric chấm sản phẩm dự án",
+          "danh_muc": "đánh_giá_học_sinh",
+          "noi_dung_prompt": "Tạo rubric 4 mức (1–4) để chấm sản phẩm dự án chủ đề [Chủ đề].\nTiêu chí: đúng nội dung, sáng tạo, trình bày, làm việc nhóm, phản biện.\nKèm mô tả rõ cho từng mức."
+        },
+        {
+          "tieu_de": "PROMPT 31: Lời nhận xét sổ liên lạc điện tử",
+          "danh_muc": "đánh_giá_học_sinh",
+          "noi_dung_prompt": "Dựa trên mô tả sau về HS: [mô tả ngắn].\nViết nhận xét sổ liên lạc 2–3 câu: cụ thể, tích cực, có hành động đề nghị. Tránh từ ngữ tiêu cực."
+        }
+      ],
+      "skkn_bien_phap": [],
+      "thiết_kế_bài_giảng": [
+        {
+          "tieu_de": "PROMPT 4: Tạo hoạt động khởi động 3 phút",
+          "danh_muc": "thiết_kế_bài_giảng",
+          "noi_dung_prompt": "Hãy tạo 5 hoạt động khởi động 3 phút cho bài [Tên bài] môn [Môn] lớp [Lớp].\nMỗi hoạt động phải: vui, không cần đạo cụ, có câu hỏi dẫn vào bài, và có cách “bắt lỗi hiểu sai” của HS."
+        },
+        {
+          "tieu_de": "PROMPT 7: Thiết kế hoạt động tích hợp liên môn",
+          "danh_muc": "thiết_kế_bài_giảng",
+          "noi_dung_prompt": "Hãy thiết kế hoạt động tích hợp liên môn cho chủ đề [Chủ đề], kết nối ít nhất 2 môn: [Môn 1] và [Môn 2].\nGồm: tình huống thực tế, nhiệm vụ học sinh, sản phẩm cuối, rubric đánh giá và gợi ý vật liệu dễ kiếm."
+        },
+        {
+          "tieu_de": "PROMPT 21: Tạo bảng quan sát hoạt động nhóm",
+          "danh_muc": "thiết_kế_bài_giảng",
+          "noi_dung_prompt": "Tạo phiếu quan sát hoạt động nhóm cho tiết học [Tên bài].\nGồm 6 tiêu chí, mỗi tiêu chí có mô tả hành vi quan sát được và thang 0–2. Có ô ghi chú nhanh."
+        },
+        {
+          "tieu_de": "PROMPT 30: Thiết kế hoạt động gắn kết lớp",
+          "danh_muc": "thiết_kế_bài_giảng",
+          "noi_dung_prompt": "Đề xuất 10 hoạt động gắn kết lớp (15 phút/hoạt động) không cần đạo cụ.\nMỗi hoạt động có mục tiêu, cách chơi, lưu ý an toàn tâm lý."
+        },
+        {
+          "tieu_de": "PROMPT 35: Tạo slide dạy học 10 trang",
+          "danh_muc": "thiết_kế_bài_giảng",
+          "noi_dung_prompt": "Tạo dàn ý slide 10 trang cho bài [Tên bài] lớp [Lớp].\nMỗi trang: tiêu đề, 3 ý chính, 1 câu hỏi tương tác, gợi ý hình minh họa. Không viết quá dài."
+        },
+        {
+          "tieu_de": "PROMPT 41: Tạo flashcards",
+          "danh_muc": "thiết_kế_bài_giảng",
+          "noi_dung_prompt": "Tạo 30 flashcards cho bài [Tên bài].\nFormat: Mặt trước (câu hỏi/khái niệm) | Mặt sau (đáp án ngắn + ví dụ)."
+        },
+        {
+          "tieu_de": "PROMPT 42: Hoạt động “truy tìm lỗi”",
+          "danh_muc": "thiết_kế_bài_giảng",
+          "noi_dung_prompt": "Tạo 1 đoạn văn/lời giải có 6 lỗi sai (khái niệm/logic) về chủ đề [Chủ đề].\nSau đó cung cấp đáp án: liệt kê 6 lỗi và sửa đúng. Mục tiêu: HS chơi trò “thám tử lỗi”."
+        },
+        {
+          "tieu_de": "PROMPT 3: Hoạt động khởi động 5 phút",
+          "danh_muc": "thiết_kế_bài_giảng",
+          "noi_dung_prompt": "plaintext\nTạo 5 hoạt động KHỞI ĐỘNG 5 phút cho bài học:\n- Môn: [Môn học]\n- Lớp: [Số lớp]\n- Bài: [Tên bài]\n- Nội dung chính: [Tóm tắt ngắn]\n \nMỗi hoạt động phải có:\n \n1. TÊN HOẠT ĐỘNG: [Tên hấp dẫn]\n \n2. MỤC ĐÍCH: [Tại sao làm hoạt động này]\n \n3. CÁCH TỔ CHỨC (từng bước):\n   - Bước 1: [Chi tiết]\n   - Bước 2: [Chi tiết]\n   - Bước 3: [Chi tiết]\n \n4. CÂU HỎI DẪN VÀO BÀI: [2-3 câu hỏi kết nối với nội dung chính]\n \n5. BIẾN THỂ:\n   - Cho lớp đông: [Điều chỉnh]\n   - Cho HS nhút nhát: [Điều chỉnh]\n   - Nếu không có đồ dùng: [Phương án thay thế]\n \nYêu cầu:\n- KHÔNG cần đạo cụ phức tạp\n- Phù hợp lớp 40-45"
+        }
+      ],
+      "content_mạng_xã_hội": [
+        {
+          "tieu_de": "PROMPT 44: Bài đăng Facebook kể trải nghiệm tiết dạy",
+          "danh_muc": "content_mạng_xã_hội",
+          "noi_dung_prompt": "Viết 1 bài đăng Facebook 250–400 chữ kể về việc tôi áp dụng phương pháp [Tên phương pháp AI] trong lớp [Lớp].\nCấu trúc: Hook 1 câu – Câu chuyện 3 đoạn – 3 gạch đầu dòng bài học – CTA kêu gọi comment nhận tài liệu.\nGiọng thân thiện, chân thật.\nPHẦN 5 — PROMPT “SIÊU KHUNG” (8 PROMPT)"
+        }
+      ],
+      "khác": [
+        {
+          "tieu_de": "PROMPT 5: Thiết kế dạy học phân hóa",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Với bài [Tên bài], hãy thiết kế 3 tầng nhiệm vụ: Cơ bản–Khá–Giỏi.\nMỗi tầng: 3 câu hỏi/bài tập, gợi ý từng bước, và tiêu chí hoàn thành.\nGợi ý cách chia nhóm trong lớp đông."
+        },
+        {
+          "tieu_de": "PROMPT 6: Lập phiếu học tập (worksheet) 1 trang",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tạo phiếu học tập 1 trang A4 cho bài [Tên bài] môn [Môn] lớp [Lớp].\nGồm:\n1) Nhiệm vụ 1 (nhận biết)\n2) Nhiệm vụ 2 (thông hiểu)\n3) Nhiệm vụ 3 (vận dụng)\n4) Ô “tự đánh giá”\n5) Ô “câu hỏi còn thắc mắc”."
+        },
+        {
+          "tieu_de": "PROMPT 9: Thiết kế tiết STEM đơn giản",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tạo kế hoạch 1 tiết STEM cho chủ đề [Chủ đề] môn [Môn] lớp [Lớp].\nSản phẩm làm bằng vật liệu rẻ/đồ tái chế. Có bước thử–sai (iteration), bảng tiêu chí đánh giá, và phần phản tư cuối tiết."
+        },
+        {
+          "tieu_de": "PROMPT 10: Tạo tình huống nhập vai (role-play)",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tạo 1 kịch bản role-play 10 phút cho bài [Tên bài].\nCó 4 vai, lời thoại gợi ý, mục tiêu kiến thức cần “lộ ra” trong đối thoại, và 3 câu hỏi thảo luận sau nhập vai."
+        },
+        {
+          "tieu_de": "PROMPT 11: Thiết kế trò chơi ôn tập",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tạo 1 trò chơi ôn tập cho chương [Tên chương] môn [Môn] lớp [Lớp].\nLuật chơi rõ, có tính cạnh tranh nhẹ, không cần công cụ đặc biệt.\nKèm 20 câu hỏi (10 dễ, 7 vừa, 3 khó) và đáp án."
+        },
+        {
+          "tieu_de": "PROMPT 17: Exit ticket cuối tiết",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tạo 5 mẫu exit ticket cho bài [Tên bài] lớp [Lớp].\nMỗi mẫu có 3 câu: 1 kiến thức, 1 ứng dụng, 1 tự phản tư “hôm nay em còn vướng gì?”."
+        },
+        {
+          "tieu_de": "PROMPT 19: Phân tích lỗi sai và tạo bài chữa lỗi",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Đây là các lỗi sai phổ biến của lớp: [liệt kê].\nHãy phân nhóm lỗi (khái niệm/kỹ năng/đọc đề/logic) và tạo 10 bài tập chữa lỗi kèm hướng dẫn từng bước."
+        },
+        {
+          "tieu_de": "PROMPT 25: Tin nhắn nhắc học bài nhưng không gây phản cảm",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Hãy viết 3 mẫu tin nhắn nhắc học bài gửi nhóm lớp (Zalo/Facebook).\nGiọng: tích cực, hài hước nhẹ, không áp lực. Kèm 1 câu hỏi để phụ huynh/HS phản hồi."
+        },
+        {
+          "tieu_de": "PROMPT 26: Tin nhắn thông báo HS vi phạm tế nhị",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Viết tin nhắn riêng gửi phụ huynh về việc HS [ẩn danh] hay [mô tả vấn đề], giọng thấu hiểu, hợp tác, không quy chụp.\nKèm 2 đề xuất giải pháp cụ thể và lời mời trao đổi."
+        },
+        {
+          "tieu_de": "PROMPT 27: Kế hoạch họp phụ huynh 45 phút",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tạo kịch bản họp phụ huynh 45 phút cho lớp [Lớp].\nGồm: mục tiêu buổi họp, nội dung chính, slide outline 8 trang, câu hỏi thảo luận và phần cam kết phối hợp."
+        },
+        {
+          "tieu_de": "PROMPT 28: Thiết kế nội quy lớp học tích cực",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Hãy tạo bộ “nội quy lớp học tích cực” 8 điều cho lớp [Lớp], ngôn ngữ thân thiện, tập trung vào hành vi mong muốn.\nKèm cách triển khai 10 phút để HS cùng xây dựng."
+        },
+        {
+          "tieu_de": "PROMPT 29: Xử lý lớp mất trật tự bằng can thiệp nhẹ",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tôi có lớp [Lớp] hay ồn đầu giờ. Hãy đề xuất 5 chiến thuật can thiệp nhẹ trong 2 phút (không quát mắng), và 1 kế hoạch 1 tuần để cải thiện dần."
+        },
+        {
+          "tieu_de": "PROMPT 32: Kịch bản xử lý mâu thuẫn học sinh",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Hãy tạo kịch bản 3 bước xử lý mâu thuẫn giữa HS A và HS B trong lớp [Lớp].\nKèm câu hỏi trung lập để hai bên nói chuyện và cách chốt thỏa thuận."
+        },
+        {
+          "tieu_de": "PROMPT 33: Thiết kế phiếu khảo sát nhanh cuối tháng",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tạo 1 phiếu khảo sát 10 câu (Google Form) để lấy ý kiến HS về lớp học tháng này.\nGồm: mức độ hiểu bài, cảm xúc, hoạt động thích nhất, điều muốn thay đổi. Có 2 câu mở."
+        },
+        {
+          "tieu_de": "PROMPT 34: Thư khen gửi phụ huynh",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Viết 1 thư khen gửi phụ huynh về việc HS [ẩn danh] đã tiến bộ ở [điểm].\nGiọng chân thành, ngắn gọn, có 1 ví dụ cụ thể và 1 lời cảm ơn hợp tác.\nPHẦN 4 — SÁNG TẠO HỌC LIỆU SỐ, TRUYỀN THÔNG LỚP HỌC (10 PROMPT)"
+        },
+        {
+          "tieu_de": "PROMPT 36: Tạo kịch bản video 60–90 giây",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Viết kịch bản video 60–90 giây tóm tắt bài [Tên bài] cho HS lớp [Lớp].\nCó hook 3 giây đầu, ví dụ gần gũi, và 1 câu hỏi cuối video để HS trả lời."
+        },
+        {
+          "tieu_de": "PROMPT 37: Prompt tạo ảnh minh họa bằng AI",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Viết 5 prompt tạo ảnh minh họa cho khái niệm [Khái niệm] trong môn [Môn].\nYêu cầu: không chữ trong ảnh, phong cách [3D/hoạt hình/sơn dầu], bối cảnh lớp học Việt Nam. Mỗi prompt 1–2 câu, có chi tiết."
+        },
+        {
+          "tieu_de": "PROMPT 38: Tạo sơ đồ tư duy dạng text",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tạo sơ đồ tư duy dạng text (cây) cho bài [Tên bài].\nCó 3 nhánh chính, mỗi nhánh 3 nhánh con, và có ví dụ minh họa ngắn."
+        },
+        {
+          "tieu_de": "PROMPT 40: Bảng từ vựng + ví dụ (ngoại ngữ)",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tạo bảng 20 từ vựng cho chủ đề [Chủ đề] lớp [Lớp].\nMỗi từ: phiên âm, nghĩa, 1 câu ví dụ, 1 lỗi hay gặp và cách sửa."
+        },
+        {
+          "tieu_de": "PROMPT 43: Câu chuyện hóa bài học",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Viết 1 câu chuyện 400–600 chữ để dạy khái niệm [Khái niệm] cho HS lớp [Lớp].\nNhân vật gần gũi, có tình huống, có twist, và chốt lại bài học khoa học rõ ràng."
+        },
+        {
+          "tieu_de": "PROMPT 47: Khung tạo 3 phiên bản (ngắn–vừa–dài)",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Hãy tạo 3 phiên bản cho cùng 1 nội dung về [Chủ đề]:\n- Bản 1: 100 chữ (đăng nhanh)\n- Bản 2: 300 chữ (bài Facebook)\n- Bản 3: 800 chữ (bài blog)\nGiữ giọng nhất quán và có CTA."
+        },
+        {
+          "tieu_de": "PROMPT 48: Khung chuyển đổi phong cách",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Hãy viết lại nội dung sau theo 3 phong cách:\n1) nghiêm túc sư phạm\n2) gần gũi đời thường\n3) hài hước nhẹ\nNội dung: [paste]."
+        },
+        {
+          "tieu_de": "PROMPT 49: Khung tạo checklist triển khai trên lớp",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Từ kế hoạch bài dạy sau: [paste]\nHãy tạo checklist 10 mục để tôi mang vào lớp (chuẩn bị trước giờ, trong giờ, cuối giờ)."
+        },
+        {
+          "tieu_de": "PROMPT 50: Khung tạo phiên bản cho lớp đông",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Hãy điều chỉnh kế hoạch hoạt động sau để phù hợp lớp 45 HS, không đủ thiết bị, chỉ có bảng và giấy.\nKế hoạch: [paste]."
+        },
+        {
+          "tieu_de": "PROMPT 51: Khung “phản biện” ý tưởng của tôi",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Tôi có ý tưởng dạy học sau: [mô tả].\nHãy đóng vai người phản biện giàu kinh nghiệm: chỉ ra rủi ro, điểm mơ hồ, và đề xuất 3 cách cải tiến thực tế."
+        },
+        {
+          "tieu_de": "PROMPT 52: Khung tạo tài liệu tặng/lead magnet",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "Từ chủ đề [Chủ đề], hãy tạo một tài liệu tặng (lead magnet) 3 trang gồm:\n1) vấn đề\n2) giải pháp\n3) checklist + 10 prompt mẫu\nViết dễ đọc, có tiêu đề hấp dẫn.\nGợi ý CTA để tặng tài liệu: “Thầy cô comment AI, mình gửi bộ Prompt + kế hoạch 30 ngày đăng FB nhé!”\n\nTạo cho tôi một file HTML hoàn chỉnh cho ứng dụng Flashcard Thông Minh với các yêu cầu sau:\n\n**THÔNG TIN CẦN THAY ĐỔI:**\n- Môn học: [TÊN MÔN HỌC - VD: Lịch Sử, Toán, Hóa Học]\n- Chủ đề: [CHỦ ĐỀ CỤ THỂ - VD: Cách Mạng Tháng Tám 1945]\n- Danh sách câu hỏi và đáp án (định dạng JSON):\n[\n  {\"question\": \"Câu hỏi 1?\", \"answer\": \"Đáp án 1\"},\n  {\"qu"
+        },
+        {
+          "tieu_de": "PROMPT 21 : Phân tích lỗi sai",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "plaintext\nBạn là chuyên gia phân tích lỗi học tập.\n \nPhân tích bài làm sau và chẩn đoán lỗi:\n- Môn: [Môn học]\n- Lớp: [Số lớp]\n- Bài tập: [Tên bài tập]\n- Bài làm của học sinh:\n \n[PASTE BÀI LÀM CỦA HỌC SINH]\n \nHãy phân tích theo cấu trúc:\n \n1. ĐÁNH GIÁ TỔNG QUAN\n   - Điểm mạnh: [2-3 điểm]\n   - Điểm yếu: [2-3 điểm]\n   - Điểm số dự kiến: [X/10]\n \n2. PHÂN LOẠI LỖI SAI\n \n   A. LỖI KIẾN THỨC (Knowledge Errors)\n   - Lỗi 1: [Mô tả lỗi]\n     + Nguyên nhân: [Tại sao sai]\n     + Kiến thức cần bổ sung: [Cụ thể]\n   \n   B. LỖI KỸ NĂNG (Skill Errors)\n   - Lỗi 2: [Mô tả lỗi]\n     + Kỹ năng còn yếu: [Cụ thể]\n  "
+        },
+        {
+          "tieu_de": "PROMPT 22 : Feedback cá nhân hóa",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "plaintext\nViết nhận xét cá nhân hóa cho bài làm:\n- Môn: [Môn học]\n- Học sinh: [Tên học sinh]\n- Bài tập: [Tên bài tập]\n- Điểm: [X/10]\n- Bài làm:\n \n[PASTE BÀI LÀM]\n \nCấu trúc feedback:\n \n1. LỜI MỞ ĐẦU TÍCH CỰC (1 câu)\n   [Khen ngợi chân thành về 1 điểm cụ thể]\n   Ví dụ: \"Cô rất ấn tượng với cách em phân tích vấn đề một cách logic!\"\n \n2. ĐIỂM MẠNH (2-3 điểm CỤ THỂ)\n   ✅ [Điểm mạnh 1 + Dẫn chứng từ bài làm]\n   ✅ [Điểm mạnh 2 + Dẫn chứng]\n   ✅ [Điểm mạnh 3 + Dẫn chứng]\n \n3. ĐIỂM CẦN CẢI THIỆN (2-3 điểm CỤ THỂ)\n   📌 [Điểm yếu 1]\n      → Gợi ý cải thiện: [Cách làm cụ thể]\n   📌 [Điểm yếu 2]\n      → Gợ"
+        },
+        {
+          "tieu_de": "PROMPT 31: Phiếu học tập 1 trang",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "plaintext\nTạo phiếu học tập 1 trang A4 cho:\n- Môn: [Môn học]\n- Lớp: [Số lớp]\n- Bài: [Tên bài]\n- Mục tiêu: [Mục tiêu học tập]\n \nCấu trúc phiếu (fit trong 1 trang A4):\n \n┌─────────────────────────────────────────┐\n│  PHIẾU HỌC TẬP: [TÊN BÀI]               │\n│  Họ tên: ____________  Lớp: ____        │\n└─────────────────────────────────────────┘\n \n📚 PHẦN 1: KIẾN THỨC CỐT LÕI (10%)\n[Bảng từ khóa hoặc mindmap đơn giản]\n \n✏️ PHẦN 2: NHIỆM VỤ HỌC TẬP (70%)\n \nNhiệm vụ 1: NHẬN BIẾT (Dễ) ⭐\n[Câu hỏi/Bài tập cơ bản]\nÔ trả lời: _________________________\n \nNhiệm vụ 2: VẬN DỤNG (Trung bình) ⭐⭐\n[Câu hỏi/Bài tậ"
+        },
+        {
+          "tieu_de": "PROMPT 32: Game học tập",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "plaintext\nThiết kế game học tập cho:\n- Môn: [Môn học]\n- Lớp: [Số lớp]\n- Chủ đề: [Chủ đề cần ôn tập]\n- Thời gian: [Phút]\n- Số học sinh: [Số lượng]\n \nCấu trúc game:\n \n1. THÔNG TIN GAME\n   - Tên game: [Tên hấp dẫn, dễ nhớ]\n   - Mục tiêu học tập: [Học sinh sẽ học được gì]\n   - Loại game: [Cá nhân/Nhóm/Cả lớp]\n \n2. CHUẨN BỊ\n   - Vật liệu: [Danh sách cụ thể]\n   - Chuẩn bị trước: [GV cần làm gì]\n   - Không gian: [Sắp xếp lớp học]\n \n3. LUẬT CHƠI (Từng bước)\n   \n   BƯỚC 1: KHỞI ĐỘNG (2 phút)\n   [Giải thích luật, chia đội, phát vật liệu]\n \n   BƯỚC 2: CHƠI GAME (15-20 phút)\n   [Mô tả chi tiết cách chơi]\n"
+        },
+        {
+          "tieu_de": "PROMPT 46: Email phụ huynh",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "plaintext\nViết email gửi phụ huynh về:\n- Học sinh: [Tên học sinh]\n- Lớp: [Số lớp]\n- Mục đích: [Báo cáo tiến bộ/Vấn đề/Mời họp/...]\n- Tình huống cụ thể: [Mô tả ngắn]\n \nCấu trúc email:\n \nSUBJECT: [Tiêu đề email - Ngắn gọn, rõ ràng]\n \nKính gửi Quý Phụ huynh của em [Tên học sinh],\n \n1. LỜI CHÀO & GIỚI THIỆU (1-2 câu)\n   [Xưng danh, vai trò, mục đích email]\n \n2. ĐIỂM TÍCH CỰC (Luôn bắt đầu bằng positive)\n   [Khen ngợi 1-2 điểm mạnh của học sinh]\n \n3. NỘI DUNG CHÍNH\n   [Thông tin cần truyền đạt - Cụ thể, khách quan]\n \n4. ĐỀ XUẤT/YÊU CẦU (Nếu có)\n   [Những gì cần phụ huynh hỗ trợ]\n \n5. KẾ HOẠCH HÀNH "
+        },
+        {
+          "tieu_de": "PROMPT 51: Tạo Podcast với NotebookLM",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "plaintext\nHướng dẫn sử dụng NotebookLM để tạo podcast:\n \nBƯỚC 1: Chuẩn bị tài liệu\n- Tổng hợp nội dung bài học vào 1 file (PDF/Doc)\n- Hoặc paste text trực tiếp\n- Độ dài: 500-5000 từ\n \nBƯỚC 2: Upload lên NotebookLM\n- Vào notebooklm.google.com\n- Tạo notebook mới\n- Upload file hoặc paste text\n \nBƯỚC 3: Tạo Podcast\n- Click nút \"Generate Audio Overview\"\n- Đợi 2-3 phút\n- NotebookLM tự động tạo podcast 2 người đối thoại\n \nBƯỚC 4: Tùy chỉnh (Optional)\n- Nếu muốn điều chỉnh, thêm prompt:\n  \"Tạo podcast 7 phút về [chủ đề], \n   phong cách: [giảng giải/thảo luận/phỏng vấn],\n   dành cho: học sinh lớp [X],\n"
+        },
+        {
+          "tieu_de": "PROMPT 52: Research nhanh với Perplexity",
+          "danh_muc": "khác",
+          "noi_dung_prompt": "plaintext\nSử dụng Perplexity để nghiên cứu nhanh:\n \nĐẶC ĐIỂM PERPLEXITY:\n- AI search engine với nguồn đáng tin cậy\n- Trả lời kèm citation (trích dẫn nguồn)\n- Cập nhật real-time\n- Miễn phí\n \nCÁCH DÙNG CHO GIÁO VIÊN:\n \n1. NGHIÊN CỨU TÀI LIỆU MỚI\n   Prompt: \"Tìm 5 nghiên cứu mới nhất (2024-2026) \n   về [chủ đề], từ các tạp chí uy tín\"\n \n2. KIỂM TRA THÔNG TIN\n   Prompt: \"Thông tin này có đúng không: [paste thông tin]. \n   Hãy kiểm chứng với các nguồn đáng tin cậy\"\n \n3. TÌM VÍ DỤ THỰC TẾ\n   Prompt: \"Cho 5 ví dụ thực tế về [khái niệm] \n   ở Việt Nam, có nguồn\"\n \n4. SO SÁNH QUAN ĐIỂM\n   Prompt: \"So s"
+        }
+      ]
+    }
+  },
+  "C_y_tuong_app_giao_duc": {
+    "mo_ta": "Ý tưởng app hỗ trợ giáo viên — dùng làm tính mới & sáng tạo trong SKKN",
+    "danh_sach": [
+      {
+        "ten_app": "ĐỀ XUẤT 10 Ý TƯỞNG APP HỖ TRỢ GIÁO VIÊN VIỆT NAM",
+        "doi_tuong_chinh": "",
+        "van_de_giai_quyet": "- ✅ **Giải quyết vấn đề thực tế** từ nghiên cứu - ✅ **Dễ sử dụng** cho cả giáo viên lớn tuổi - ✅ **Tiết kiệm thời gian** và giảm gánh nặng công việc - ✅ **Nâng cao chất lượng** giảng dạy và chuyên môn - ✅ **Khả thi về mặt kỹ thuật** và kinh tế",
+        "tinh_nang_chinh": [],
+        "mo_ta": "\n**Ngày báo cáo:** 17/02/2026\n\n---\n\n## TỔNG QUAN\n\nDựa trên phân tích chi tiết về các vấn đề chuyên môn của giáo viên Việt Nam từ cấp Mầm non đến Đại học, chúng tôi đề xuất **10 ý tưởng app** được thiết kế để giải quyết các \"pain points\" cụ thể mà đội ngũ giáo viên đang phải đối mặt hàng ngày. Mỗi app được xây dựng với triết lý:\n\n- ✅ **Giải quyết vấn đề thực tế** từ nghiên cứu\n- ✅ **Dễ sử dụng** cho cả giáo viên lớn tuổi\n- ✅ **Tiết kiệm thời gian** và giảm gánh nặng công việc\n- ✅ **Nâng cao chất lượng** giảng dạy và chuyên môn\n- ✅ **Khả thi về mặt kỹ thuật** và kinh tế\n\n---"
+      },
+      {
+        "ten_app": "APP 1: GIAOAN.AI",
+        "doi_tuong_chinh": "",
+        "van_de_giai_quyet": "",
+        "tinh_nang_chinh": [
+          "Tạo giáo án tự động bằng AI",
+          "Ngân hàng mẫu giáo án chất lượng",
+          "Tùy chỉnh và cá nhân hóa",
+          "Tích hợp học liệu đa phương tiện",
+          "Quản lý và chia sẻ",
+          "Trợ lý AI thông minh",
+          "Cập nhật liên tục"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**Mầm non, Tiểu học, THCS**\n\n### 🔥 Vấn đề cụ thể giải quyết\nGiáo viên dành quá nhiều thời gian soạn giáo án (từ 2-4 giờ/bài), đặc biệt với chương trình GDPT 2018 đòi hỏi giáo án theo định hướng phát triển năng lực. Nhiều giáo viên lớn tuổi gặp khó khăn trong việc thiết kế bài giảng tích hợp và sử dụng công nghệ.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Tạo giáo án tự động bằng AI**\n   - Nhập môn học, lớp, tiết học và nội dung cần dạy\n   - AI tự động tạo giáo án hoàn chỉnh theo chuẩn GDPT 2018\n   - Tích hợp các hoạt động phát triển năng lực và phẩm chất học sinh"
+      },
+      {
+        "ten_app": "APP 2: KẾT NỐI YÊU THƯƠNG",
+        "doi_tuong_chinh": "áp lực từ phụ huynh",
+        "van_de_giai_quyet": "áp lực từ phụ huynh - 🤝 **Tạo cầu nối** giữa nhà trường và gia đình một cách hiệu quả - 🇻🇳 **Thiết kế cho văn hóa Việt Nam** với các",
+        "tinh_nang_chinh": [
+          "Giao tiếp hai chiều thông minh",
+          "Nhật ký theo dõi học sinh",
+          "Quản lý hình ảnh và kỷ niệm",
+          "Thời khóa biểu và lịch học",
+          "Đánh giá và phát triển",
+          "Bảo vệ quyền riêng tư",
+          "Tính năng nâng cao"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**Mầm non, Tiểu học**\n\n### 🔥 Vấn đề cụ thể giải quyết\nGiáo viên, đặc biệt là cấp Mầm non, chịu áp lực lớn từ phụ huynh với kỳ vọng cao và yêu cầu liên lạc thường xuyên. Việc quản lý thông tin, ảnh, video của từng trẻ và giao tiếp với nhiều phụ huynh tốn rất nhiều thời gian và dễ xảy ra nhầm lẫn. Nhiều giáo viên phải sử dụng điện thoại cá nhân, mất ranh giới giữa công việc và đời tư.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Giao tiếp hai chiều thông minh**\n   - Gửi thông báo đến tất cả hoặc một nhóm phụ huynh cụ thể\n   - Tin nhắn cá nhân với từng phụ huynh\n   - "
+      },
+      {
+        "ten_app": "APP 3: THẦY CÔ SÁNG TẠO",
+        "doi_tuong_chinh": "Hát và âm nhạc, Múa và vận động, Vẽ và thủ công, Kể chuyện, Làm đồ dùng dạy học",
+        "van_de_giai_quyet": "Hát và âm nhạc, Múa và vận động, Vẽ và thủ công, Kể chuyện, Làm đồ dùng dạy học - Từ cơ bản đến nâng cao, phù hợp với mọi trình độ - Có phụ đề và giải thích chi tiết, dễ hiểu",
+        "tinh_nang_chinh": [
+          "Thư viện video hướng dẫn kỹ năng",
+          "Kho bài hát và nhạc cho trẻ",
+          "Ngân hàng câu chuyện và kịch bản",
+          "Hướng dẫn thủ công và đồ dùng dạy học",
+          "Khóa học trực tuyến",
+          "Cộng đồng chia sẻ",
+          "Lịch sử kiện và chủ đề"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**Mầm non**\n\n### 🔥 Vấn đề cụ thể giải quyết\nGiáo viên mầm non cần liên tục trau dồi nhiều kỹ năng mềm và năng khiếu như hát, múa, vẽ, kể chuyện, làm đồ chơi để tạo môi trường học tập sinh động và hấp dẫn cho trẻ. Tuy nhiên, họ thiếu thời gian và nguồn tài liệu hướng dẫn dễ tiếp cận, đặc biệt là các giáo viên ở vùng sâu vùng xa hoặc giáo viên mới vào nghề.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Thư viện video hướng dẫn kỹ năng**\n   - Hàng ngàn video ngắn (3-10 phút) hướng dẫn các kỹ năng cụ thể\n   - Phân loại theo chủ đề: Hát và âm nhạc, Múa và vận động, Vẽ và"
+      },
+      {
+        "ten_app": "APP 4: TÍCHHỢP PRO",
+        "doi_tuong_chinh": "Các môn học tích hợp (Khoa học tự nhiên = Lý+Hóa+Sinh, Lịch sử-Địa lý) được thiết kế \"ghép cơ học\", gây khó khăn cho giáo viên vốn được đào tạo đơn môn. Họ lúng túng trong việc xây dựng kế hoạch dạy học, kiểm tra đánh giá và thiếu tài liệu tham khảo chất lượng.",
+        "van_de_giai_quyet": "Các môn học tích hợp (Khoa học tự nhiên = Lý+Hóa+Sinh, Lịch sử-Địa lý) được thiết kế \"ghép cơ học\", gây khó khăn cho giáo viên vốn được đào tạo đơn môn. Họ lúng túng trong việc xây dựng kế hoạch dạy học, kiểm tra đánh giá và thiếu tài liệu tham khảo chất lượng.",
+        "tinh_nang_chinh": [
+          "Hệ thống bài giảng tích hợp mẫu",
+          "Công cụ thiết kế bài dạy tích hợp",
+          "Ngân hàng câu hỏi và đề kiểm tra",
+          "Thư viện video và mô phỏng",
+          "Hướng dẫn phương pháp luận",
+          "Cộng đồng giáo viên môn tích hợp",
+          "Công cụ quản lý và báo cáo"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**THCS (Trung học Cơ sở)**\n\n### 🔥 Vấn đề cụ thể giải quyết\nĐây là pain point lớn nhất của giáo viên THCS: Các môn học tích hợp (Khoa học tự nhiên = Lý+Hóa+Sinh, Lịch sử-Địa lý) được thiết kế \"ghép cơ học\", gây khó khăn cho giáo viên vốn được đào tạo đơn môn. Họ lúng túng trong việc xây dựng kế hoạch dạy học, kiểm tra đánh giá và thiếu tài liệu tham khảo chất lượng.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Hệ thống bài giảng tích hợp mẫu**\n   - Bài giảng chi tiết cho tất cả các bài trong SGK môn tích hợp\n   - Được thiết kế bởi đội ngũ giáo viên chuyên gia có kin"
+      },
+      {
+        "ten_app": "APP 5: CỘNG ĐỒNG GIÁO VIÊN VIỆT NAM",
+        "doi_tuong_chinh": "like, comment, share, bookmark",
+        "van_de_giai_quyet": "like, comment, share, bookmark - Theo dõi giáo viên khác và tạo mạng lưới chuyên môn - Newsfeed được cá nhân hóa theo sở thích và cấp học",
+        "tinh_nang_chinh": [
+          "Mạng xã hội chuyên nghiệp",
+          "Nhóm chuyên môn theo chủ đề",
+          "Hỏi đáp chuyên môn (Q&A Platform)",
+          "Thư viện tài nguyên chia sẻ",
+          "Sự kiện và hội thảo trực tuyến",
+          "Tìm việc và cơ hội nghề nghiệp",
+          "Tính năng wellness và hỗ trợ tinh thần"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**Tất cả các cấp học (Mầm non, Tiểu học, THCS, THPT, Đại học)**\n\n### 🔥 Vấn đề cụ thể giải quyết\nGiáo viên thường cảm thấy cô đơn và căng thẳng với công việc, thiếu một nền tảng để chia sẻ kinh nghiệm, học hỏi lẫn nhau và tìm kiếm sự hỗ trợ chuyên môn. Các nền tảng hiện tại (Facebook, Zalo) thiếu tính chuyên nghiệp và khó quản lý thông tin chuyên môn. Nhu cầu xây dựng cộng đồng học tập chuyên môn là rất lớn nhưng chưa được đáp ứng hiệu quả.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Mạng xã hội chuyên nghiệp**\n   - Hồ sơ giáo viên với thông tin chuyên môn (môn dạy"
+      },
+      {
+        "ten_app": "APP 6: HƯỚNG NGHIỆP THÔNG MINH",
+        "doi_tuong_chinh": "",
+        "van_de_giai_quyet": "",
+        "tinh_nang_chinh": [
+          "Công cụ đánh giá nghề nghiệp cho học sinh",
+          "Cơ sở dữ liệu ngành học và nghề nghiệp",
+          "Công cụ hỗ trợ giáo viên tư vấn",
+          "Hoạt động trải nghiệm nghề nghiệp",
+          "Tư vấn chọn tổ hợp môn học",
+          "Cổng thông tin tuyển sinh đại học",
+          "Báo cáo và thống kê"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**THPT (Trung học Phổ thông)**\n\n### 🔥 Vấn đề cụ thể giải quyết\nChương trình GDPT 2018 yêu cầu giáo viên THPT đảm nhận vai trò tư vấn và định hướng nghề nghiệp cho học sinh, nhưng phần lớn giáo viên không được đào tạo về tư vấn hướng nghiệp, thiếu công cụ và thông tin cần thiết. Việc hướng nghiệp còn mang tính hình thức, không đáp ứng được nhu cầu cá nhân hóa cho từng học sinh.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Công cụ đánh giá nghề nghiệp cho học sinh**\n   - Bài test đánh giá hứng thú nghề nghiệp (Holland Code, MBTI, Big Five)\n   - Đánh giá năng lực, điể"
+      },
+      {
+        "ten_app": "APP 7: NGHIÊN CỨU 360",
+        "doi_tuong_chinh": "thiếu thời gian do giờ dạy quá tải, hạn chế về nguồn lực, khó khăn trong công bố quốc tế (rào cản ngoại ngữ, chi phí cao), và thiếu kỹ năng về phương pháp nghiên cứu hiện đại. Việc cân bằng giữa giảng dạy và nghiên cứu là thách thức lớn.",
+        "van_de_giai_quyet": "thiếu thời gian do giờ dạy quá tải, hạn chế về nguồn lực, khó khăn trong công bố quốc tế (rào cản ngoại ngữ, chi phí cao), và thiếu kỹ năng về phương pháp nghiên cứu hiện đại. Việc cân bằng giữa giảng dạy và nghiên cứu là thách thức lớn.",
+        "tinh_nang_chinh": [
+          "Quản lý dự án nghiên cứu",
+          "Công cụ viết bài báo khoa học",
+          "Tìm kiếm và quản lý tài liệu tham khảo",
+          "Cơ sở dữ liệu tạp chí quốc tế",
+          "Kết nối và hợp tác nghiên cứu",
+          "Khóa học và hội thảo",
+          "Theo dõi và báo cáo thành tích"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**Đại học (Giảng viên)**\n\n### 🔥 Vấn đề cụ thể giải quyết\nGiảng viên đại học chịu áp lực nghiên cứu khoa học (NCKH) rất lớn nhưng gặp nhiều rào cản: thiếu thời gian do giờ dạy quá tải, hạn chế về nguồn lực, khó khăn trong công bố quốc tế (rào cản ngoại ngữ, chi phí cao), và thiếu kỹ năng về phương pháp nghiên cứu hiện đại. Việc cân bằng giữa giảng dạy và nghiên cứu là thách thức lớn.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Quản lý dự án nghiên cứu**\n   - Tạo và quản lý đề tài nghiên cứu (cấp trường, cấp bộ, quốc gia)\n   - Timeline và milestone cho từng dự án\n  "
+      },
+      {
+        "ten_app": "APP 8: QUẢN LÝ THÔNG MINH",
+        "doi_tuong_chinh": "các công việc ngoài chuyên môn như hồ sơ, sổ sách, báo cáo, hội họp, phong trào chiếm quá nhiều thời gian (30-40% thời gian làm việc), khiến giáo viên không thể tập trung vào chuyên môn và chăm sóc học sinh.",
+        "van_de_giai_quyet": "các công việc ngoài chuyên môn như hồ sơ, sổ sách, báo cáo, hội họp, phong trào chiếm quá nhiều thời gian (30-40% thời gian làm việc), khiến giáo viên không thể tập trung vào chuyên môn và chăm sóc học sinh.",
+        "tinh_nang_chinh": [
+          "Điểm danh điện tử thông minh",
+          "Quản lý điểm số và học lực",
+          "Nhận xét và đánh giá",
+          "Quản lý hồ sơ học sinh",
+          "Lịch công tác và nhắc nhở",
+          "Tạo và quản lý biểu mẫu",
+          "Báo cáo tự động"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**Tất cả các cấp học (Mầm non, Tiểu học, THCS, THPT, Đại học)**\n\n### 🔥 Vấn đề cụ thể giải quyết\nGánh nặng hành chính là một trong những pain point lớn nhất của giáo viên ở mọi cấp học: các công việc ngoài chuyên môn như hồ sơ, sổ sách, báo cáo, hội họp, phong trào chiếm quá nhiều thời gian (30-40% thời gian làm việc), khiến giáo viên không thể tập trung vào chuyên môn và chăm sóc học sinh.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Điểm danh điện tử thông minh**\n   - Điểm danh nhanh bằng QR code hoặc NFC\n   - Tự động gửi thông báo đến phụ huynh khi học sinh vắng "
+      },
+      {
+        "ten_app": "APP 9: KỸ NĂNG SỐ CHO THẦY CÔ",
+        "doi_tuong_chinh": "thiết kế slide, poster, infographic",
+        "van_de_giai_quyet": "thiết kế slide, poster, infographic - Prezi: bài thuyết trình sinh động - Genially: bài giảng tương tác - Hướng dẫn sử dụng từng bước - Template có sẵn cho từng môn học",
+        "tinh_nang_chinh": [
+          "Khóa học kỹ năng số cơ bản",
+          "Công cụ thiết kế bài giảng số",
+          "Công cụ tạo video bài giảng",
+          "Công cụ kiểm tra trực tuyến",
+          "Quản lý lớp học trực tuyến",
+          "Kỹ năng nâng cao",
+          "Cộng đồng học tập và hỗ trợ"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**Tất cả các cấp học (Mầm non, Tiểu học, THCS, THPT, Đại học)**\n\n### 🔥 Vấn đề cụ thể giải quyết\nNăng lực số đã trở thành yêu cầu bắt buộc trong thời đại 4.0, nhưng nhiều giáo viên, đặc biệt là lớn tuổi, gặp khó khăn trong việc ứng dụng công nghệ thông tin vào giảng dạy. Họ thiếu thời gian và cơ hội để học các kỹ năng mới, trong khi các khóa đào tạo thường mang tính lý thuyết, không sát thực tế.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Khóa học kỹ năng số cơ bản**\n   - Microsoft Office (Word, Excel, PowerPoint) cho giáo viên\n   - Google Workspace (Docs, Sheets, "
+      },
+      {
+        "ten_app": "APP 10: THƯ VIỆN BÀI GIẢNG VIỆT NAM",
+        "doi_tuong_chinh": "#### 🔴 **Ưu tiên cao** (Triển khai trong 6-12 tháng đầu)",
+        "van_de_giai_quyet": "#",
+        "tinh_nang_chinh": [
+          "Kho bài giảng chuẩn chất lượng cao",
+          "Ngân hàng đề thi và bài kiểm tra",
+          "Video bài giảng từ giáo viên giỏi",
+          "Tài liệu chuyên đề và bồi dưỡng học sinh giỏi",
+          "Nội dung giáo dục địa phương",
+          "Công cụ tìm kiếm thông minh",
+          "Đóng góp từ cộng đồng",
+          "GiaoAn.AI"
+        ],
+        "mo_ta": "\n### 🎯 Đối tượng sử dụng chính\n**THCS, THPT (có thể mở rộng ra các cấp khác)**\n\n### 🔥 Vấn đề cụ thể giải quyết\nGiáo viên, đặc biệt là THCS và THPT, thiếu tài liệu tham khảo chất lượng cho các môn học mới, môn tích hợp và nội dung giáo dục địa phương. Họ phải tự mày mò tìm kiếm trên nhiều nguồn khác nhau, tốn thời gian và không đảm bảo tính chính xác. Chất lượng các tài liệu trên mạng rất không đồng đều.\n\n### ⚙️ Danh sách tính năng chi tiết\n\n1. **Kho bài giảng chuẩn chất lượng cao**\n   - Bài giảng đầy đủ cho tất cả các môn THCS, THPT\n   - Theo tất cả các bộ SGK được phê duyệt\n   - Slide PowerPo"
+      }
+    ]
+  },
+  "D_thi_truong_edtech": {
+    "mo_ta": "Dữ liệu thị trường EdTech Việt Nam 2025-2026 — cơ sở thực tiễn cho SKKN",
+    "so_lieu_chinh": {
+      "quy_mo_thi_truong_2023": "1 tỷ USD",
+      "du_kien_2025": "1.5-2 tỷ USD",
+      "toc_do_tang_truong": "20%/năm",
+      "vi_the_khu_vuc": "Top 3 EdTech tiềm năng nhất Đông Nam Á",
+      "phan_khuc_k12": "Hơn 197 startup, chiếm 61% hệ sinh thái EdTech VN",
+      "ai_trong_edtech": "60% sản phẩm EdTech tích hợp AI (Sách Trắng 2024)",
+      "chi_tieu_giao_duc": "Trung bình gia đình VN dành 20% thu nhập cho giáo dục",
+      "muc_tieu_bo_gddt": "Tích hợp EdTech vào 80% trường công lập vào 2025",
+      "full_report": "Nghiên Cứu Thị Trường EdTech Việt Nam 2025-2026: Cơ Hội Kinh Doanh App/Dịch Vụ Cho Giáo Viên\nNgày nghiên cứu : 12/03/2026\nNgười thực hiện: YouMind AI Assistant\nPhạm vi: Phân tích toàn diện thị trường EdTech Việt Nam, đề xuất 8 ý tưởng app/dịch vụ có thể kiếm tiền từ giáo viên\n📊 TỔNG QUAN THỊ TRƯỜNG EDTECH VIỆT NAM\nQuy Mô và Tốc Độ Tăng Trưởng\nThị trường công nghệ giáo dục (EdTech) Việt Nam đang trong giai đoạn tăng trưởng mạnh mẽ với các chỉ số ấn tượng :\nQuy mô thị trường 2023 : 1 tỷ USD\nDự kiến 2025: 1,5-2 tỷ USD\nTốc độ tăng trưởng: 20%/năm\nVị thế khu vực: Top 3 thị trường EdTech tiềm năng nhất Đông Nam Á, chiếm 20% tổng số EdTech toàn khu vực\nVị thế toàn cầu : Top 10 quốc gia có tốc độ tăng trưởng EdTech nhanh nhất thế giới\nLợi Thế Văn Hóa Việt Nam\nMột yếu tố then chốt tạo nên sức hút của thị trường Việt Nam là văn hóa coi trọng giáo dục :\nChi tiêu giáo dục : Trung bình một gia đình Việt Nam dành 20% thu nhập cho giáo dục con cái\nSo sánh khu vực: Cao hơn gấp 2-3 lần so với mức 6-10% ở các nước Đông Nam Á khác\nChính sách hỗ trợ: Bộ GD&ĐT công bố kế hoạch chuyển đổi số, hướng tới tích hợp giải pháp EdTech vào 80% trường công lập vào năm 2025\nCấu Trúc Thị Trường\nPhân khúc K-12 (Mầm non - Lớp 12) :\nChiếm ưu thế với hơn 197 startup\nChiếm hơn 61% hệ sinh thái EdTech Việt Nam\nLà phân khúc có nhu cầu cao nhất\nCông nghệ AI trong EdTech :\n60% sản phẩm EdTech trong nước đã tích hợp công nghệ AI (theo Sách Trắng EdTech 2024)\nXu hướng tích hợp AI đang là yếu tố cạnh tranh then chốt\n🏆 CÁC APP EDTECH THÀNH CÔNG TẠI VIỆT NAM\nCase Study 1: Vuihoc.vn\nMô hình : Lớp học tương tác trực tuyến K-12\nThành tích :\nHơn 5 triệu người dùng\nHơn 1.000 lớp học/ngày\n400.000 tài liệu học tập\nFunding: 8 triệu USD\nBài học rút ra : Mô hình subscription B2C cho học sinh có tiềm năng lớn khi kết hợp nội dung chất lượng và công nghệ tương tác.\nCase Study 2: Edupia\nMô hình : Nền tảng học tiếng Anh trực tuyến\nThành tích :\nHơn 5 triệu người dùng\n400.000 học sinh trả phí\nFunding: 24 triệu USD\nBài học rút ra : Tập trung vào một môn học cụ thể (tiếng Anh) với chất lượng cao có thể tạo ra doanh nghiệp triệu đô.\nCase Study 3: ELSA Speak\nMô hình : Ứng dụng luyện phát âm tiếng Anh bằng AI\nThành tích :\nHơn 54 triệu lượt tải xuống toàn cầu\nĐứng thứ 2 tại Việt Nam (sau Duolingo)\nĐịnh vị : \"Gia sư tiếng Anh cá nhân 24/7\"\nBài học rút ra : AI cá nhân hóa là yếu tố tạo khác biệt lớn, người dùng sẵn sàng trả phí cho trải nghiệm học tập được tùy chỉnh.\nCase Study 4: Edulive\nMô hình : Công cụ số hóa bài giảng cho giáo viên\nTính năng chính:\nSố hóa phiếu bài tập thành bài tập tương tác\nGiao bài tập về nhà tự động\nChấm điểm và tổng kết báo cáo tự động\nBài học rút ra : Công cụ hỗ trợ giáo viên tiết kiệm thời gian có nhu cầu thực tế cao, đặc biệt sau COVID-19.\n💡 PHÂN TÍCH TÀI LIỆU YOUMIND HIỆN CÓ\nTừ việc rà soát toàn bộ thư viện YouMind, tôi nhận thấy bạn đã có nền tảng vững chắc với các tài sản sau :\n1. Dự Án LabManager (App Quản Lý Phòng Máy)\nTrạng thái: Sản phẩm đã hoàn thiện, đang sử dụng thực tế\nĐiểm mạnh:\nGiải quyết pain point cụ thể: Quản lý phòng máy tính trường học\nTiết kiệm 3-5 giờ/tuần cho giáo viên phụ trách phòng máy\nTích hợp công nghệ QR Code tiên tiến\nGiao diện thân thiện, dễ sử dụng\nHoàn toàn miễn phí (hiện tại)\nThị trường mục tiêu :\nTAM: 30.000 trường có phòng máy tính tại Việt Nam\nSAM: 10.000 trường THCS/THPT khu vực thành phố lớn\nSOM: 1.000-2.000 trường giai đoạn đầu\nMô hình kinh doanh đề xuất : Freemium\nGói miễn phí: 1 phòng máy, 30 máy tính, lưu trữ local\nGói Premium : 299.000đ/năm với cloud backup, multi-user, báo cáo nâng cao\n2. Tài Liệu \"10 Ý Tưởng App Hỗ Trợ Giáo Viên\"\nBạn đã nghiên cứu chi tiết 10 ý tưởng app bao gồm :\nGiaoAn. AI - Tạo giáo án tự động bằng AI\nKết Nối Yêu Thương - Giao tiếp nhà trường - phụ huynh\nThầy Cô Sáng Tạo - Kỹ năng mềm cho giáo viên mầm non\nTrợ Lý Đánh Giá - Chấm bài và đánh giá tự động\nNgân Hàng Đề Thi AI - Tạo đề thi tự động\nLớp Học Số - Quản lý lớp học toàn diện\nPhát Triển Chuyên Môn - Nền tảng học tập cho giáo viên\nSức Khỏe Tinh Thần - Hỗ trợ tâm lý cho giáo viên\nCộng Đồng Giáo Viên - Mạng xã hội chuyên nghiệp\nTrợ Lý Hành Chính - Tự động hóa công việc văn phòng\nGiá trị: Đây là tài liệu nghiên cứu chất lượng cao với phân tích chi tiết về pain points, tính năng, và mô hình kinh doanh.\n3. Khóa Học \"AI Cho Giáo Viên\"\nTrạng thái: Đã có nội dung và chiến lược marketing\nThông tin khóa học :\nGiá: 299.000đ\nNội dung: 6 module học thực chiến\nBonus: 150+ Template AI, phần mềm trọn đời, hỗ trợ 1-1\nThành tích : 1.247 giáo viên đã tham gia (theo tài liệu marketing)\nĐánh giá: 4.9/5 sao từ 856 đánh giá\nChiến lược marketing hiện có:\nBài quảng cáo Facebook/Zalo chi tiết\nTestimonial từ giáo viên thực tế\nƯu đãi Early Bird và scarcity marketing\n4. Tài Liệu \"App Trợ Lý Ảo Cá Nhân Cho Giáo Viên\"\nConcept: Giáo viên \"clone\" phong cách dạy của mình thành AI chatbot để hỗ trợ học sinh 24/7\nPain point giải quyết:\n73% giáo viên bị burnout vì làm việc ngoài giờ\nHọc sinh thường hỏi bài vào 8-10h tối (giờ vàng học tập)\nGiáo viên không thể phản hồi"
+    }
+  },
+  "E_khung_bien_phap_skkn": {
+    "mo_ta": "Khung chuẩn để viết biện pháp/SKKN ứng dụng AI vào dạy học",
+    "cau_truc_skkn": {
+      "I_phan_mo_dau": {
+        "1_ly_do_chon_de_tai": "Xuất phát từ thực trạng giáo viên Việt Nam mất 2-4 giờ soạn giáo án/bài; áp lực viết SKKN, thiếu công cụ hỗ trợ hiện đại...",
+        "2_muc_dich_nghien_cuu": "Nghiên cứu và ứng dụng AI vào [tên hoạt động cụ thể] nhằm nâng cao hiệu quả giảng dạy...",
+        "3_doi_tuong_nghien_cuu": "Giáo viên [cấp học], học sinh lớp [X], trường [Y]...",
+        "4_pham_vi_ap_dung": "Năm học [20XX-20XX], môn [tên môn], lớp [X]..."
+      },
+      "II_co_so_ly_luan": {
+        "1_khai_niem_ai_trong_gd": "AI (Trí tuệ nhân tạo) trong giáo dục là việc ứng dụng các thuật toán học máy, mô hình ngôn ngữ lớn (LLM) như ChatGPT, Gemini... vào quá trình dạy và học.",
+        "2_xu_the_giao_duc_4_0": "Giáo dục 4.0 hướng đến cá nhân hóa học tập, tăng tương tác và ứng dụng công nghệ. Bộ GD&ĐT khuyến khích đổi mới phương pháp dạy học.",
+        "3_cac_ly_thuyet_nen_tang": [
+          "Lý thuyết dạy học phân hóa (Differentiated Instruction)",
+          "Lý thuyết học tập kiến tạo (Constructivism)",
+          "Lý thuyết gamification trong giáo dục",
+          "Thuyết đa trí tuệ (Multiple Intelligences - Howard Gardner)"
+        ]
+      },
+      "III_thuc_trang": {
+        "1_thuan_loi": "Giáo viên ngày càng được tiếp cận công nghệ; học sinh thành thạo thiết bị số; nhà trường có kết nối internet...",
+        "2_kho_khan": "Thiếu thời gian, thiếu kỹ năng số, lo ngại về độ chính xác của AI, chưa có hướng dẫn cụ thể từ Bộ GD&ĐT...",
+        "3_so_lieu_khao_sat": "[Điền kết quả khảo sát thực tế tại trường/lớp của bạn]"
+      },
+      "IV_bien_phap": {
+        "cac_bien_phap": [
+          {
+            "so_thu_tu": 1,
+            "ten_bien_phap": "[Ví dụ: Sử dụng AI tạo đề thi phân hóa]",
+            "muc_tieu": "[Mục tiêu cụ thể của biện pháp]",
+            "cach_thuc": "[Quy trình 4 bước: Chuẩn bị → Thực hiện → Đánh giá → Điều chỉnh]",
+            "ket_qua_dat_duoc": "[Tiết kiệm X giờ, tăng Y% tương tác...]",
+            "minh_chung": "[Ảnh chụp màn hình, bài kiểm tra, phiếu khảo sát...]"
+          }
+        ]
+      },
+      "V_ket_qua": {
+        "dinh_luong": "[Số liệu cụ thể: tỷ lệ HS đạt điểm khá giỏi, thời gian tiết kiệm...]",
+        "dinh_tinh": "[Nhận xét của HS, GV, BGH; không khí lớp học...]",
+        "doi_chieu": "[So sánh trước và sau khi áp dụng biện pháp]"
+      },
+      "VI_ket_luan": {
+        "bai_hoc_kinh_nghiem": "[Rút ra từ quá trình thực hiện]",
+        "de_xuat": "[Đề xuất với BGH, Sở GD&ĐT về việc nhân rộng]",
+        "huong_phat_trien": "[Kế hoạch tiếp tục cải tiến và mở rộng áp dụng]"
+      }
+    },
+    "tu_khoa_chat_luong_cao": [
+      "đổi mới phương pháp dạy học",
+      "ứng dụng công nghệ AI",
+      "cá nhân hóa học tập",
+      "dạy học phân hóa",
+      "tăng tương tác học sinh",
+      "tiết kiệm thời gian soạn bài",
+      "nâng cao chất lượng giờ dạy",
+      "phát triển năng lực học sinh",
+      "gamification",
+      "học tập chủ động",
+      "công cụ số hóa",
+      "chuyển đổi số giáo dục",
+      "trí tuệ nhân tạo trong giáo dục",
+      "EdTech Việt Nam",
+      "giáo dục 4.0"
+    ]
+  }
+}

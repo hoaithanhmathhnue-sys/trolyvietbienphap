@@ -57,7 +57,7 @@ const getHealingPromptSnippet = (healingContext: { originalContent: string; anal
   return `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🩺 CHẾ ĐỘ CHỮA BỆNH (HEALING MODE) ĐANG ĐƯỢC BẬT:
-Đây là văn bản báo cáo/SKKN gốc của người dùng được tải lên:
+Đây là văn bản báo cáo/Biện pháp gốc của người dùng được tải lên:
 <DOCUMENT_GOC>
 ${healingContext.originalContent}
 </DOCUMENT_GOC>
@@ -192,7 +192,7 @@ const App: React.FC = () => {
     includeStatistics: false, // Bổ sung bảng biểu thống kê
     requirementsConfirmed: false, // Đã xác nhận yêu cầu
     includeSolution4_5: false, // Viết thêm Giải pháp 4 và 5
-    customTemplate: undefined // Cấu trúc mẫu SKKN tùy chỉnh (đã trích xuất)
+    customTemplate: undefined // Cấu trúc mẫu Biện pháp tùy chỉnh (đã trích xuất)
   });
 
   // Khôi phục referenceDocuments từ sessionStorage khi mount
@@ -362,7 +362,7 @@ const App: React.FC = () => {
   const [currentSolutionContent, setCurrentSolutionContent] = useState('');
   const [isRevisingSolution, setIsRevisingSolution] = useState(false);
 
-  // Helper: Tính toán phân bổ trang cho từng phần SKKN
+  // Helper: Tính toán phân bổ trang cho từng phần Biện pháp
   const getPageAllocation = useCallback(() => {
     if (!userInfo.pageLimit || typeof userInfo.pageLimit !== 'number') return null;
 
@@ -402,7 +402,7 @@ const App: React.FC = () => {
     return `
 🚨 GIỚI HẠN SỐ TRANG CHO PHẦN NÀY (BẮT BUỘC):
 📌 ${sectionName}: PHẢI viết khoảng ${section.pages} TRANG (≈ ${section.words.toLocaleString()} từ ≈ ${section.chars.toLocaleString()} ký tự)
-⚠️ Trong tổng ${alloc.totalPages} trang SKKN, phần này chiếm ${section.pages} trang.
+⚠️ Trong tổng ${alloc.totalPages} trang Biện pháp, phần này chiếm ${section.pages} trang.
 🚫 KHÔNG viết quá ${Math.ceil(section.pages * 1.15)} trang và KHÔNG viết dưới ${Math.max(1, Math.floor(section.pages * 0.85))} trang.
 ✅ Viết CÔ ĐỌNG, SÚC TÍCH nhưng ĐẦY ĐỦ NỘI DUNG. Ưu tiên bảng biểu để tiết kiệm không gian.
 `;
@@ -491,7 +491,7 @@ ${requirements.join('\n')}
 `;
   }, [userInfo.requirementsConfirmed, userInfo.pageLimit, userInfo.includePracticalExamples, userInfo.includeStatistics, userInfo.specialRequirements, userInfo.textbook, getPageAllocation]);
 
-  // Helper function để tạo prompt cấu trúc từ mẫu SKKN đã trích xuất
+  // Helper function để tạo prompt cấu trúc từ mẫu Biện pháp đã trích xuất
   const getCustomTemplatePrompt = useCallback(() => {
     if (!userInfo.customTemplate) return null;
 
@@ -508,10 +508,10 @@ ${requirements.join('\n')}
 
       return `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚨🚨🚨 CẤU TRÚC MẪU SKKN TỪ ${template.name || 'Sở/Phòng GD'} (BẮT BUỘC TUYỆT ĐỐI) 🚨🚨🚨
+🚨🚨🚨 CẤU TRÚC MẪU BIỆN PHÁP TỪ ${template.name || 'Sở/Phòng GD'} (BẮT BUỘC TUYỆT ĐỐI) 🚨🚨🚨
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️ CẢNH BÁO: Đây là CẤU TRÚC DUY NHẤT được phép sử dụng.
-🚫 TUYỆT ĐỐI KHÔNG sử dụng cấu trúc SKKN mặc định/chuẩn.
+🚫 TUYỆT ĐỐI KHÔNG sử dụng cấu trúc Biện pháp mặc định/chuẩn.
 ✅ BẮT BUỘC TẠO DÀN Ý VÀ NỘI DUNG THEO ĐÚNG CẤU TRÚC NÀY:
 
 ${structureText}
@@ -591,19 +591,19 @@ QUY TẮC BẮT BUỘC:
       const textbookTerm = isHigherEd ? 'giáo trình' : 'SGK';
 
       const initMessage = `
-Bạn là chuyên gia giáo dục cấp quốc gia, có 20+ năm kinh nghiệm viết, thẩm định và chấm điểm Sáng kiến Kinh nghiệm (SKKN) đạt giải cấp Bộ, cấp tỉnh tại Việt Nam.
+Bạn là chuyên gia giáo dục cấp quốc gia, có 20+ năm kinh nghiệm viết, thẩm định và chấm điểm Sáng kiến Kinh nghiệm (Biện pháp) đạt giải cấp Bộ, cấp tỉnh tại Việt Nam.
 ${isHigherEd ? `
-⚠️ LƯU Ý QUAN TRỌNG: Đây là SKKN dành cho BẬC ${userInfo.level.toUpperCase()} - KHÔNG PHẢI PHỔ THÔNG.
+⚠️ LƯU Ý QUAN TRỌNG: Đây là Biện pháp dành cho BẬC ${userInfo.level.toUpperCase()} - KHÔNG PHẢI PHỔ THÔNG.
 Phải sử dụng thuật ngữ phù hợp: "sinh viên" thay "học sinh", "giảng viên" thay "giáo viên", "giáo trình" thay "SGK", v.v.
 ` : ''}
 NHIỆM VỤ CỦA BẠN:
-Lập DÀN Ý CHI TIẾT cho một đề tài SKKN dựa trên thông tin tôi cung cấp. Dàn ý phải đầy đủ, cụ thể, có độ sâu và đảm bảo 4 tiêu chí: Tính MỚI, Tính KHOA HỌC, Tính KHẢ THI, Tính HIỆU QUẢ.
+Lập DÀN Ý CHI TIẾT cho một đề tài Biện pháp dựa trên thông tin tôi cung cấp. Dàn ý phải đầy đủ, cụ thể, có độ sâu và đảm bảo 4 tiêu chí: Tính MỚI, Tính KHOA HỌC, Tính KHẢ THI, Tính HIỆU QUẢ.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🏆 10 NGUYÊN TẮC VÀNG CHỐNG ĐẠO VĂN & NÂNG TẦM CHẤT LƯỢNG (BẮT BUỘC TUÂN THỦ NGHIÊM NGẶT):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-⚠️ CẢNH BÁO: Bạn PHẢI tuân thủ 10 nguyên tắc sau để SKKN có tính "CON NGƯỜI", giọng điệu tự nhiên như một giáo viên thực sự đang viết sáng kiến của chính họ - là tâm huyết và sáng tạo của họ.
+⚠️ CẢNH BÁO: Bạn PHẢI tuân thủ 10 nguyên tắc sau để Biện pháp có tính "CON NGƯỜI", giọng điệu tự nhiên như một giáo viên thực sự đang viết sáng kiến của chính họ - là tâm huyết và sáng tạo của họ.
 
 1️⃣ KHÔNG SAO CHÉP TRỰC TIẾP (Zero Copy-Paste):
    ❌ SAI: Copy nguyên văn định nghĩa từ Wikipedia, sách giáo khoa.
@@ -662,7 +662,7 @@ THÔNG TIN ĐỀ TÀI:
           const info = getSubjectInfo(userInfo.subject); return info ? `
   → Nhóm: ${info.group}
   → Đặc trưng: ${info.description}
-  → Hãy viết nội dung SKKN bám sát đặc thù lĩnh vực "${info.name}" thuộc nhóm "${info.group}"` : '';
+  → Hãy viết nội dung Biện pháp bám sát đặc thù lĩnh vực "${info.name}" thuộc nhóm "${info.group}"` : '';
         })()}
 • Cấp học: ${userInfo.level}
 • Khối lớp / Đối tượng: ${userInfo.grade}
@@ -672,7 +672,7 @@ THÔNG TIN ĐỀ TÀI:
 ${userInfo.referenceDocuments ? `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TÀI LIỆU THAM KHẢO (DO GIÁO VIÊN CUNG CẤP):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Dưới đây là nội dung các tài liệu tham khảo mà giáo viên đã tải lên. BẮT BUỘC phải bám sát vào nội dung này để viết SKKN phù hợp và chính xác:
+Dưới đây là nội dung các tài liệu tham khảo mà giáo viên đã tải lên. BẮT BUỘC phải bám sát vào nội dung này để viết Biện pháp phù hợp và chính xác:
 
 ${truncateForPrompt(userInfo.referenceDocuments)}
 
@@ -680,11 +680,11 @@ ${truncateForPrompt(userInfo.referenceDocuments)}
 ` : ''}
 
 ${userInfo.customTemplate ? getCustomTemplatePrompt() : (userInfo.skknTemplate ? `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚨🚨🚨 MẪU YÊU CẦU SKKN TỪ SỞ/PHÒNG GD (BẮT BUỘC TUYỆT ĐỐI) 🚨🚨🚨
+🚨🚨🚨 MẪU YÊU CẦU BIỆN PHÁP TỪ SỞ/PHÒNG GD (BẮT BUỘC TUYỆT ĐỐI) 🚨🚨🚨
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-⚠️ CẢNH BÁO QUAN TRỌNG NHẤT: Giáo viên đã cung cấp MẪU YÊU CẦU SKKN chính thức bên dưới.
+⚠️ CẢNH BÁO QUAN TRỌNG NHẤT: Giáo viên đã cung cấp MẪU YÊU CẦU Biện pháp chính thức bên dưới.
 
-🚫 BẠN TUYỆT ĐỐI KHÔNG ĐƯỢC sử dụng bất kỳ cấu trúc SKKN mặc định/chuẩn nào.
+🚫 BẠN TUYỆT ĐỐI KHÔNG ĐƯỢC sử dụng bất kỳ cấu trúc Biện pháp mặc định/chuẩn nào.
 ✅ BẠN BẮT BUỘC PHẢI viết HOÀN TOÀN theo cấu trúc và mẫu này:
 
 1. Tạo dàn ý và viết nội dung ĐÚNG CHÍNH XÁC theo cấu trúc, các mục, các phần trong mẫu này
@@ -694,10 +694,10 @@ ${userInfo.customTemplate ? getCustomTemplatePrompt() : (userInfo.skknTemplate ?
 5. Số lượng giải pháp, tên các phần lớn, thứ tự trình bày ĐỀU PHẢI theo mẫu này
 6. Viết đúng theo format và quy cách mẫu đề ra
 
-NỘI DUNG MẪU SKKN (ĐÂY LÀ CẤU TRÚC DUY NHẤT ĐƯỢC PHÉP SỬ DỤNG):
+NỘI DUNG MẪU BIỆN PHÁP (ĐÂY LÀ CẤU TRÚC DUY NHẤT ĐƯỢC PHÉP SỬ DỤNG):
 ${userInfo.skknTemplate}
 
-[HẾT MẪU SKKN - MỌI NỘI DUNG PHẢI TUÂN THỦ CẤU TRÚC TRÊN]
+[HẾT MẪU BIỆN PHÁP - MỌI NỘI DUNG PHẢI TUÂN THỦ CẤU TRÚC TRÊN]
 ` : '')}
 
 ${userInfo.specialRequirements ? `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -745,7 +745,7 @@ Các yêu cầu khác:
 
 ${(userInfo.skknTemplate || userInfo.customTemplate) ? '' : (isHigherEd ? `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CẤU TRÚC SKKN BẬC CAO (TRUNG CẤP / CAO ĐẲNG / ĐẠI HỌC):
+CẤU TRÚC BIỆN PHÁP BẬC CAO (TRUNG CẤP / CAO ĐẲNG / ĐẠI HỌC):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📋 MÔ TẢ SÁNG KIẾN
@@ -903,7 +903,7 @@ CẤU TRÚC SKKN BẬC CAO (TRUNG CẤP / CAO ĐẲNG / ĐẠI HỌC):
    → Kết quả phân tích thống kê chi tiết
 ` : `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-CẤU TRÚC SKKN CHUẨN (ÁP DỤNG KHI KHÔNG CÓ MẪU RIÊNG):
+CẤU TRÚC BIỆN PHÁP CHUẨN (ÁP DỤNG KHI KHÔNG CÓ MẪU RIÊNG):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📋 MÔ TẢ SÁNG KIẾN
@@ -1138,7 +1138,7 @@ QUAN TRỌNG:
 "${outlineFeedback}"
       
       Hãy viết lại TOÀN BỘ Dàn ý chi tiết mới đã được cập nhật theo yêu cầu trên. 
-      Vẫn đảm bảo cấu trúc chuẩn SKKN.
+      Vẫn đảm bảo cấu trúc chuẩn Biện pháp.
       
       Lưu ý các quy tắc định dạng:
 - Xuống dòng sau mỗi câu.
@@ -1244,7 +1244,7 @@ QUAN TRỌNG:
               
               🖼️ GỢI Ý HÌNH ẢNH MINH HỌA.
               
-              ⚠️ NHẮC LẠI: Đây là SKKN cấp ${userInfo.level}, khối ${userInfo.grade}, môn ${userInfo.subject}.
+              ⚠️ NHẮC LẠI: Đây là Biện pháp cấp ${userInfo.level}, khối ${userInfo.grade}, môn ${userInfo.subject}.
               Mọi nội dung, ví dụ, số liệu, đối tượng khảo sát PHẢI phù hợp với cấp ${userInfo.level}.
               🚫 TUYỆT ĐỐI KHÔNG nhầm sang THPT, THCS hoặc cấp học khác nếu đề tài không thuộc cấp đó!
               
@@ -1756,7 +1756,7 @@ SGK: ${userInfo.textbook}
 1. Tuân thủ YÊU CẦU SỬA từ người dùng
 2. Tham khảo tài liệu mới nếu có
 3. Giữ nguyên cấu trúc: Mục tiêu - Cơ sở - Quy trình - Ví dụ - Công cụ - Lưu ý
-4. Format chuẩn SKKN
+4. Format chuẩn Biện pháp
         
         ${getPageLimitPrompt()}
 `;
@@ -1841,7 +1841,7 @@ SGK: ${userInfo.textbook}
 
       // Pattern tìm GIẢI PHÁP có nội dung chi tiết (separator + tiêu đề)
       const detailPatterns = [
-        // Pattern cho format chuẩn SKKN (có separator và icon)
+        // Pattern cho format chuẩn Biện pháp (có separator và icon)
         new RegExp(`━+\\s *\\n ?\\s *📋\\s * GIẢI PHÁP\\s * ${solutionNum} \\s * [-–: ]`, 'i'),
         new RegExp(`━+\\s *\\n ?\\s * GIẢI PHÁP\\s *\\[?${solutionNum}\\] ?\\s * [-–: ]`, 'i'),
         // Pattern với số mục 4.1, 4.2 (trong phần IV)
@@ -1968,12 +1968,12 @@ SGK: ${userInfo.textbook}
         📎 NHIỆM VỤ: TẠO ĐẦY ĐỦ CÁC TÀI LIỆU PHỤ LỤC
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         
-        ⚠️ QUAN TRỌNG: Bạn PHẢI dựa vào NỘI DUNG SKKN ĐÃ VIẾT bên dưới để tạo phụ lục.
-        Các phụ lục phải KHỚP với nội dung, số liệu, giải pháp đã đề cập trong SKKN.
+        ⚠️ QUAN TRỌNG: Bạn PHẢI dựa vào NỘI DUNG BIỆN PHÁP ĐÃ VIẾT bên dưới để tạo phụ lục.
+        Các phụ lục phải KHỚP với nội dung, số liệu, giải pháp đã đề cập trong Biện pháp.
         KHÔNG tạo phụ lục liên quan đến hình ảnh, video(vì không thể hiển thị).
         
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        📄 NỘI DUNG SKKN ĐÃ VIẾT(ĐỌC KỸ ĐỂ TẠO PHỤ LỤC PHÙ HỢP):
+        📄 NỘI DUNG BIỆN PHÁP ĐÃ VIẾT(ĐỌC KỸ ĐỂ TẠO PHỤ LỤC PHÙ HỢP):
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         
         ${state.fullDocument}
@@ -1994,7 +1994,7 @@ SGK: ${userInfo.textbook}
         📎 YÊU CẦU TẠO PHỤ LỤC:
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         
-        Dựa trên NỘI DUNG SKKN ĐÃ VIẾT ở trên, hãy tạo ĐẦY ĐỦ, CHI TIẾT từng tài liệu phụ lục sau:
+        Dựa trên NỘI DUNG BIỆN PHÁP ĐÃ VIẾT ở trên, hãy tạo ĐẦY ĐỦ, CHI TIẾT từng tài liệu phụ lục sau:
 
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         📋 PHỤ LỤC 1: PHIẾU KHẢO SÁT ĐÁNH GIÁ MỨC ĐỘ HỨNG THÚ VÀ HIỆU QUẢ HỌC TẬP CỦA HỌC SINH
@@ -2120,12 +2120,12 @@ Tổ: [Tổ chuyên môn]
     - Nếu môn Toán: Sử dụng LaTeX cho công thức
 
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-        📋 PHỤ LỤC 6: BẢNG TỔNG HỢP KẾT QUẢ KHẢO SÁT(MINH CHỨNG CHO BẢNG DỮ LIỆU SKKN)
+        📋 PHỤ LỤC 6: BẢNG TỔNG HỢP KẾT QUẢ KHẢO SÁT(MINH CHỨNG CHO BẢNG DỮ LIỆU BIỆN PHÁP)
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 - Bảng tổng hợp kết quả khảo sát TRƯỚC thực nghiệm(số lượng, tỷ lệ %)
   - Bảng tổng hợp kết quả khảo sát SAU thực nghiệm
-    - Bảng so sánh kết quả TRƯỚC - SAU để minh chứng cho các bảng số liệu trong SKKN
-      - Số liệu phải LOGIC và KHỚP với các bảng trong phần Kết quả của SKKN
+    - Bảng so sánh kết quả TRƯỚC - SAU để minh chứng cho các bảng số liệu trong Biện pháp
+      - Số liệu phải LOGIC và KHỚP với các bảng trong phần Kết quả của Biện pháp
 
         ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
         ⚠️ YÊU CẦU FORMAT VÀ NỘI DUNG(BẮT BUỘC):
@@ -2137,8 +2137,8 @@ Tổ: [Tổ chuyên môn]
     - Giáo án minh họa phải VIẾT CHI TIẾT từng hoạt động, có lời thoại GV - HS mẫu
       - Rubric phải có ĐẦY ĐỦ tiêu chí và mô tả các mức độ
         - Bài tập mẫu phải có ĐẦY ĐỦ đề bài và đáp án / hướng dẫn giải
-          - Số liệu bảng tổng hợp phải KHỚP với số liệu trong phần Kết quả SKKN
-            - Nếu dàn ý SKKN có đề cập phụ lục khác(chưa liệt kê ở trên), hãy TẠO THÊM
+          - Số liệu bảng tổng hợp phải KHỚP với số liệu trong phần Kết quả Biện pháp
+            - Nếu dàn ý Biện pháp có đề cập phụ lục khác(chưa liệt kê ở trên), hãy TẠO THÊM
         
         📌 VỀ FORMAT:
 - Markdown chuẩn, bảng dùng | ---|
@@ -2336,14 +2336,14 @@ Tổ: [Tổ chuyên môn]
                 )
               )}
 
-              {/* Nút xuất Word SKKN (luôn hiển thị khi đã có nội dung) */}
+              {/* Nút xuất Word Biện pháp (luôn hiển thị khi đã có nội dung) */}
               {(state.step >= GenerationStep.OUTLINE) && (
                 <Button variant="secondary" onClick={exportToWord} className="w-full" icon={<Download size={16} />}>
-                  Xuất file Word SKKN
+                  Xuất file Word Biện pháp
                 </Button>
               )}
 
-              {/* Sau khi hoàn thành SKKN: hiển thị các nút phụ lục */}
+              {/* Sau khi hoàn thành Biện pháp: hiển thị các nút phụ lục */}
               {state.step >= GenerationStep.COMPLETED && (
                 <>
                   {!appendixDocument ? (
@@ -2498,7 +2498,7 @@ Tổ: [Tổ chuyên môn]
                 : 'text-gray-500 hover:bg-red-50 hover:text-red-700'
             }`}
           >
-             <Stethoscope className="w-5 h-5" /> 🩺 KHÁM & MÔNG MÁ SKKN CŨ
+             <Stethoscope className="w-5 h-5" /> 🩺 THẨM ĐỊNH VÀ SỬA BIỆN PHÁP CŨ
           </button>
         </div>
 
@@ -2526,14 +2526,14 @@ Tổ: [Tổ chuyên môn]
                  <div className="flex items-start gap-3">
                     <Stethoscope className="w-6 h-6 text-red-600 mt-0.5" />
                     <div>
-                      <h3 className="font-bold text-red-800 text-lg">Đang ở chế độ: Mông Má Sáng Kiến</h3>
-                      <p className="text-red-700 text-sm mt-1">Hệ thống đã nạp "Toa Thuốc" vào dòng chảy AI. Hãy điền thêm thông tin cơ bản bên dưới (Tên đề tài, Môn học...) để cấu hình bài làm, sau đó bấm <strong>Tiếp Theo</strong> để AI tiến hành viết lại bài.</p>
+                      <h3 className="font-bold text-red-800 text-lg">Đang ở chế độ: Thẩm định Sáng Kiến</h3>
+                      <p className="text-red-700 text-sm mt-1">Hệ thống đã nạp "Bản phân tích" vào dòng chảy AI. Hãy điền thêm thông tin cơ bản bên dưới (Tên đề tài, Môn học...) để cấu hình bài làm, sau đó bấm <strong>Tiếp Theo</strong> để AI tiến hành viết lại bài.</p>
                       
                       <button 
                          onClick={() => setHealingContext(null)}
                          className="mt-3 text-xs font-semibold bg-white border border-red-200 text-red-600 px-3 py-1.5 rounded-md hover:bg-red-100 transition-colors"
                       >
-                         Hủy bỏ chế độ mông má
+                         Hủy bỏ chế độ Thẩm định
                       </button>
                     </div>
                  </div>

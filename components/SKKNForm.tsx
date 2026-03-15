@@ -61,7 +61,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
       return saved ? JSON.parse(saved) : [];
     } catch { return []; }
   }); // Danh sách tên file đã tải
-  const [templateFileName, setTemplateFileName] = useState<string>(''); // Tên file mẫu SKKN
+  const [templateFileName, setTemplateFileName] = useState<string>(''); // Tên file mẫu Biện pháp
   // State cho phân tích tài liệu
   const [isAnalyzingRef, setIsAnalyzingRef] = useState(false);
   const [isAnalyzingTemplate, setIsAnalyzingTemplate] = useState(false);
@@ -318,7 +318,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
     }
   };
 
-  // Handle SKKN Template Upload - Tự động trích xuất cấu trúc
+  // Handle Biện pháp Template Upload - Tự động trích xuất cấu trúc
   const [isExtractingStructure, setIsExtractingStructure] = useState(false);
   const [parsedTemplate, setParsedTemplate] = useState<SKKNTemplate | null>(null);
 
@@ -373,7 +373,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
               };
               onChange('customTemplate', JSON.stringify(customTemplate) as any);
               setParsedTemplate(customTemplate);
-              console.log(`✅ Đã trích xuất ${sections.length} mục từ mẫu SKKN`);
+              console.log(`✅ Đã trích xuất ${sections.length} mục từ mẫu Biện pháp`);
             } else {
               console.log('⚠️ Không trích xuất được cấu trúc - sẽ dùng mẫu chuẩn');
             }
@@ -387,7 +387,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
       }
     } catch (error) {
       console.error("Error reading template file:", error);
-      alert("Không thể đọc file mẫu SKKN. Vui lòng thử lại.");
+      alert("Không thể đọc file mẫu Biện pháp. Vui lòng thử lại.");
     } finally {
       setIsProcessingTemplateFile(false);
       setFileProgress('');
@@ -438,10 +438,10 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
     }
   };
 
-  // Hàm phân tích mẫu SKKN bằng AI
+  // Hàm phân tích mẫu Biện pháp bằng AI
   const handleAnalyzeTemplate = async () => {
     if (!userInfo.skknTemplate || !apiKey) {
-      alert('Vui lòng tải lên mẫu SKKN và đảm bảo đã nhập API Key.');
+      alert('Vui lòng tải lên mẫu Biện pháp và đảm bảo đã nhập API Key.');
       return;
     }
     setIsAnalyzingTemplate(true);
@@ -518,7 +518,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
           </h3>
 
           <div className="space-y-5">
-            <InputGroup label="Tên đề tài SKKN" icon={PenTool} required>
+            <InputGroup label="Tên đề tài Biện pháp" icon={PenTool} required>
               <div className="flex gap-3 items-center">
                 <div className="flex-1">
                   <InputWithHistory
@@ -794,7 +794,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
               )}
             </div>
 
-            {/* RIGHT COLUMN: SKKN Template */}
+            {/* RIGHT COLUMN: Biện pháp Template */}
             <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 relative">
               {isProcessingTemplateFile && (
                 <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10 backdrop-blur-sm rounded-lg">
@@ -807,7 +807,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
 
               <div className="flex justify-between items-start mb-3">
                 <label className="text-sm font-semibold text-gray-700">
-                  Tải lên mẫu yêu cầu SKKN:
+                  Tải lên mẫu yêu cầu Biện pháp:
                 </label>
                 <div className="flex gap-2 flex-shrink-0">
                   {templateFileName && (
@@ -836,13 +836,13 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
 
               {templateFileName ? (
                 <div className="space-y-2">
-                  <p className="text-xs text-gray-500 mb-2">Mẫu SKKN đã tải:</p>
+                  <p className="text-xs text-gray-500 mb-2">Mẫu Biện pháp đã tải:</p>
                   <div className="flex items-center gap-2 px-3 py-2 bg-amber-100 text-amber-800 rounded-lg">
                     <FileText size={16} />
                     <span className="text-sm font-medium truncate">{templateFileName}</span>
                   </div>
                   <p className="text-xs text-green-600 font-medium">✓ AI sẽ bám sát cấu trúc mẫu này</p>
-                  {/* Nút Phân tích sơ bộ mẫu SKKN */}
+                  {/* Nút Phân tích sơ bộ mẫu Biện pháp */}
                   <button
                     onClick={handleAnalyzeTemplate}
                     disabled={isAnalyzingTemplate || !apiKey}
@@ -905,7 +905,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
                   <FileText size={24} className="mx-auto mb-2 opacity-50 text-amber-400" />
                   <p className="text-xs font-medium text-gray-600 mb-2">Chưa có mẫu</p>
                   <div className="text-xs text-left bg-white p-2 rounded border border-amber-100">
-                    <p className="font-semibold text-amber-700 mb-1">📋 Mẫu yêu cầu SKKN:</p>
+                    <p className="font-semibold text-amber-700 mb-1">📋 Mẫu yêu cầu Biện pháp:</p>
                     <ul className="space-y-0.5 text-gray-600 text-[11px]">
                       <li>• File Word/PDF mẫu từ Sở/Phòng GD</li>
                       <li>• AI sẽ bám sát cấu trúc mẫu</li>
@@ -950,7 +950,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
             {/* 1. Số trang giới hạn */}
             <div className="flex items-center gap-4">
               <label className="text-sm font-medium text-gray-700 w-64 flex items-center gap-2">
-                📄 Số trang SKKN cần giới hạn:
+                📄 Số trang Biện pháp cần giới hạn:
               </label>
               <input
                 type="number"
@@ -1035,7 +1035,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
               </button>
               {userInfo.requirementsConfirmed && (
                 <p className="mt-2 text-xs text-green-700 text-center font-medium">
-                  ✅ Các yêu cầu đã được lưu! AI sẽ tuân thủ NGHIÊM NGẶT khi viết SKKN.
+                  ✅ Các yêu cầu đã được lưu! AI sẽ tuân thủ NGHIÊM NGẶT khi viết Biện pháp.
                 </p>
               )}
               {!userInfo.requirementsConfirmed && (
@@ -1155,7 +1155,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
                 <Search size={20} />
                 📊 Kết quả phân tích sơ bộ
                 <span className="text-xs bg-white/20 px-2 py-0.5 rounded-full">
-                  {showAnalysisModal === 'ref' ? 'Tài liệu tham khảo' : 'Mẫu SKKN'}
+                  {showAnalysisModal === 'ref' ? 'Tài liệu tham khảo' : 'Mẫu Biện pháp'}
                 </span>
               </h3>
               <button
