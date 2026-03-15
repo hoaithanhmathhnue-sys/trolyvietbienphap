@@ -8,6 +8,7 @@ import { SUBJECTS_DATA, SUBJECT_GROUPS, searchSubjects, getSubjectsByGroup } fro
 import { TEACHING_METHODS } from '../data/teachingMethods';
 import { analyzeDocumentForSKKN, extractSKKNStructure, analyzeTitleSKKN } from '../services/geminiService';
 import TitleAnalysisPanel from './TitleAnalysisPanel';
+import { BrainstormTopicModal } from './BrainstormTopicModal';
 import { BookOpen, School, GraduationCap, PenTool, MapPin, Calendar, Users, Cpu, Target, Monitor, FileUp, Sparkles, ClipboardPaste, Loader2, FileText, Search, X, CheckCircle, List, Save, ChevronDown } from 'lucide-react';
 import * as mammoth from 'mammoth';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -69,6 +70,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
   const [refAnalysisResult, setRefAnalysisResult] = useState('');
   const [templateAnalysisResult, setTemplateAnalysisResult] = useState('');
   const [showAnalysisModal, setShowAnalysisModal] = useState<'ref' | 'template' | null>(null);
+  const [isBrainstormModalOpen, setIsBrainstormModalOpen] = useState(false);
 
   // State cho phân tích tên đề tài
   const [isAnalyzingTitle, setIsAnalyzingTitle] = useState(false);
@@ -515,9 +517,19 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
 
         {/* SECTION 1: REQUIRED INFO */}
         <div>
-          <h3 className="text-lg font-bold text-sky-800 border-b border-sky-100 pb-2 mb-4 uppercase tracking-wide">
-            1. Thông tin bắt buộc
-          </h3>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-sky-100 pb-2 mb-4 gap-2">
+            <h3 className="text-lg font-bold text-sky-800 uppercase tracking-wide m-0">
+              1. Thông tin bắt buộc
+            </h3>
+            <button
+              type="button"
+              onClick={() => setIsBrainstormModalOpen(true)}
+              className="text-sm bg-indigo-50 text-indigo-700 hover:bg-indigo-100 px-3 py-1.5 flex items-center gap-1.5 font-bold transition-all border border-indigo-200 rounded-md w-max"
+            >
+              <Sparkles size={16} className="text-indigo-600"/>
+              Đề xuất tên đề tài (AI)
+            </button>
+          </div>
 
           <div className="space-y-5">
             <InputGroup label="Tên đề tài Biện pháp" icon={PenTool} required>
@@ -1214,6 +1226,21 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
           onSelectTitle={handleSelectTitle}
         />
       )}
+      {/* Brainstorm Topic Modal */}
+      <BrainstormTopicModal
+        isOpen={isBrainstormModalOpen}
+        onClose={() => setIsBrainstormModalOpen(false)}
+        apiKey={apiKey}
+        selectedModel={selectedModel}
+        initialSubject={userInfo.subject}
+        initialLevel={userInfo.level}
+        onSelectTopic={(topic, method) => {
+          onChange('topic', topic);
+          if (method) {
+            onChange('teachingMethod', method);
+          }
+        }}
+      />
     </div>
   );
 };

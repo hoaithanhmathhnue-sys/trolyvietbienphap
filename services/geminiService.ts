@@ -713,3 +713,80 @@ CHỈ TRẢ VỀ JSON, KHÔNG CÓ GIẢI THÍCH HAY VĂN BẢN KHÁC.`;
     throw new Error(getFriendlyErrorMessage(error).message);
   }
 };
+
+/**
+ * Đề xuất tên đề tài (Brainstorm) thông qua AI
+ */
+export const brainstormTopicNames = async (
+  apiKey: string,
+  inputs: {
+    subject: string;
+    level: string;
+    grade: string;
+    topicArea: string;
+    chapter: string;
+    targetCompetence: string;
+    selectedMethods: string[];
+  },
+  selectedModel?: string
+): Promise<Array<{ title: string; rationale: string }>> => {
+  const ai = new GoogleGenAI({ apiKey });
+  
+  const prompt = `Bạn là chuyên gia thiết kế Sáng kiến kinh nghiệm (SKKN) và Biện pháp giáo viên giỏi xuất sắc nhất Việt Nam.
+Hãy đề xuất 5 tên đề tài Biện pháp/SKKN siêu sáng tạo, độc đáo và đúng chuẩn cấu trúc khoa học dựa trên các thông tin sau:
+- Môn học: ${inputs.subject}
+- Khối lớp: ${inputs.grade} (Cấp: ${inputs.level})
+- Chuyên đề: ${inputs.topicArea}
+- Chương/Bài: ${inputs.chapter}
+- Mục tiêu/Năng lực cần đạt: ${inputs.targetCompetence}
+- Phương pháp / Kỹ thuật mong muốn tích hợp: ${inputs.selectedMethods.join(', ')}
+
+ĐÁNH GIÁ VÀ ĐỀ XUẤT:
+- Tạo 5 tên đề tài Biện pháp thật CỤ THỂ, rõ ràng.
+- Gắn chặt với Tên Chương/Bài và Chuyên đề người dùng nhập.
+- Kết hợp mượt mà các Phương pháp/Kỹ thuật đã chọn vào tên đề tài.
+- Tránh các tên quá cũ kỹ như "Sử dụng PowerPoint...", "Một số biện pháp nâng cao..."
+- Cấu trúc tiêu chuẩn của một tên đề tài hay: [Hành động] + [Công cụ/Phương pháp/Kỹ thuật] + [Mục đích/Năng lực] + [Khách thể]. 
+  => Ví dụ: "Tích hợp mô hình Lớp học đảo ngược qua trạm học tập nhằm phát triển năng lực tự học môn Toán lớp 10" hoặc "Vận dụng kỹ thuật Khăn trải bàn và Sơ đồ KWL trong thiết kế bài giảng Sinh học 11 nhằm nâng cao tính chủ động".
+
+TRẢ VỀ JSON ARRAY DƯỚI ĐÂY (CHỈ TRẢ VỀ JSON THUẦN, KHÔNG FORMAT MARKDOWN CODE BLOCK):
+[
+  { "title": "Tên đề tài 1", "rationale": "Lý do vì sao tên này hay và phù hợp" },
+  { "title": "Tên đề tài 2", "rationale": "Lý do..." },
+  { "title": "Tên đề tài 3", "rationale": "Lý do..." },
+  { "title": "Tên đề tài 4", "rationale": "Lý do..." },
+  { "title": "Tên đề tài 5", "rationale": "Lý do..." }
+]
+CHỈ OUTPUT JSON KHÔNG DIỄN GIẢI THÊM:`;
+
+  const model = selectedModel || FALLBACK_MODELS[0];
+
+  try {
+    const response = await ai.models.generateContent({
+      model: model,
+      contents: prompt
+    });
+
+    const responseText = response.text || '[]';
+
+    // Parse JSON
+    let jsonText = responseText.trim();
+    if (jsonText.startsWith('```json')) {
+      jsonText = jsonText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    } else if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+
+    const jsonMatch = jsonText.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+      jsonText = jsonMatch[0];
+    }
+
+    const result = JSON.parse(jsonText);
+    return Array.isArray(result) ? result : [];
+
+  } catch (error: any) {
+    console.error('Lỗi brainstorm đề tài:', error);
+    throw new Error(getFriendlyErrorMessage(error).message);
+  }
+};
