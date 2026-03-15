@@ -1183,11 +1183,18 @@ QUAN TRỌNG:
 
   // Generate Next Section
   const generateNextSection = async (stepToRun?: GenerationStep) => {
+    // ⚠️ GUARD: Ngăn gọi trùng khi đang streaming (race condition)
+    if (state.isStreaming) {
+      console.warn('⚠️ generateNextSection bị chặn: đang streaming');
+      return;
+    }
+
     let currentStepPrompt = "";
     let nextStepEnum = GenerationStep.PART_1;
     let shouldAppend = true; // Mặc định append nội dung vào fullDocument
 
     const activeStep = stepToRun !== undefined ? stepToRun : state.step;
+    console.log(`📝 generateNextSection: activeStep=${activeStep}, state.step=${state.step}, stepToRun=${stepToRun}`);
     const healingSnippet = getHealingPromptSnippet(healingContext);
 
     // Logic for OUTLINE step specifically handles manual edits synchronization
@@ -1616,7 +1623,10 @@ SGK: ${userInfo.textbook}
           skipAppend: true
         }
       };
-      const stepConfig = nextStepMap[state.step];
+      // ⚠️ QUAN TRỌNG: Dùng activeStep (đã xử lý stepToRun) thay vì state.step
+      // để tránh stale closure — khi gọi generateNextSection(stepToRun) từ setTimeout,
+      // state.step trong closure có thể chưa cập nhật, gây lặp bước cũ.
+      const stepConfig = nextStepMap[activeStep];
       if (!stepConfig) return;
       currentStepPrompt = stepConfig.prompt;
       nextStepEnum = stepConfig.nextStep;
@@ -1730,11 +1740,13 @@ SGK: ${userInfo.textbook}
   // Duyệt giải pháp và tiếp tục
   const handleApproveSolution = () => {
     const solutionNum = getSolutionNumberFromStep(state.step);
+    // ⚠️ Capture step NGAY TẠI ĐÂY để tránh stale closure trong setTimeout
+    const currentStep = state.step;
 
     // Lưu giải pháp đã duyệt
     setSolutionsState(prev => ({
       ...prev,
-      [`solution${solutionNum} `]: {
+      [`solution${solutionNum}`]: {
         content: currentSolutionContent,
         isApproved: true,
         revisionHistory: [],
@@ -1745,11 +1757,14 @@ SGK: ${userInfo.textbook}
     setShowSolutionReview(false);
     setCurrentSolutionContent('');
 
-    // Chuyển sang bước tiếp theo nếu Bật Tự Động
+    // Chuyển sang bước tiếp theo CHỈ KHI Bật Tự Động
     if (autoGenerateRef.current) {
+      console.log(`✅ Duyệt GP${solutionNum} → auto-advance từ step ${currentStep}`);
       setTimeout(() => {
-        generateNextSection();
+        generateNextSection(currentStep);
       }, 500);
+    } else {
+      console.log(`✅ Duyệt GP${solutionNum} → chờ user bấm "Viết tiếp" (auto OFF)`);
     }
   };
 
