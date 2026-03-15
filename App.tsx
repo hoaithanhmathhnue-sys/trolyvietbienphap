@@ -2494,8 +2494,8 @@ Tổ: [Tổ chuyên môn]
             onClick={() => setActiveAppTab('heal')}
             className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${
               activeAppTab === 'heal' 
-                ? 'bg-gradient-to-r from-red-600 to-rose-500 text-white shadow-md transform scale-[1.02]' 
-                : 'text-gray-500 hover:bg-red-50 hover:text-red-700'
+                ? 'bg-gradient-to-r from-teal-600 to-emerald-500 text-white shadow-md transform scale-[1.02]' 
+                : 'text-gray-500 hover:bg-teal-50 hover:text-teal-700'
             }`}
           >
              <Stethoscope className="w-5 h-5" /> 🩺 THẨM ĐỊNH VÀ SỬA BIỆN PHÁP CŨ
@@ -2522,16 +2522,16 @@ Tổ: [Tổ chuyên môn]
           <div className="flex-1 w-full max-w-6xl mx-auto h-full flex flex-col animate-fade-in relative pb-20">
             {/* Show error context if healing mode */}
             {healingContext && state.step === GenerationStep.INPUT_FORM && (
-               <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm">
+               <div className="mb-6 bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg shadow-sm">
                  <div className="flex items-start gap-3">
-                    <Stethoscope className="w-6 h-6 text-red-600 mt-0.5" />
+                    <Stethoscope className="w-6 h-6 text-teal-600 mt-0.5" />
                     <div>
-                      <h3 className="font-bold text-red-800 text-lg">Đang ở chế độ: Thẩm định Sáng Kiến</h3>
-                      <p className="text-red-700 text-sm mt-1">Hệ thống đã nạp "Bản phân tích" vào dòng chảy AI. Hãy điền thêm thông tin cơ bản bên dưới (Tên đề tài, Môn học...) để cấu hình bài làm, sau đó bấm <strong>Tiếp Theo</strong> để AI tiến hành viết lại bài.</p>
+                      <h3 className="font-bold text-teal-800 text-lg">Đang ở chế độ: Thẩm định Sáng Kiến</h3>
+                      <p className="text-teal-700 text-sm mt-1">Hệ thống đã nạp "Bản phân tích" vào dòng chảy AI. Hãy điền thêm thông tin cơ bản bên dưới (Tên đề tài, Môn học...) để cấu hình bài làm, sau đó bấm <strong>Tiếp Theo</strong> để AI tiến hành viết lại bài.</p>
                       
                       <button 
                          onClick={() => setHealingContext(null)}
-                         className="mt-3 text-xs font-semibold bg-white border border-red-200 text-red-600 px-3 py-1.5 rounded-md hover:bg-red-100 transition-colors"
+                         className="mt-3 text-xs font-semibold bg-white border border-teal-200 text-teal-600 px-3 py-1.5 rounded-md hover:bg-teal-100 transition-colors"
                       >
                          Hủy bỏ chế độ Thẩm định
                       </button>
