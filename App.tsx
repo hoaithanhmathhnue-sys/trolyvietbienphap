@@ -1174,15 +1174,16 @@ QUAN TRỌNG:
   };
 
   // Generate Next Section
-  const generateNextSection = async () => {
+  const generateNextSection = async (stepToRun?: GenerationStep) => {
     let currentStepPrompt = "";
     let nextStepEnum = GenerationStep.PART_1;
     let shouldAppend = true; // Mặc định append nội dung vào fullDocument
 
+    const activeStep = stepToRun !== undefined ? stepToRun : state.step;
     const healingSnippet = getHealingPromptSnippet(healingContext);
 
     // Logic for OUTLINE step specifically handles manual edits synchronization
-    if (state.step === GenerationStep.OUTLINE) {
+    if (activeStep === GenerationStep.OUTLINE) {
       // We inject the CURRENT fullDocument (which might have been edited by user) into the prompt
       // This ensures the AI uses the user's finalized outline.
       currentStepPrompt = `
@@ -1639,7 +1640,7 @@ SGK: ${userInfo.textbook}
       // Timeout một xíu để mượt UX render
       if (nextStepEnum !== GenerationStep.COMPLETED) {
         setTimeout(() => {
-          generateNextSection();
+          generateNextSection(nextStepEnum);
         }, 1500);
       } else {
         // Nếu đã hoàn thành, tự động tạo phụ lục
@@ -1660,7 +1661,7 @@ SGK: ${userInfo.textbook}
           initializeGeminiChat(rotation.newKey, selectedModel);
           // Tự động thử lại với key mới
           setState(prev => ({ ...prev, isStreaming: false, error: null }));
-          setTimeout(() => generateNextSection(), 500);
+          setTimeout(() => generateNextSection(activeStep), 500);
           return;
         }
       }
@@ -2333,7 +2334,7 @@ Tổ: [Tổ chuyên môn]
                       </div>
                     )}
 
-                    <Button onClick={generateNextSection} className="w-full" icon={<ChevronRight size={16} />}>
+                    <Button onClick={() => generateNextSection()} className="w-full" icon={<ChevronRight size={16} />}>
                       {state.step === GenerationStep.OUTLINE ? 'Chốt Dàn ý & Viết tiếp' : 'Viết phần tiếp theo'}
                     </Button>
                   </>
