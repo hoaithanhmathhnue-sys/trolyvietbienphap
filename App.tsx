@@ -9,7 +9,10 @@ import { DocumentPreview } from './components/DocumentPreview';
 import { Button } from './components/Button';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { SolutionReviewModal } from './components/SolutionReviewModal';
-import { Download, ChevronRight, Wand2, FileText, CheckCircle, RefreshCw, Settings, AlertTriangle, Save, Trash2, Stethoscope, PenTool } from 'lucide-react';
+import {
+  FileText, Brain, LayoutTemplate, PenTool, BookOpen, User, Users,
+  CheckCircle, ChevronRight, Save, Wand2, Download, Trash2, Settings, AlertTriangle, RefreshCw, Microscope
+} from 'lucide-react';
 
 import { LockScreen } from './components/LockScreen';
 import ReviewOldDocPanel from './components/ReviewOldDocPanel';
@@ -2498,7 +2501,7 @@ Tổ: [Tổ chuyên môn]
                 : 'text-gray-500 hover:bg-teal-50 hover:text-teal-700'
             }`}
           >
-             <Stethoscope className="w-5 h-5" /> 🩺 THẨM ĐỊNH VÀ SỬA BIỆN PHÁP CŨ
+             <Microscope className="w-5 h-5" /> 🔬 THẨM ĐỊNH BIỆN PHÁP
           </button>
         </div>
 
@@ -2524,9 +2527,9 @@ Tổ: [Tổ chuyên môn]
             {healingContext && state.step === GenerationStep.INPUT_FORM && (
                <div className="mb-6 bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg shadow-sm">
                  <div className="flex items-start gap-3">
-                    <Stethoscope className="w-6 h-6 text-teal-600 mt-0.5" />
+                    <Microscope className="w-6 h-6 text-teal-600 mt-0.5" />
                     <div>
-                      <h3 className="font-bold text-teal-800 text-lg">Đang ở chế độ: Thẩm định Sáng Kiến</h3>
+                      <h3 className="font-bold text-teal-800 text-lg">Đang ở chế độ: Thẩm định Biện Pháp</h3>
                       <p className="text-teal-700 text-sm mt-1">Hệ thống đã nạp "Bản phân tích" vào dòng chảy AI. Hãy điền thêm thông tin cơ bản bên dưới (Tên đề tài, Môn học...) để cấu hình bài làm, sau đó bấm <strong>Tiếp Theo</strong> để AI tiến hành viết lại bài.</p>
                       
                       <button 
