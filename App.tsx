@@ -1136,7 +1136,8 @@ QUAN TRỌNG:
   };
 
   // Regenerate Outline based on feedback
-  const regenerateOutline = async () => {
+  const regenerateOutline = async (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
     if (!outlineFeedback.trim()) return;
 
     try {
@@ -1744,8 +1745,12 @@ SGK: ${userInfo.textbook}
     setShowSolutionReview(false);
     setCurrentSolutionContent('');
 
-    // Chuyển sang bước tiếp theo - tiếp tục viết giải pháp tiếp hoặc Phần V-VI
-    generateNextSection();
+    // Chuyển sang bước tiếp theo nếu Bật Tự Động
+    if (autoGenerateRef.current) {
+      setTimeout(() => {
+        generateNextSection();
+      }, 500);
+    }
   };
 
   // Yêu cầu viết lại giải pháp
@@ -2355,7 +2360,7 @@ Tổ: [Tổ chuyên môn]
                     )}
 
                     <div className="flex flex-col gap-2">
-                      <Button onClick={() => generateNextSection()} className="w-full" icon={<ChevronRight size={16} />}>
+                      <Button onClick={() => { generateNextSection(); }} className="w-full" icon={<ChevronRight size={16} />}>
                         {state.step === GenerationStep.OUTLINE ? 'Chốt Dàn ý & Viết tiếp' : 'Viết phần tiếp theo'}
                       </Button>
                       
