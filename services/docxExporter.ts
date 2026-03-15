@@ -266,9 +266,53 @@ function elementsToDocxChildren(elements: ParsedElement[], numberingConfig: any[
 }
 
 /**
+ * Lọc bỏ các lệnh điều hướng và hướng dẫn của AI khỏi nội dung xuất Word
+ */
+function cleanMarkdownForExport(markdown: string): string {
+  if (!markdown) return markdown;
+
+  // Pattern 1: Bảng menu trạng thái và xác nhận
+  // Bao gồm các khung dạng:
+  // ┌─────────────────────────────────┐
+  // │ ✅ Đồng ý nội dung Phần 1 này?   │
+  // │ ✏️ Bạn có thể CHỈNH SỬA trực   │
+  // │    tiếp bằng nút "Chỉnh sửa"    │
+  // └─────────────────────────────────┘
+  // Hoặc các dòng tương tự
+  let cleaned = markdown
+    .replace(/┌[─]+┐[\s\S]*?└[─]+┘/g, '')
+    // Lọc các dòng hỏi đáp cuối các giải pháp
+    .replace(/❓ Bạn muốn tôi tiếp tục viết Giải pháp.*/g, '')
+    // Mệnh lệnh của AI về MENU NAVIGATION
+    .replace(/.*?📱 MENU NAVIGATION.*/g, '')
+    .replace(/.*?BẮT ĐẦU phản hồi bằng MENU NAVIGATION.*/g, '')
+    .replace(/.*?✅ Đồng ý nội dung Phần.*/g, '')
+    .replace(/.*?✅ Đồng ý dàn ý này.*/g, '')
+    .replace(/.*?✏️ Bạn có thể CHỈNH SỬA.*/g, '')
+    .replace(/.*?\*\*Nếu bạn đồng ý với nội dung này.*/g, '')
+    .replace(/.*?tiếp bằng nút "Chỉnh sửa".*/g, '')
+    // Các lệnh menu con (Bước 1:, Bước 2:...)
+    .replace(/^\s*[•\-*]?\s*Bước \d+:.*?(Hoàn thành|Đang thực hiện|Chờ lệnh|ĐANG THỰC HIỆN|CHỜ LỆNH).*$/gm, '')
+    // Các block trạng thái Bước (không có dấu gạch)
+    .replace(/^Bước \d+:.*?(Hoàn thành|Đang thực hiện|Chờ lệnh|ĐANG THỰC HIỆN|CHỜ LỆNH).*$/gm, '')
+    // Các đường gạch ngang dài --- hoặc ━━━ thường đi kèm menu
+    .replace(/^[─━]{10,}.*$/gm, '')
+    .replace(/^---$/gm, '')
+    // Các chú thích dạng 📋 HƯỚNG DẪN COPY:
+    .replace(/📋 HƯỚNG DẪN COPY:[\s\S]*?5\. Format lại nếu cần \(font chữ, cỡ chữ\)/g, '')
+    .replace(/✅ KẾT THÚC GIẢI PHÁP.*/g, '');
+
+  // Lọc thêm khoảng trắng thừa
+  cleaned = cleaned.replace(/\n{3,}/g, '\n\n').trim();
+
+  return cleaned;
+}
+
+/**
  * Xuất Markdown sang file .docx
  */
-export async function exportMarkdownToDocx(markdown: string, filename: string): Promise<void> {
+export async function exportMarkdownToDocx(rawMarkdown: string, filename: string): Promise<void> {
+  const markdown = cleanMarkdownForExport(rawMarkdown);
   const elements = parseMarkdown(markdown);
   const numberingConfig: any[] = [];
   const children = elementsToDocxChildren(elements, numberingConfig);
