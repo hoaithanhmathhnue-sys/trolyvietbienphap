@@ -128,7 +128,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
       <div className="bg-gradient-to-r from-red-600 to-rose-600 px-6 py-4">
         <div className="flex items-center gap-3">
           <Stethoscope className="w-6 h-6 text-white" />
-          <h2 className="text-xl font-bold text-white">Khám & Chữa Bệnh Sáng Kiến Cũ</h2>
+          <h2 className="text-xl font-bold text-white">Thẩm định và sửa SKKN cũ</h2>
         </div>
         <p className="text-red-100 text-sm mt-1">AI phân tích điểm yếu và tự động nâng cấp báo cáo cũ của bạn thành phiên bản GVG xuất sắc.</p>
       </div>
