@@ -165,12 +165,12 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 mb-8 max-w-4xl mx-auto">
-      <div className="bg-gradient-to-r from-red-600 to-rose-600 px-6 py-4">
+      <div className="bg-gradient-to-r from-teal-600 to-emerald-600 px-6 py-4">
         <div className="flex items-center gap-3">
           <Stethoscope className="w-6 h-6 text-white" />
           <h2 className="text-xl font-bold text-white">THẨM ĐỊNH VÀ SỬA BIỆN PHÁP CŨ</h2>
         </div>
-        <p className="text-red-100 text-sm mt-1">AI phân tích điểm yếu và tự động nâng cấp báo cáo cũ của bạn thành phiên bản GVG xuất sắc.</p>
+        <p className="text-teal-100 text-sm mt-1">AI phân tích điểm yếu và tự động nâng cấp báo cáo cũ của bạn thành phiên bản GVG xuất sắc.</p>
       </div>
 
       <div className="p-6">
@@ -178,7 +178,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
         {!analysisResult && (
           <div className="mb-6">
              <div 
-               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${file ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-red-400 bg-gray-50'}`}
+               className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${file ? 'border-teal-300 bg-teal-50' : 'border-gray-300 hover:border-teal-400 bg-gray-50'}`}
              >
                {!file && !isProcessingFile ? (
                  <>
@@ -205,19 +205,19 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
                  <div className="flex flex-col items-center">
                    {isProcessingFile ? (
                      <>
-                       <Loader2 className="w-10 h-10 text-red-500 animate-spin mb-3" />
-                       <p className="text-red-600 font-medium">{fileProgress || 'Đang bóc tách văn bản...'}</p>
+                       <Loader2 className="w-10 h-10 text-teal-500 animate-spin mb-3" />
+                       <p className="text-teal-600 font-medium">{fileProgress || 'Đang bóc tách văn bản...'}</p>
                      </>
                    ) : (
                      <>
-                       <FileText className="w-12 h-12 text-red-500 mb-3" />
+                       <FileText className="w-12 h-12 text-teal-500 mb-3" />
                        <p className="text-gray-900 font-medium">{file?.name}</p>
                        <p className="text-sm text-gray-500 mb-4">Đã trích xuất {originalContent.length.toLocaleString()} ký tự</p>
                        
                        <button
                          onClick={startAnalysis}
                          disabled={isAnalyzing}
-                         className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 shadow-sm disabled:opacity-50"
+                         className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700 shadow-sm disabled:opacity-50"
                        >
                          {isAnalyzing ? (
                            <><Loader2 className="w-5 h-5 animate-spin" /> Đang thẩm định biện pháp...</>
@@ -238,7 +238,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
           <div className="space-y-6 animate-fade-in-up">
             <div className="flex items-center justify-between">
                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                 <ShieldAlert className="w-5 h-5 text-red-500" /> Kết quả thẩm định Biện pháp
+                 <ShieldAlert className="w-5 h-5 text-teal-500" /> Kết quả thẩm định Biện pháp
                </h3>
                <button 
                   onClick={() => setAnalysisResult(null)}
