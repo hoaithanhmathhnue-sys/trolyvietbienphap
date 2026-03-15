@@ -31,16 +31,16 @@ function createRedRunElement(xmlDoc: Document, text: string): Node {
 }
 
 // Gửi một mảng text sang AI
-async function rewriteTextBatch(apiKey: string, selectedModel: string, items: { [key: string]: string }) {
+async function rewriteTextBatch(apiKey: string, selectedModel: string, items: { [key: string]: string }, aiReductionPrompt?: string) {
     const ai = new GoogleGenAI({ apiKey });
     
-    // Tạo payload nhỏ vừa đủ để model làm nhanh
     const prompt = `Bạn là chuyên gia thẩm định và viết Sáng kiến kinh nghiệm, biện pháp GVG/GVCN chuyên nghiệp.
 Nhiệm vụ: CẢI THIỆN các đoạn văn bản dưới đây thành một phiên bản học thuật, khoa học, thực tế và thuyết phục hơn.
 - KHÔNG gộp các đoạn lại với nhau. Giữ nguyên số lượng đoạn.
 - Trả về đúng định dạng JSON mà key là số như đầu vào, value là nội dung sau khi viết lại.
 - Dùng ngữ điệu khách quan, dùng từ ngữ chuyên môn giáo dục.
 - BẮT BUỘC TRẢ VỀ JSON THUẦN!
+${aiReductionPrompt || ''}
 
 Dữ liệu gốc:
 ${JSON.stringify(items, null, 2)}
@@ -59,7 +59,7 @@ ${JSON.stringify(items, null, 2)}
     if (jsonText.includes('```json')) {
         jsonText = jsonText.replace(/```json\s*/g, '').replace(/```\s*/g, '');
     } else if (jsonText.startsWith('```')) {
-        jsonText = jsonText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+        jsonText = jsonText.replace(/^```\s*/, '').replace(/\s*```$/,'');
     }
 
     const match = jsonText.match(/\{[\s\S]*\}/);
@@ -69,12 +69,49 @@ ${JSON.stringify(items, null, 2)}
     return JSON.parse(jsonText);
 }
 
+// Tạo prompt giảm AI dựa trên kết quả thẩm định
+function buildAIReductionPrompt(analysisResult?: any): string {
+    if (!analysisResult) return '';
+    const aiRisk = analysisResult.aiRiskPercent || 0;
+    if (aiRisk < 30) return '';
+
+    const patterns = (analysisResult.aiRiskDetails?.suspiciousPatterns || []).slice(0, 5);
+    const patternsList = patterns.length > 0
+        ? patterns.map((p: string, i: number) => `${i + 1}. "${p}"`).join('\n')
+        : 'Không có mẫu cụ thể';
+
+    return `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 GIẢM NGUY CƠ AI (AI Risk hiện tại: ${aiRisk}%) — BẮT BUỘC ÁP DỤNG
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Các mẫu câu AI phát hiện:
+${patternsList}
+
+Áp dụng 10 KỸ THUẬT VƯỢT AI DETECTION sau để sửa lại văn bản, mục tiêu đưa AI score xuống dưới 15%:
+
+1. PERPLEXITY INJECTION: Thay 15-20% từ ngữ thông dụng bằng từ đồng nghĩa học thuật ít gặp hơn. Tránh lặp lại cùng 1 cụm từ trong 3 câu liên tiếp.
+2. BURSTINESS CONTROL: Đảm bảo có câu ngắn (<15 từ) xen kẽ câu dài (>40 từ). Không để 3 câu liên tiếp có độ dài tương đương.
+3. SYNTACTIC VARIATION: Thay đổi chủ ngữ đa dạng ("Tôi" → "Việc..." → "Quá trình..."). Dùng câu bị động 20-30%.
+4. LEXICAL SUBSTITUTION: Không lặp danh từ chính trong 2 câu liên tiếp. Chuẩn bị 3-4 từ đồng nghĩa cho khái niệm chính.
+5. SENTENCE COMPLEXITY: Xen kẽ câu đơn (20%), câu ghép (30%), câu phức (50%). Không 3 câu cùng loại liên tiếp.
+6. TRANSITION VARIATION: Không dùng cùng 1 liên từ quá 2 lần. "tuy nhiên" → "song" → "ngược lại" → "trái lại".
+7. INFORMATION DENSITY: 30% câu nhiều thông tin (số liệu), 40% trung bình, 30% ít thông tin (kết luận ngắn).
+8. PASSIVE VOICE: Dùng bị động 20-25% ở phần Phương pháp. Giữ chủ động ở suy nghĩ cá nhân.
+9. NOMINALIZATION: 60% danh từ hóa, 40% động từ. Không 3 câu liên tiếp toàn danh từ hóa.
+10. MICRO-VARIATION: Thêm ngoặc đơn chú thích, dấu hai chấm, trình bày số liệu đa dạng (%, phân số, tỷ lệ).
+
+⚠️ QUAN TRỌNG: Sửa TẤT CẢ các đoạn có dấu hiệu AI, KHÔNG CHỈ đoạn đạo văn. Mục tiêu: AI score < 15%.
+`;
+}
+
 export async function processDocxFile(
     file: File,
     apiKey: string,
     selectedModel: string,
-    onProgress: (percent: number, message: string) => void
+    onProgress: (percent: number, message: string) => void,
+    analysisResult?: any
 ): Promise<Blob> {
+    const aiReductionPrompt = buildAIReductionPrompt(analysisResult);
     onProgress(5, "Đang mở file tài liệu gốc...");
     
     // Đọc array buffer
@@ -130,7 +167,7 @@ export async function processDocxFile(
         });
         
         try {
-            const rewrittenObj = await rewriteTextBatch(apiKey, selectedModel, payload);
+            const rewrittenObj = await rewriteTextBatch(apiKey, selectedModel, payload, aiReductionPrompt);
             
             // Tiến hành thay thế trong DOM
             Object.keys(rewrittenObj).forEach(key => {

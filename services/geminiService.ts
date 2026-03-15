@@ -588,29 +588,61 @@ BẮT ĐẦU JSON NGAY:`;
 };
 
 // ====== PHÂN TÍCH BIỆN PHÁP CŨ (THẨM ĐỊNH & CẢI THIỆN) ======
+// Return type cho kết quả thẩm định nâng cao
+export interface EnhancedAnalysisResult {
+  totalScore: number;
+  summary: string;
+  // Cấu trúc phát hiện tự động (linh hoạt theo biện pháp)
+  detectedSections: Array<{
+    name: string;
+    status: 'pass' | 'warn' | 'fail';
+    comment: string;
+  }>;
+  // Tiêu chí chất lượng linh hoạt (AI tự quyết theo cấu trúc)
+  qualityCriteria: Array<{
+    name: string;
+    score: number;
+    maxScore: number;
+    comment: string;
+  }>;
+  // Đạo văn
+  plagiarismPercent: number;
+  plagiarismLevel: string;
+  plagiarismSegments: Array<{ segment: string; source: string; similarity: number }>;
+  // AI risk
+  aiRiskPercent: number;
+  aiRiskLevel: string;
+  aiRiskDetails: {
+    perplexity: number;
+    burstiness: number;
+    patternDensity: number;
+    suspiciousPatterns: string[];
+    recommendations: string[];
+  };
+  suggestions: string[];
+  // Legacy compatibility
+  criteria: Array<{ name: string; score: number; maxScore: number; details: string }>;
+}
+
 export const analyzeOldDocument = async (
   apiKey: string,
   content: string,
   selectedModel?: string
-): Promise<{
-  totalScore: number;
-  criteria: Array<{ name: string; score: number; maxScore: number; details: string }>;
-  suggestions: string[];
-  summary: string;
-}> => {
+): Promise<EnhancedAnalysisResult> => {
   try {
     const genAI = new GoogleGenAI({ apiKey });
     const modelName = selectedModel || 'gemini-2.5-flash';
 
-    // Truncate content if too long (keep first 15000 chars)
-    const truncatedContent = content.length > 15000
-      ? content.substring(0, 15000) + '\n\n[... nội dung còn lại đã được cắt bớt ...]'
+    // Truncate content if too long (keep first 20000 chars)
+    const truncatedContent = content.length > 20000
+      ? content.substring(0, 20000) + '\n\n[... nội dung còn lại đã được cắt bớt ...]'
       : content;
 
     const prompt = `
-Bạn là CHUYÊN GIA THẨM ĐỊNH SKKN/Biện pháp GVG/GVCN hàng đầu Việt Nam.
+Bạn là CHUYÊN GIA THẨM ĐỊNH SKKN/Biện pháp GVG/GVCN hàng đầu Việt Nam, kiêm chuyên gia phát hiện đạo văn và nội dung AI.
 
-NHIỆM VỤ: Phân tích và chấm điểm biện pháp/SKKN sau theo 5 tiêu chí.
+NHIỆM VỤ: Phân tích TOÀN DIỆN biện pháp/SKKN sau. 
+⚠️ QUAN TRỌNG: Mỗi đơn vị/sở có cấu trúc biện pháp KHÁC NHAU → Bạn phải TỰ NHẬN DIỆN cấu trúc thực tế của văn bản, KHÔNG áp đặt cấu trúc cố định.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📄 NỘI DUNG CẦN PHÂN TÍCH:
@@ -619,59 +651,80 @@ NHIỆM VỤ: Phân tích và chấm điểm biện pháp/SKKN sau theo 5 tiêu 
 ${truncatedContent}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📋 YÊU CẦU CHẤM ĐIỂM (5 TIÊU CHÍ, MỖI TIÊU CHÍ TỐI ĐA 20 ĐIỂM):
+📋 YÊU CẦU PHÂN TÍCH (4 MẢNG CHÍNH):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. **CẤU TRÚC & BỐ CỤC** (20 điểm):
-   - Có đầy đủ các phần: Đặt vấn đề, Thực trạng, Giải pháp/Biện pháp, Kết quả, Kết luận?
-   - Bố cục logic, mạch lạc?
-   - Tiêu đề rõ ràng, phân cấp hợp lý?
+## A. NHẬN DIỆN CẤU TRÚC (detectedSections)
+- Đọc kỹ văn bản và liệt kê TẤT CẢ các phần/mục thực tế có trong biện pháp
+- Đánh giá mỗi phần: "pass" (đạt), "warn" (cần cải thiện), "fail" (yếu/thiếu)
+- KHÔNG cố định — tùy theo cấu trúc thực tế (có biện pháp chia Phần I-VI, có cái chia Chương 1-5, có cái dùng mục A-B-C...)
 
-2. **CHỐNG ĐẠO VĂN & TÍNH ĐỘC ĐÁO** (20 điểm):
-   - Có câu khuôn mẫu "Trong bối cảnh...", "Với sự phát triển..." không?
-   - Có paraphrase tốt hay copy nguyên văn?
-   - Mỗi đoạn có yếu tố riêng biệt (bối cảnh, tên riêng, quan sát) không?
+## B. TIÊU CHÍ CHẤT LƯỢNG LINH HOẠT (qualityCriteria)
+Tạo 6-8 tiêu chí phù hợp VỚI CẤU TRÚC ĐÃ PHÁT HIỆN. Gợi ý: Cấu trúc, Lý luận, Số liệu, Khả thi, Tính mới, Ngôn ngữ, Thực tiễn, Hình thức... (chọn phù hợp). Mỗi tiêu chí chấm 0-10.
 
-3. **TÍNH MỚI & SÁNG TẠO** (20 điểm):
-   - Giải pháp/Biện pháp có thực sự mới không?
-   - Có ứng dụng công nghệ, phương pháp hiện đại?
-   - Khác biệt so với các SKKN phổ biến?
+## C. PHÂN TÍCH ĐẠO VĂN (plagiarism)
+- Ước lượng % trùng lặp tổng thể (0-100%)
+- Xác định mức độ: "Thấp" (<15%), "Trung bình" (15-30%), "Cao" (30-50%), "Rất cao" (>50%)
+- Liệt kê 3-5 đoạn nghi ngờ đạo văn cao nhất (nếu có), kèm nguồn gốc tương tự và % giống
 
-4. **SỐ LIỆU & TÍNH KHOA HỌC** (20 điểm):
-   - Có bảng số liệu so sánh trước/sau?
-   - Số liệu có lẻ, cụ thể (không tròn trĩnh)?
-   - Có ghi rõ nguồn gốc số liệu (khảo sát ngày nào, bao nhiêu học sinh)?
+## D. PHÂN TÍCH NGUY CƠ AI (aiRisk)
+Kiểm tra xem văn bản có dấu hiệu được viết bởi AI không:
 
-5. **NGÔN NGỮ & GIỌNG VĂN** (20 điểm):
-   - Cân bằng giữa khoa học và thực tiễn?
-   - Có quan sát cá nhân xen kẽ số liệu?
-   - Có thừa nhận hạn chế?
-   - Câu văn đa dạng hay lặp pattern?
+### Các chỉ số:
+1. **Perplexity (0-100)**: AI thường 20-40, người viết 40-80+
+2. **Burstiness (0-100)**: AI viết câu đều (thấp), người viết xen kẽ câu ngắn-dài (cao)
+3. **Pattern Density (0-100)**: Tỷ lệ mẫu câu đặc trưng AI: "trong bối cảnh... hiện nay", "tuy nhiên, thực tế cho thấy", "không chỉ... mà còn", "qua đó... học sinh", "do đó... là rất cần thiết"
+
+### Ngưỡng đánh giá aiRiskPercent:
+- <15%: "An toàn" (Thấp)
+- 15-35%: "Trung bình"  
+- 35-60%: "Nguy hiểm" (Cao)
+- >60%: "Rất nguy hiểm" (Rất cao)
+
+### Mẫu câu đặc trưng AI cần kiểm tra:
+- ChatGPT: "trong bối cảnh... hiện nay", "theo định hướng... chương trình", "việc... là yêu cầu cấp thiết"
+- Gemini: "điều này cho thấy... rằng", "một cách... hiệu quả", "đáng chú ý là"
+- Claude: "điều đáng chú ý là", "một điểm đáng xem xét"
+
+⚠️ LƯU Ý KHI CHẤM AI:
+- KHÔNG đánh đồng "văn bản trơn tru" với "văn bản AI"
+- Dấu hiệu cốt lõi AI thô: vô hồn, thiếu ví dụ thực tiễn cá nhân, lạm dụng từ nối
+- Nếu có cấu trúc câu đa dạng, từ vựng giản dị, diễn đạt đời thường → NGƯỜI VIẾT → AI Score THẤP
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚠️ TRẢ VỀ ĐÚNG FORMAT JSON (KHÔNG CÓ GÌ KHÁC):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {
-  "totalScore": <tổng điểm 0-100>,
-  "criteria": [
-    {"name": "Cấu trúc & Bố cục", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"},
-    {"name": "Chống đạo văn & Tính độc đáo", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"},
-    {"name": "Tính mới & Sáng tạo", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"},
-    {"name": "Số liệu & Tính khoa học", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"},
-    {"name": "Ngôn ngữ & Giọng văn", "score": <0-20>, "maxScore": 20, "details": "<phân tích chi tiết 3-5 câu>"}
+  "totalScore": <tổng điểm 0-100 dựa trên qualityCriteria>,
+  "summary": "<tóm tắt tổng quan 3-5 câu>",
+  "detectedSections": [
+    {"name": "<tên phần>", "status": "pass|warn|fail", "comment": "<nhận xét ngắn>"},
+    ...
   ],
-  "suggestions": [
-    "<gợi ý cải thiện cụ thể 1>",
-    "<gợi ý cải thiện cụ thể 2>",
-    "<gợi ý cải thiện cụ thể 3>",
-    "<gợi ý cải thiện cụ thể 4>",
-    "<gợi ý cải thiện cụ thể 5>"
+  "qualityCriteria": [
+    {"name": "<tên tiêu chí>", "score": <0-10>, "maxScore": 10, "comment": "<nhận xét>"},
+    ...6-8 tiêu chí
   ],
-  "summary": "<tóm tắt tổng quan 3-5 câu về chất lượng biện pháp>"
+  "plagiarismPercent": <0-100>,
+  "plagiarismLevel": "Thấp|Trung bình|Cao|Rất cao",
+  "plagiarismSegments": [
+    {"segment": "<đoạn văn nghi ngờ ~50 ký tự>", "source": "<nguồn tương tự>", "similarity": <0-100>},
+    ...tối đa 5
+  ],
+  "aiRiskPercent": <0-100>,
+  "aiRiskLevel": "An toàn|Trung bình|Nguy hiểm|Rất nguy hiểm",
+  "aiRiskDetails": {
+    "perplexity": <0-100>,
+    "burstiness": <0-100>,
+    "patternDensity": <0-100>,
+    "suspiciousPatterns": ["<mẫu câu AI 1>", "<mẫu câu AI 2>", ...tối đa 5],
+    "recommendations": ["<gợi ý giảm AI 1>", "<gợi ý giảm AI 2>", ...tối đa 3]
+  },
+  "suggestions": ["<gợi ý cải thiện 1>", ...<5-7 gợi ý>]
 }
 
-CHỈ TRẢ VỀ JSON, KHÔNG CÓ GIẢI THÍCH HAY VĂN BẢN KHÁC.`;
+CHỈ TRẢ VỀ JSON THUẦN, KHÔNG GIẢI THÍCH, KHÔNG MARKDOWN CODE BLOCK.`;
 
     const response = await genAI.models.generateContent({
       model: modelName,
@@ -695,17 +748,50 @@ CHỈ TRẢ VỀ JSON, KHÔNG CÓ GIẢI THÍCH HAY VĂN BẢN KHÁC.`;
 
     const result = JSON.parse(jsonText);
 
+    // Build qualityCriteria with validation
+    const qualityCriteria = (result.qualityCriteria || []).map((c: any) => ({
+      name: c.name || 'Không rõ',
+      score: Math.min(10, Math.max(0, Number(c.score) || 0)),
+      maxScore: 10,
+      comment: c.comment || '',
+    }));
+
+    // Build legacy criteria from qualityCriteria for backward compatibility
+    const legacyCriteria = qualityCriteria.map((c: any) => ({
+      name: c.name,
+      score: c.score,
+      maxScore: c.maxScore,
+      details: c.comment,
+    }));
+
     // Validate and sanitize result
     return {
-      totalScore: Math.min(100, Math.max(0, result.totalScore || 0)),
-      criteria: (result.criteria || []).map((c: any) => ({
-        name: c.name || 'Không rõ',
-        score: Math.min(c.maxScore || 20, Math.max(0, c.score || 0)),
-        maxScore: c.maxScore || 20,
-        details: c.details || 'Không có chi tiết',
-      })),
-      suggestions: result.suggestions || [],
+      totalScore: Math.min(100, Math.max(0, Number(result.totalScore) || 0)),
       summary: result.summary || 'Không có tóm tắt.',
+      detectedSections: (result.detectedSections || []).map((s: any) => ({
+        name: s.name || '',
+        status: (['pass', 'warn', 'fail'].includes(s.status) ? s.status : 'warn') as 'pass' | 'warn' | 'fail',
+        comment: s.comment || '',
+      })),
+      qualityCriteria,
+      plagiarismPercent: Math.min(100, Math.max(0, Number(result.plagiarismPercent) || 0)),
+      plagiarismLevel: result.plagiarismLevel || 'Thấp',
+      plagiarismSegments: (result.plagiarismSegments || []).slice(0, 5).map((p: any) => ({
+        segment: p.segment || '',
+        source: p.source || '',
+        similarity: Math.min(100, Math.max(0, Number(p.similarity) || 0)),
+      })),
+      aiRiskPercent: Math.min(100, Math.max(0, Number(result.aiRiskPercent) || 0)),
+      aiRiskLevel: result.aiRiskLevel || 'An toàn',
+      aiRiskDetails: {
+        perplexity: Math.min(100, Math.max(0, Number(result.aiRiskDetails?.perplexity) || 50)),
+        burstiness: Math.min(100, Math.max(0, Number(result.aiRiskDetails?.burstiness) || 50)),
+        patternDensity: Math.min(100, Math.max(0, Number(result.aiRiskDetails?.patternDensity) || 0)),
+        suspiciousPatterns: (result.aiRiskDetails?.suspiciousPatterns || []).slice(0, 5),
+        recommendations: (result.aiRiskDetails?.recommendations || []).slice(0, 3),
+      },
+      suggestions: result.suggestions || [],
+      criteria: legacyCriteria,
     };
 
   } catch (error: any) {
