@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { UploadCloud, FileText, CheckCircle, AlertTriangle, ShieldAlert, Sparkles, Loader2, Play, Stethoscope } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { UploadCloud, FileText, CheckCircle, AlertTriangle, ShieldAlert, Sparkles, Loader2, Play, Microscope } from 'lucide-react';
 import * as mammoth from 'mammoth';
 import * as pdfjsLib from 'pdfjs-dist';
 import { analyzeOldDocument } from '../services/geminiService';
@@ -167,8 +167,8 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mt-6 mb-8 max-w-4xl mx-auto">
       <div className="bg-gradient-to-r from-teal-600 to-emerald-600 px-6 py-4">
         <div className="flex items-center gap-3">
-          <Stethoscope className="w-6 h-6 text-white" />
-          <h2 className="text-xl font-bold text-white">THẨM ĐỊNH VÀ SỬA BIỆN PHÁP CŨ</h2>
+          <Microscope className="w-6 h-6 text-white" />
+          <h2 className="text-xl font-bold text-white">THẨM ĐỊNH BIỆN PHÁP</h2>
         </div>
         <p className="text-teal-100 text-sm mt-1">AI phân tích điểm yếu và tự động nâng cấp báo cáo cũ của bạn thành phiên bản GVG xuất sắc.</p>
       </div>
@@ -222,7 +222,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
                          {isAnalyzing ? (
                            <><Loader2 className="w-5 h-5 animate-spin" /> Đang thẩm định biện pháp...</>
                          ) : (
-                           <><Stethoscope className="w-5 h-5" /> Bắt đầu Thẩm định AI</>
+                           <><Microscope className="w-5 h-5" /> Bắt đầu Thẩm định AI</>
                          )}
                        </button>
                      </>
