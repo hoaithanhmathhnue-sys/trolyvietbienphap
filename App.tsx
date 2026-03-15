@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { UserInfo, GenerationStep, GenerationState, SKKNTemplate, SolutionsState } from './types';
 import { STEPS_INFO, SOLUTION_MODE_PROMPT, FALLBACK_MODELS, HIGHER_ED_LEVELS, HIGHER_ED_SYSTEM_INSTRUCTION } from './constants';
 import { initializeGeminiChat, sendMessageStream, getFriendlyErrorMessage, parseApiError, getChatHistory, setChatHistory } from './services/geminiService';
@@ -102,6 +102,13 @@ const App: React.FC = () => {
 
   // Form Tabs State
   const [activeTab, setActiveTab] = useState<'create' | 'review'>('create');
+
+  // Auto Generate State
+  const [isAutoGenerate, setIsAutoGenerate] = useState(false);
+  const autoGenerateRef = useRef(false);
+  useEffect(() => {
+    autoGenerateRef.current = isAutoGenerate;
+  }, [isAutoGenerate]);
 
   // Check LocalStorage on Mount
   useEffect(() => {
@@ -1650,7 +1657,7 @@ SGK: ${userInfo.textbook}
           GenerationStep.PHAM_VI_REVIEW,
         ].includes(nextStepEnum);
 
-        if (!isNextStepReview) {
+        if (!isNextStepReview && autoGenerateRef.current) {
           setTimeout(() => {
             generateNextSection(nextStepEnum);
           }, 1500);
@@ -2337,7 +2344,7 @@ Tổ: [Tổ chuyên môn]
                         />
                         <Button
                           variant="secondary"
-                          onClick={regenerateOutline}
+                          onClick={() => regenerateOutline()}
                           disabled={!outlineFeedback.trim()}
                           className="w-full text-sm"
                           icon={<RefreshCw size={14} />}
@@ -2347,9 +2354,23 @@ Tổ: [Tổ chuyên môn]
                       </div>
                     )}
 
-                    <Button onClick={() => generateNextSection()} className="w-full" icon={<ChevronRight size={16} />}>
-                      {state.step === GenerationStep.OUTLINE ? 'Chốt Dàn ý & Viết tiếp' : 'Viết phần tiếp theo'}
-                    </Button>
+                    <div className="flex flex-col gap-2">
+                      <Button onClick={() => generateNextSection()} className="w-full" icon={<ChevronRight size={16} />}>
+                        {state.step === GenerationStep.OUTLINE ? 'Chốt Dàn ý & Viết tiếp' : 'Viết phần tiếp theo'}
+                      </Button>
+                      
+                      {state.step > GenerationStep.INPUT_FORM && state.step < GenerationStep.COMPLETED && (
+                        <label className="flex items-center justify-center gap-2 cursor-pointer text-sm text-gray-600 hover:text-gray-800 bg-white/50 py-1.5 px-3 rounded-md border border-gray-200 transition-colors">
+                          <input 
+                            type="checkbox" 
+                            checked={isAutoGenerate}
+                            onChange={(e) => setIsAutoGenerate(e.target.checked)}
+                            className="rounded border-gray-300 text-sky-600 focus:ring-sky-500 w-4 h-4 cursor-pointer"
+                          />
+                          <span className="font-medium select-none">Tự động viết phần tiếp theo</span>
+                        </label>
+                      )}
+                    </div>
                   </>
                 )
               )}
