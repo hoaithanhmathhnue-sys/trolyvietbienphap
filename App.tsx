@@ -1639,9 +1639,22 @@ SGK: ${userInfo.textbook}
       // Tự động gọi hàm kế tiếp nếu chưa tới bài toán COMPLETED
       // Timeout một xíu để mượt UX render
       if (nextStepEnum !== GenerationStep.COMPLETED) {
-        setTimeout(() => {
-          generateNextSection(nextStepEnum);
-        }, 1500);
+        // NGĂN chặn auto-advance nếu bước tiếp theo là bước cần REVIEW (Modal sẽ xử lý việc đi tiếp)
+        const isNextStepReview = [
+          GenerationStep.BP1_REVIEW,
+          GenerationStep.BP2_REVIEW,
+          GenerationStep.BP3_REVIEW,
+          GenerationStep.BP4_REVIEW,
+          GenerationStep.BP5_REVIEW,
+          GenerationStep.TINH_MOI_REVIEW,
+          GenerationStep.PHAM_VI_REVIEW,
+        ].includes(nextStepEnum);
+
+        if (!isNextStepReview) {
+          setTimeout(() => {
+            generateNextSection(nextStepEnum);
+          }, 1500);
+        }
       } else {
         // Nếu đã hoàn thành, tự động tạo phụ lục
         setTimeout(() => {
