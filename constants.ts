@@ -1,4 +1,5 @@
-
+import { KNOWLEDGE_BASE } from './data/knowledgeBase';
+import { WRITING_RULES } from './data/writingRules';
 
 export const MODEL_NAME = 'gemini-3-flash-preview';
 
@@ -255,6 +256,10 @@ Bạn sẽ không viết tất cả cùng lúc. Bạn sẽ viết từng phần 
 - [ ] Có thừa nhận hạn chế?
 - [ ] Câu văn đa dạng (không lặp pattern AI thường dùng)?
 - [ ] Đã paraphrase tất cả trích dẫn (mức 3)?
+
+${KNOWLEDGE_BASE}
+
+${WRITING_RULES}
 `;
 
 export const SOLUTION_MODE_PROMPT = `

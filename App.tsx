@@ -49,6 +49,32 @@ interface SessionData {
   savedAt: string;
 }
 
+// -------------------------------------------------------------------------------- //
+// HELPER: Thêm prompt chữa bệnh nếu đang ở chế độ Healing
+// -------------------------------------------------------------------------------- //
+const getHealingPromptSnippet = (healingContext: { originalContent: string; analysisResult: any } | null) => {
+  if (!healingContext) return "";
+  return `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🩺 CHẾ ĐỘ CHỮA BỆNH (HEALING MODE) ĐANG ĐƯỢC BẬT:
+Đây là văn bản báo cáo/SKKN gốc của người dùng được tải lên:
+<DOCUMENT_GOC>
+${healingContext.originalContent}
+</DOCUMENT_GOC>
+
+Và đây là BÁO CÁO KHÁM BỆNH (TOA THUỐC) từ AI chuyên gia:
+<TOA_THUOC_KHAM_BENH>
+${JSON.stringify(healingContext.analysisResult, null, 2)}
+</TOA_THUOC_KHAM_BENH>
+
+YÊU CẦU ĐẶC BIỆT KHI VIẾT BÀI / LẬP DÀN Ý:
+- Tái sử dụng tối đa CÁC Ý TƯỞNG TỐT từ văn bản gốc.
+- Bắt buộc phải TIÊU DIỆT HOÀN TOÀN các lỗi được nêu trong TOA THUỐC (đặc biệt là lỗi cấu trúc, đạo văn, thiếu số liệu).
+- Mục tiêu là tạo ra phiên bản NÂNG CẤP XUẤT SẮC từ bài gốc, chứ không phải viết một bài mới hoàn toàn không liên quan.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+`;
+};
+
 const App: React.FC = () => {
   // Lock Screen State
   const [isUnlocked, setIsUnlocked] = useState(false);
@@ -63,6 +89,15 @@ const App: React.FC = () => {
   const [apiKey, setApiKey] = useState('');
   const [showApiModal, setShowApiModal] = useState(false);
   const [selectedModel, setSelectedModel] = useState(FALLBACK_MODELS[0]);
+  
+  // App Navigation State
+  const [activeAppTab, setActiveAppTab] = useState<'create' | 'heal'>('create');
+  const [healingContext, setHealingContext] = useState<{
+    originalContent: string;
+    analysisResult: any;
+  } | null>(null);
+
+  // Form Tabs State
   const [activeTab, setActiveTab] = useState<'create' | 'review'>('create');
 
   // Check LocalStorage on Mount
@@ -1140,6 +1175,8 @@ QUAN TRỌNG:
     let nextStepEnum = GenerationStep.PART_1;
     let shouldAppend = true; // Mặc định append nội dung vào fullDocument
 
+    const healingSnippet = getHealingPromptSnippet(healingContext);
+
     // Logic for OUTLINE step specifically handles manual edits synchronization
     if (state.step === GenerationStep.OUTLINE) {
       // We inject the CURRENT fullDocument (which might have been edited by user) into the prompt
@@ -1580,7 +1617,9 @@ SGK: ${userInfo.textbook}
 
     try {
       let sectionText = "\n\n---\n\n"; // Separator
-      await sendMessageStream(currentStepPrompt, (chunk) => {
+      // Tiêm healing context vào prompt nếu đang ở chế độ Chữa Bệnh
+      const finalPrompt = healingSnippet + currentStepPrompt;
+      await sendMessageStream(finalPrompt, (chunk) => {
         sectionText += chunk;
         if (shouldAppend) {
           setState(prev => ({
@@ -2436,7 +2475,71 @@ Tổ: [Tổ chuyên môn]
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 min-h-0 p-4 lg:p-8 flex flex-col overflow-y-auto relative main-scroll">
+      <div className="flex-1 min-h-0 p-3 lg:p-6 flex flex-col overflow-y-auto relative main-scroll bg-gray-50/50">
+        
+        {/* Main App Navigation Tabs */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 p-1.5 flex gap-2 lg:max-w-2xl mx-auto w-full sticky top-0 z-10 backdrop-blur-xl bg-white/80">
+          <button
+            onClick={() => setActiveAppTab('create')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${
+              activeAppTab === 'create' 
+                ? 'bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-md transform scale-[1.02]' 
+                : 'text-gray-500 hover:bg-sky-50 hover:text-sky-700'
+            }`}
+          >
+            <PenTool className="w-5 h-5" /> 📝 VIẾT SÁNG KIẾN MỚI
+          </button>
+          
+          <button
+            onClick={() => setActiveAppTab('heal')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${
+              activeAppTab === 'heal' 
+                ? 'bg-gradient-to-r from-red-600 to-rose-500 text-white shadow-md transform scale-[1.02]' 
+                : 'text-gray-500 hover:bg-red-50 hover:text-red-700'
+            }`}
+          >
+             <Stethoscope className="w-5 h-5" /> 🩺 KHÁM & MÔNG MÁ SKKN CŨ
+          </button>
+        </div>
+
+        {/* View Routing */}
+        {activeAppTab === 'heal' ? (
+          <div className="flex-1 w-full max-w-6xl mx-auto h-full animate-fade-in">
+             <ReviewOldDocPanel 
+                apiKey={apiKey}
+                selectedModel={selectedModel}
+                onHealDoc={(originalContent, analysisResult) => {
+                  setHealingContext({ originalContent, analysisResult });
+                  setActiveAppTab('create');
+                  // Auto-trigger sinh dàn ý chữa bệnh sau khi state update
+                  setTimeout(() => {
+                    startGeneration();
+                  }, 500);
+                }} 
+             />
+          </div>
+        ) : (
+          <div className="flex-1 w-full max-w-6xl mx-auto h-full flex flex-col animate-fade-in relative pb-20">
+            {/* Show error context if healing mode */}
+            {healingContext && state.step === GenerationStep.INPUT_FORM && (
+               <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg shadow-sm">
+                 <div className="flex items-start gap-3">
+                    <Stethoscope className="w-6 h-6 text-red-600 mt-0.5" />
+                    <div>
+                      <h3 className="font-bold text-red-800 text-lg">Đang ở chế độ: Mông Má Sáng Kiến</h3>
+                      <p className="text-red-700 text-sm mt-1">Hệ thống đã nạp "Toa Thuốc" vào dòng chảy AI. Hãy điền thêm thông tin cơ bản bên dưới (Tên đề tài, Môn học...) để cấu hình bài làm, sau đó bấm <strong>Tiếp Theo</strong> để AI tiến hành viết lại bài.</p>
+                      
+                      <button 
+                         onClick={() => setHealingContext(null)}
+                         className="mt-3 text-xs font-semibold bg-white border border-red-200 text-red-600 px-3 py-1.5 rounded-md hover:bg-red-100 transition-colors"
+                      >
+                         Hủy bỏ chế độ mông má
+                      </button>
+                    </div>
+                 </div>
+               </div>
+            )}
+
 
         {/* Mobile Header */}
         <div className="lg:hidden mb-4 bg-gradient-to-r from-white to-sky-50 p-4 rounded-xl shadow-lg border border-sky-100 flex flex-col gap-2">
@@ -2567,48 +2670,15 @@ Tổ: [Tổ chuyên môn]
 
         {state.step === GenerationStep.INPUT_FORM ? (
           <div className="flex-1 flex flex-col items-center">
-            {/* Tab Navigation */}
-            <div className="w-full max-w-4xl flex gap-2 mb-6 bg-white/80 backdrop-blur-sm p-1.5 rounded-2xl shadow-sm border border-gray-200">
-              <button
-                onClick={() => setActiveTab('create')}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
-                  activeTab === 'create'
-                    ? 'bg-gradient-to-r from-blue-500 to-sky-500 text-white shadow-lg'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <PenTool className="w-4 h-4" />
-                ✍️ Viết Mới
-              </button>
-              <button
-                onClick={() => setActiveTab('review')}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
-                  activeTab === 'review'
-                    ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-lg'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <Stethoscope className="w-4 h-4" />
-                🩺 Khám Bệnh Biện Pháp Cũ
-              </button>
-            </div>
-
-            {activeTab === 'create' ? (
-              <SKKNForm
+             <SKKNForm
+                apiKey={apiKey}
+                selectedModel={selectedModel}
                 userInfo={userInfo}
                 onChange={handleUserChange}
                 onSubmit={startGeneration}
                 onManualSubmit={handleManualOutlineSubmit}
                 isSubmitting={state.isStreaming}
-                apiKey={apiKey}
-                selectedModel={selectedModel}
               />
-            ) : (
-              <ReviewOldDocPanel
-                apiKey={apiKey}
-                selectedModel={selectedModel}
-              />
-            )}
           </div>
         ) : (
           <div className="flex-1 flex flex-col min-h-0 relative">
@@ -2632,6 +2702,8 @@ Tổ: [Tổ chuyên môn]
             </div>
           </div>
         )}
+       </div>
+      )}
       </div>
     </div>
   );
