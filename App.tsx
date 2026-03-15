@@ -50,26 +50,26 @@ interface SessionData {
 }
 
 // -------------------------------------------------------------------------------- //
-// HELPER: Thêm prompt chữa bệnh nếu đang ở chế độ Healing
+// HELPER: Thêm prompt cải thiện nếu đang ở chế độ Healing
 // -------------------------------------------------------------------------------- //
 const getHealingPromptSnippet = (healingContext: { originalContent: string; analysisResult: any } | null) => {
   if (!healingContext) return "";
   return `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🩺 CHẾ ĐỘ CHỮA BỆNH (HEALING MODE) ĐANG ĐƯỢC BẬT:
+🩺 CHẾ ĐỘ Cải thiện (HEALING MODE) ĐANG ĐƯỢC BẬT:
 Đây là văn bản báo cáo/Biện pháp gốc của người dùng được tải lên:
 <DOCUMENT_GOC>
 ${healingContext.originalContent}
 </DOCUMENT_GOC>
 
-Và đây là BÁO CÁO KHÁM BỆNH (TOA THUỐC) từ AI chuyên gia:
+Và đây là BÁO CÁO Thẩm định (Giải pháp) từ AI chuyên gia:
 <TOA_THUOC_KHAM_BENH>
 ${JSON.stringify(healingContext.analysisResult, null, 2)}
 </TOA_THUOC_KHAM_BENH>
 
 YÊU CẦU ĐẶC BIỆT KHI VIẾT BÀI / LẬP DÀN Ý:
 - Tái sử dụng tối đa CÁC Ý TƯỞNG TỐT từ văn bản gốc.
-- Bắt buộc phải TIÊU DIỆT HOÀN TOÀN các lỗi được nêu trong TOA THUỐC (đặc biệt là lỗi cấu trúc, đạo văn, thiếu số liệu).
+- Bắt buộc phải TIÊU DIỆT HOÀN TOÀN các lỗi được nêu trong Giải pháp (đặc biệt là lỗi cấu trúc, đạo văn, thiếu số liệu).
 - Mục tiêu là tạo ra phiên bản NÂNG CẤP XUẤT SẮC từ bài gốc, chứ không phải viết một bài mới hoàn toàn không liên quan.
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `;
@@ -1617,7 +1617,7 @@ SGK: ${userInfo.textbook}
 
     try {
       let sectionText = "\n\n---\n\n"; // Separator
-      // Tiêm healing context vào prompt nếu đang ở chế độ Chữa Bệnh
+      // Tiêm healing context vào prompt nếu đang ở chế độ Cải thiện
       const finalPrompt = healingSnippet + currentStepPrompt;
       await sendMessageStream(finalPrompt, (chunk) => {
         sectionText += chunk;
@@ -2511,7 +2511,7 @@ Tổ: [Tổ chuyên môn]
                 onHealDoc={(originalContent, analysisResult) => {
                   setHealingContext({ originalContent, analysisResult });
                   setActiveAppTab('create');
-                  // Auto-trigger sinh dàn ý chữa bệnh sau khi state update
+                  // Auto-trigger sinh dàn ý cải thiện sau khi state update
                   setTimeout(() => {
                     startGeneration();
                   }, 500);

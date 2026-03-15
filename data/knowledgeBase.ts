@@ -410,10 +410,10 @@ Mục tiêu: Học sâu qua việc dạ...
 
 - **PHƯƠNG PHÁP 14: "BỆNH VIỆN TRI THỨC" - AI CHẨN ĐOÁN LỖI HỌC TẬP (AI LEARNING CLINIC)**: Cá nhân hóa việc sửa lỗi, giúp học sinh hiểu rõ nguyên nhân sai thay vì chỉ biết đáp án đúng.
   - Kỹ năng rèn luyện: Tự nhận thức, phân tích lỗi, tư duy metacognition.
-  - Công cụ: ChatGPT/Gemini, Google Forms (phiếu khám), Notion (hồ sơ bệnh án).
+  - Công cụ: ChatGPT/Gemini, Google Forms (phiếu khám), Notion (hồ sơ biện pháp).
   - Full text: PHƯƠNG PHÁP 14: "BỆNH VIỆN TRI THỨC" - AI CHẨN ĐOÁN LỖI HỌC TẬP (AI LEARNING CLINIC)
 I. GIỚI THIỆU CHUNG
-Biến việc sửa lỗi thành một trải nghiệm "khám bệnh". AI đóng vai bác sĩ chuyên khoa, chẩn đoán "bệnh học tập" của học sinh (hiểu sai khái niệm, lỗi logic, thiếu kiến thức nền) và kê "đơn thuốc" (...
+Biến việc sửa lỗi thành một trải nghiệm "thẩm định". AI đóng vai bác sĩ chuyên khoa, chẩn đoán "bệnh học tập" của học sinh (hiểu sai khái niệm, lỗi logic, thiếu kiến thức nền) và kê "giải pháp" (...
 
 - **PHƯƠNG PHÁP 15: "PHÒNG THÍ NGHIỆM TƯƠNG LAI" - AI MÔ PHỎNG KẾT QUẢ (AI FUTURE LAB)**: Phát triển tư duy dự đoán, hiểu mối quan hệ nhân quả, rèn trách nhiệm với tương lai.
   - Kỹ năng rèn luyện: Tư duy hệ thống, phân tích dữ liệu, ra quyết định.

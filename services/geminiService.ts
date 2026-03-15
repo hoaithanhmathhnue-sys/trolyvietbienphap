@@ -576,7 +576,7 @@ BẮT ĐẦU JSON NGAY:`;
   }
 };
 
-// ====== PHÂN TÍCH BIỆN PHÁP CŨ (KHÁM & CHỮA BỆNH) ======
+// ====== PHÂN TÍCH BIỆN PHÁP CŨ (THẨM ĐỊNH & CẢI THIỆN) ======
 export const analyzeOldDocument = async (
   apiKey: string,
   content: string,

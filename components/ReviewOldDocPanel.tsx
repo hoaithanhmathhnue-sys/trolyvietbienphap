@@ -3,6 +3,7 @@ import { UploadCloud, FileText, CheckCircle, AlertTriangle, ShieldAlert, Sparkle
 import * as mammoth from 'mammoth';
 import * as pdfjsLib from 'pdfjs-dist';
 import { analyzeOldDocument } from '../services/geminiService';
+import { processDocxFile } from '../services/docxEditorService';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
@@ -22,6 +23,10 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
   
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any | null>(null);
+  
+  const [isImprovingDocx, setIsImprovingDocx] = useState(false);
+  const [improveProgress, setImproveProgress] = useState(0);
+  const [improveMessage, setImproveMessage] = useState('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -97,7 +102,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
   const startAnalysis = async () => {
     if (!originalContent) return;
     if (!apiKey) {
-      alert("Vui lòng nhập API Key để dùng tính năng Khám Bệnh AI.");
+      alert("Vui lòng nhập API Key để dùng tính năng Thẩm định AI.");
       return;
     }
     
@@ -107,10 +112,50 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
        const result = await analyzeOldDocument(apiKey, originalContent, selectedModel);
        setAnalysisResult(result);
     } catch (error: any) {
-       console.error("Lỗi khám bệnh:", error);
-       alert("Lôi phân tích bệnh án AI: " + error.message);
+       console.error("Lỗi thẩm định:", error);
+       alert("Lỗi phân tích biện pháp AI: " + error.message);
     } finally {
        setIsAnalyzing(false);
+    }
+  };
+
+  const handleImproveDocx = async () => {
+    if (!file || !apiKey) return;
+    
+    if (!file.name.toLowerCase().endsWith('.docx')) {
+      alert('Tính năng sửa trực tiếp và giữ nguyên định dạng chỉ hỗ trợ file .docx. Với file PDF, hệ thống sẽ mở trình soạn thảo mới.');
+      onHealDoc(originalContent, analysisResult);
+      return;
+    }
+
+    setIsImprovingDocx(true);
+    setImproveProgress(0);
+    setImproveMessage('Bắt đầu xử lý...');
+    
+    try {
+      const blob = await processDocxFile(file, apiKey, selectedModel || 'gemini-1.5-pro', (percent, msg) => {
+        setImproveProgress(percent);
+        setImproveMessage(msg);
+      });
+      
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `[DA_CAI_THIEN]_${file.name}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      a.remove();
+      
+      setImproveMessage('Hoàn tất! Đã tải file xuống.');
+      setTimeout(() => {
+         setIsImprovingDocx(false);
+      }, 3000);
+      
+    } catch (error: any) {
+      console.error(error);
+      alert('Lỗi cải thiện lỗi DOCX: ' + error.message);
+      setIsImprovingDocx(false);
     }
   };
 
@@ -171,9 +216,9 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
                          className="flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 shadow-sm disabled:opacity-50"
                        >
                          {isAnalyzing ? (
-                           <><Loader2 className="w-5 h-5 animate-spin" /> Đang khám tổng quát...</>
+                           <><Loader2 className="w-5 h-5 animate-spin" /> Đang thẩm định biện pháp...</>
                          ) : (
-                           <><Stethoscope className="w-5 h-5" /> Bắt đầu Máy Quét AI</>
+                           <><Stethoscope className="w-5 h-5" /> Bắt đầu Thẩm định AI</>
                          )}
                        </button>
                      </>
@@ -194,7 +239,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
                <button 
                   onClick={() => setAnalysisResult(null)}
                   className="text-sm text-gray-500 hover:text-gray-700 underline"
-               >Khám lại file khác</button>
+               >Thẩm định lại file khác</button>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -244,10 +289,10 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
                </div>
             </div>
 
-            {/* Toa Thuốc */}
+            {/* Giải Pháp */}
             <div className="bg-green-50 rounded-xl p-5 border border-green-200 shadow-sm mt-6">
               <h4 className="font-bold text-green-800 flex items-center gap-2 mb-3">
-                <CheckCircle className="w-5 h-5" /> Đơn Thuốc Đề Xuất (AI Nâng Cấp)
+                <CheckCircle className="w-5 h-5" /> Giải Pháp Đề Xuất (AI Nâng Cấp)
               </h4>
               <ul className="space-y-2">
                 {analysisResult.suggestions && analysisResult.suggestions.map((rec: string, i: number) => (
@@ -259,14 +304,32 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
               </ul>
               
               <div className="mt-6 pt-5 border-t border-green-200/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-                 <p className="text-sm text-green-700 bg-green-100/50 px-3 py-1.5 rounded-md">
-                   Bấm nút bên phải để AI tự động <strong>viết lại bài của bạn</strong> dựa trên toa thuốc này.
-                 </p>
+                 <div className="flex-1 w-full">
+                   <p className="text-sm text-green-700 bg-green-100/50 px-3 py-1.5 rounded-md mb-2">
+                     Hệ thống sẽ <strong>sửa trực tiếp trên file DOCX</strong> của bạn, giữ nguyên định dạng và bôi đỏ chữ mới.
+                   </p>
+                   {isImprovingDocx && (
+                     <div className="mt-2 text-left">
+                       <div className="flex justify-between items-center text-xs text-green-800 font-semibold mb-1">
+                         <span>{improveMessage}</span>
+                         <span>{improveProgress}%</span>
+                       </div>
+                       <div className="w-full bg-green-200 rounded-full h-2">
+                         <div className="bg-green-600 h-2 rounded-full transition-all duration-300" style={{ width: `${improveProgress}%` }}></div>
+                       </div>
+                     </div>
+                   )}
+                 </div>
                  <button 
-                   onClick={() => onHealDoc(originalContent, analysisResult)}
-                   className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 shadow-md shrink-0 transition-transform active:scale-95"
+                   onClick={handleImproveDocx}
+                   disabled={isImprovingDocx}
+                   className="flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg font-bold hover:bg-green-700 shadow-md shrink-0 transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                  >
-                   <Play className="w-5 h-5 fill-white" /> XÁC NHẬN CHỮA BỆNH
+                   {isImprovingDocx ? (
+                      <><Loader2 className="w-5 h-5 animate-spin text-white" /> ĐANG XỬ LÝ...</>
+                   ) : (
+                      <><Play className="w-5 h-5 fill-white" /> XÁC NHẬN CẢI THIỆN</>
+                   )}
                  </button>
               </div>
             </div>
