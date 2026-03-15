@@ -27,6 +27,8 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
   const [isImprovingDocx, setIsImprovingDocx] = useState(false);
   const [improveProgress, setImproveProgress] = useState(0);
   const [improveMessage, setImproveMessage] = useState('');
+  const [improvedDocxUrl, setImprovedDocxUrl] = useState<string | null>(null);
+  const [improvedDocxName, setImprovedDocxName] = useState<string>('');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -139,18 +141,20 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
       });
       
       const url = window.URL.createObjectURL(blob);
+      setImprovedDocxUrl(url);
+      setImprovedDocxName(`[DA_CAI_THIEN]_${file.name}`);
+      
       const a = document.createElement('a');
       a.href = url;
       a.download = `[DA_CAI_THIEN]_${file.name}`;
       document.body.appendChild(a);
       a.click();
-      window.URL.revokeObjectURL(url);
       a.remove();
       
-      setImproveMessage('Hoàn tất! Đã tải file xuống.');
+      setImproveMessage('Hoàn tất! Hãy bấm nút tải về bên dưới.');
       setTimeout(() => {
          setIsImprovingDocx(false);
-      }, 3000);
+      }, 2000);
       
     } catch (error: any) {
       console.error(error);
@@ -317,6 +321,20 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
                        <div className="w-full bg-green-200 rounded-full h-2">
                          <div className="bg-green-600 h-2 rounded-full transition-all duration-300" style={{ width: `${improveProgress}%` }}></div>
                        </div>
+                     </div>
+                   )}
+                   {improvedDocxUrl && !isImprovingDocx && (
+                     <div className="mt-3">
+                       <a 
+                         href={improvedDocxUrl} 
+                         download={improvedDocxName}
+                         className="inline-flex flex-col items-start px-4 py-2 bg-green-50 border border-green-400 rounded-lg shadow-sm hover:bg-green-100 transition-colors"
+                       >
+                         <span className="flex items-center gap-2 font-bold text-green-700">
+                           <FileText className="w-4 h-4" /> BẤM VÀO ĐÂY ĐỂ TẢI XUỐNG BẢN CẢI THIỆN
+                         </span>
+                         <span className="text-xs text-green-600 mt-1">{improvedDocxName}</span>
+                       </a>
                      </div>
                    )}
                  </div>
