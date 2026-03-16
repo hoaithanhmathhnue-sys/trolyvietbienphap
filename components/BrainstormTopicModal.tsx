@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { X, Search, ChevronRight, ChevronLeft, CheckCircle, Loader2 } from 'lucide-react';
+import { X, Search, ChevronRight, ChevronLeft, CheckCircle, Loader2, Wand2, Sparkles } from 'lucide-react';
 import { TEACHING_METHODS } from '../data/teachingMethods';
-import { brainstormTopicNames } from '../services/geminiService';
+import { brainstormTopicNames, suggestMethods } from '../services/geminiService';
 
 interface BrainstormTopicModalProps {
   isOpen: boolean;
@@ -24,12 +24,18 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
     topicArea: '',
     chapter: '',
     targetCompetence: '',
+    otherRequirements: '',
     selectedMethods: [] as string[]
   });
 
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<{title: string, rationale: string}[]>([]);
   const [error, setError] = useState('');
+
+  // AI gợi ý phương pháp
+  const [isSuggesting, setIsSuggesting] = useState(false);
+  const [suggestedMethods, setSuggestedMethods] = useState<{method: string, reason: string}[]>([]);
+  const [suggestError, setSuggestError] = useState('');
 
   if (!isOpen) return null;
 
@@ -84,6 +90,44 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Hàm gọi AI gợi ý PP/KT
+  const handleSuggestMethods = async () => {
+    if (!apiKey) {
+      alert("Vui lòng nhập API Key ở Settings trước khi dùng AI gợi ý.");
+      return;
+    }
+    setSuggestError('');
+    setIsSuggesting(true);
+    try {
+      const resp = await suggestMethods(apiKey, formData, selectedModel);
+      setSuggestedMethods(resp);
+      // Tự động check các PP được AI gợi ý
+      const suggestedNames = resp.map(r => r.method);
+      setFormData(prev => {
+        const newMethods = [...prev.selectedMethods];
+        suggestedNames.forEach(name => {
+          if (!newMethods.includes(name)) {
+            newMethods.push(name);
+          }
+        });
+        return { ...prev, selectedMethods: newMethods };
+      });
+    } catch (err: any) {
+      setSuggestError(err.message || "Lỗi gợi ý phương pháp.");
+    } finally {
+      setIsSuggesting(false);
+    }
+  };
+
+  // Kiểm tra xem PP này có được AI gợi ý không
+  const isSuggestedMethod = (method: string) => {
+    return suggestedMethods.some(s => s.method === method);
+  };
+
+  const getSuggestedReason = (method: string) => {
+    return suggestedMethods.find(s => s.method === method)?.reason || '';
   };
 
   return (
@@ -154,6 +198,16 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
                 <label className="block text-sm font-medium mb-1">Năng lực / Phẩm chất cần đạt thiết yếu</label>
                 <textarea value={formData.targetCompetence} onChange={e => handleChange('targetCompetence', e.target.value)} className="w-full border rounded p-2 h-20" placeholder="VD: Tư duy phản biện, tự học, giải quyết vấn đề..." />
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-1 text-indigo-700">Yêu cầu khác</label>
+                <textarea
+                  value={formData.otherRequirements}
+                  onChange={e => handleChange('otherRequirements', e.target.value)}
+                  className="w-full border border-indigo-200 rounded p-2 h-20 bg-indigo-50/30 focus:bg-white focus:ring-indigo-500 focus:border-indigo-500"
+                  placeholder="VD: Có dùng AI không? Đã có giải pháp hay ý tưởng trò chơi nào chưa? Muốn tích hợp công nghệ gì?..."
+                />
+                <p className="text-xs text-gray-400 mt-1">Bổ sung thông tin giúp AI gợi ý phương pháp và đề tài chính xác hơn.</p>
+              </div>
             </div>
           )}
 
@@ -162,16 +216,72 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
               <h4 className="font-semibold text-lg text-gray-800 mb-2">Bước 3: Chọn Phương pháp / Kỹ thuật</h4>
               <p className="text-sm text-gray-500 mb-2">Bạn có thể chọn nhiều kỹ thuật dự kiến sẽ áp dụng (tùy chọn).</p>
               
+              {/* Nút AI gợi ý */}
+              <button
+                onClick={handleSuggestMethods}
+                disabled={isSuggesting}
+                className="w-full px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 font-medium disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {isSuggesting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Đang phân tích...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="w-4 h-4" />
+                    AI gợi ý phương pháp phù hợp
+                  </>
+                )}
+              </button>
+
+              {suggestError && (
+                <div className="p-2 bg-red-50 text-red-600 rounded text-xs">{suggestError}</div>
+              )}
+
+              {/* Hiển thị kết quả gợi ý */}
+              {suggestedMethods.length > 0 && (
+                <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
+                  <p className="text-xs font-semibold text-indigo-700 mb-2 flex items-center gap-1">
+                    <Sparkles className="w-3 h-3" /> AI đã gợi ý {suggestedMethods.length} phương pháp:
+                  </p>
+                  <div className="space-y-1.5">
+                    {suggestedMethods.map((s, idx) => (
+                      <div key={idx} className="flex items-start gap-2 text-xs">
+                        <span className="text-indigo-600 font-bold shrink-0">✦</span>
+                        <div>
+                          <span className="font-semibold text-indigo-800">{s.method}</span>
+                          <span className="text-gray-600 ml-1">— {s.reason}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
               <div className="flex-1 overflow-y-auto pr-2 border rounded p-2 bg-gray-50 max-h-60">
                 {TEACHING_METHODS.map((method, idx) => (
-                  <label key={idx} className="flex items-start gap-2 p-2 hover:bg-white rounded cursor-pointer border-b border-gray-100 last:border-0">
+                  <label
+                    key={idx}
+                    className={`flex items-start gap-2 p-2 hover:bg-white rounded cursor-pointer border-b border-gray-100 last:border-0 ${
+                      isSuggestedMethod(method) ? 'bg-indigo-50/70 ring-1 ring-indigo-200' : ''
+                    }`}
+                    title={getSuggestedReason(method) || undefined}
+                  >
                     <input 
                       type="checkbox" 
                       className="mt-1"
                       checked={formData.selectedMethods.includes(method)}
                       onChange={() => toggleMethod(method)}
                     />
-                    <span className="text-sm">{method}</span>
+                    <span className="text-sm">
+                      {method}
+                      {isSuggestedMethod(method) && (
+                        <span className="ml-1.5 text-[10px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-medium">
+                          AI gợi ý
+                        </span>
+                      )}
+                    </span>
                   </label>
                 ))}
               </div>

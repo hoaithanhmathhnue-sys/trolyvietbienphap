@@ -1,6 +1,7 @@
 
 import { GoogleGenAI, Chat } from "@google/genai";
 import { SYSTEM_INSTRUCTION, FALLBACK_MODELS } from "../constants";
+import { TEACHING_METHODS, METHOD_SUGGESTION_RULES } from "../data/teachingMethods";
 import { TitleAnalysisResult } from '../types';
 
 // Hàm phân tích và trả về thông báo lỗi thân thiện
@@ -812,6 +813,7 @@ export const brainstormTopicNames = async (
     topicArea: string;
     chapter: string;
     targetCompetence: string;
+    otherRequirements: string;
     selectedMethods: string[];
   },
   selectedModel?: string
@@ -825,6 +827,7 @@ Hãy đề xuất 5 tên đề tài Biện pháp/SKKN siêu sáng tạo, độc 
 - Chuyên đề: ${inputs.topicArea}
 - Chương/Bài: ${inputs.chapter}
 - Mục tiêu/Năng lực cần đạt: ${inputs.targetCompetence}
+- Yêu cầu khác (AI, ý tưởng trò chơi...): ${inputs.otherRequirements || 'Không có'}
 - Phương pháp / Kỹ thuật mong muốn tích hợp: ${inputs.selectedMethods.join(', ')}
 
 ĐÁNH GIÁ VÀ ĐỀ XUẤT:
@@ -873,6 +876,93 @@ CHỈ OUTPUT JSON KHÔNG DIỄN GIẢI THÊM:`;
 
   } catch (error: any) {
     console.error('Lỗi brainstorm đề tài:', error);
+    throw new Error(getFriendlyErrorMessage(error).message);
+  }
+};
+
+/**
+ * AI gợi ý phương pháp/kỹ thuật dạy học dựa trên bối cảnh Bước 1 + Bước 2
+ */
+export const suggestMethods = async (
+  apiKey: string,
+  inputs: {
+    subject: string;
+    level: string;
+    grade: string;
+    topicArea: string;
+    chapter: string;
+    targetCompetence: string;
+    otherRequirements: string;
+  },
+  selectedModel?: string
+): Promise<Array<{ method: string; reason: string }>> => {
+  const ai = new GoogleGenAI({ apiKey });
+
+  const methodList = TEACHING_METHODS.map((m, i) => `${i + 1}. ${m}`).join('\n');
+
+  const prompt = `Bạn là chuyên gia thiết kế giáo dục hàng đầu Việt Nam, am hiểu sâu 46 kỹ thuật/phương pháp dạy học tích cực.
+
+NHIỆM VỤ: Phân tích bối cảnh giáo viên cung cấp và GỢI Ý 3-5 phương pháp/kỹ thuật PHÙ HỢP NHẤT từ danh sách bên dưới.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BỐI CẢNH CỦA GIÁO VIÊN:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Môn học: ${inputs.subject}
+- Cấp học: ${inputs.level}
+- Khối lớp: ${inputs.grade}
+- Chuyên đề nghiên cứu: ${inputs.topicArea}
+- Chương/Bài: ${inputs.chapter}
+- Năng lực/Phẩm chất cần đạt: ${inputs.targetCompetence}
+- Yêu cầu khác: ${inputs.otherRequirements || 'Không có'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DANH SÁCH 46 PHƯƠNG PHÁP/KỸ THUẬT (CHỌN TỪ ĐÂY):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${methodList}
+
+${METHOD_SUGGESTION_RULES}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+YÊU CẦU:
+- Chọn 3-5 PP/KT phù hợp NHẤT với bối cảnh trên
+- "method" PHẢI ĐÚNG CHÍNH XÁC tên trong danh sách trên (copy-paste)
+- "reason" giải thích ngắn gọn vì sao phù hợp (1-2 câu)
+- Ưu tiên kết hợp phương pháp truyền thống + AI nếu phù hợp
+
+TRẢ VỀ JSON ARRAY (CHỈ JSON THUẦN, KHÔNG MARKDOWN CODE BLOCK):
+[
+  { "method": "Tên PP/KT chính xác từ danh sách", "reason": "Lý do phù hợp" },
+  ...
+]
+BẮT ĐẦU JSON NGAY:`;
+
+  const model = selectedModel || FALLBACK_MODELS[0];
+
+  try {
+    const response = await ai.models.generateContent({
+      model: model,
+      contents: prompt
+    });
+
+    const responseText = response.text || '[]';
+
+    let jsonText = responseText.trim();
+    if (jsonText.startsWith('```json')) {
+      jsonText = jsonText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    } else if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+
+    const jsonMatch = jsonText.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+      jsonText = jsonMatch[0];
+    }
+
+    const result = JSON.parse(jsonText);
+    return Array.isArray(result) ? result : [];
+
+  } catch (error: any) {
+    console.error('Lỗi gợi ý phương pháp:', error);
     throw new Error(getFriendlyErrorMessage(error).message);
   }
 };
