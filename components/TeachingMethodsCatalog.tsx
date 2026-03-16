@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Search, Users, Brain, BarChart3, Globe, Rocket, Bot, ChevronDown, ChevronUp, Zap, BookOpen, Lightbulb } from 'lucide-react';
 
 // ─── Dữ liệu chi tiết 48 PP/KT chia 6 nhóm ───
-// Nguồn: TongHop_KyThuat_DayHoc_v4.docx (Trần Hoài Thanh, v4.0, 2026)
+// Nguồn: Tổng hợp và biên soạn (Trần Hoài Thanh, v4.0, 2026)
 
 interface MethodItem {
   name: string;
@@ -298,7 +298,7 @@ const TeachingMethodsCatalog: React.FC<TeachingMethodsCatalogProps> = ({ onClose
       {/* Footer */}
       <div className="mt-8 text-center text-xs text-gray-400 pb-6">
         <p>📚 Tổng cộng <strong className="text-gray-600">{totalMethods}</strong> phương pháp & kỹ thuật dạy học tích cực</p>
-        <p className="mt-1">Nguồn tham khảo: TongHop_KyThuat_DayHoc_v4.docx — giaovienai.vercel.app</p>
+        <p className="mt-1">Tổng hợp và biên soạn: Trần Hoài Thanh — giaovienai.vercel.app</p>
       </div>
     </div>
   );
