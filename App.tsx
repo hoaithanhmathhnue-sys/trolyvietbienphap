@@ -676,6 +676,37 @@ THÔNG TIN ĐỀ TÀI:
 • Tên ${schoolTerm}: ${userInfo.school}
 • Phân tích/Kết hợp: Các yêu cầu đặc biệt của cấp học
 
+${(['GVG', 'GVCN'].includes(userInfo.subject.toUpperCase().trim())) ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🏆🏆🏆 CHẾ ĐỘ ĐẶC BIỆT: BIỆN PHÁP ${userInfo.subject.toUpperCase()} — ƯU TIÊN DATA APP 🏆🏆🏆
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ CẢNH BÁO NGHIÊM NGẶT: Giáo viên đã chọn danh mục "${userInfo.subject.toUpperCase()}" — đây là Biện pháp thi đua cấp cao.
+BẠN BẮT BUỘC PHẢI:
+
+1. 📚 SỬ DỤNG TRIỆT ĐỂ DỮ LIỆU NỘI BỘ APP:
+   - Tham khảo 48 phương pháp/kỹ thuật dạy học tích cực (từ database knowledgeBase)
+   - Áp dụng các kỹ thuật dạy học phù hợp (Think-Pair-Share, Jigsaw, KWL, 5E, STEM, AI...)
+   - Tuân thủ quy tắc viết biện pháp chất lượng cao (writingRules)
+   - Kết hợp đa dạng phương pháp truyền thống và hiện đại
+
+2. 🌟 ĐẢM BẢO TÍNH MỚI & SÁNG TẠO:
+   - Đề xuất giải pháp MỚI, CHƯA AI NGHĨ ĐẾN — không dùng lại ý tưởng phổ biến
+   - Kết hợp sáng tạo giữa PP truyền thống + công nghệ + AI
+   - Mỗi giải pháp phải có "điểm nhấn" độc đáo riêng
+
+3. 🚫 KHÔNG TRÙNG LẶP, KHÔNG ĐẠO VĂN:
+   - Mỗi giải pháp PHẢI có góc tiếp cận HOÀN TOÀN KHÁC BIỆT
+   - Câu từ phải NGUYÊN BẢN — viết từ tư duy cá nhân, không copy
+   - Số liệu, ví dụ phải ĐỘC BẢN, phù hợp với bối cảnh trường/lớp thực tế
+
+4. 💎 CHẤT LƯỢNG XUẤT SẮC:
+   - Dàn ý phải đạt chuẩn cấp tỉnh/quốc gia
+   - Nội dung sâu sắc, logic chặt chẽ, có tính ứng dụng cao
+   - Thể hiện chuyên môn vững và tâm huyết nghề nghiệp
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+` : ''}
 ${userInfo.referenceDocuments ? `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 TÀI LIỆU THAM KHẢO (DO GIÁO VIÊN CUNG CẤP):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
