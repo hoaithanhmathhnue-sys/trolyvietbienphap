@@ -509,7 +509,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
   return (
     <div className="w-full max-w-4xl mx-auto bg-white rounded-xl shadow-xl border border-sky-100 overflow-hidden my-8">
       <div className="bg-sky-600 p-6 text-white text-center">
-        <h2 className="text-3xl font-bold mb-2">Trợ Lý Viết Biện Pháp GVG/GVCN Giỏi</h2>
+        <h2 className="text-3xl font-bold mb-2">TRỢ LÝ VIẾT BIỆN PHÁP GVG/GVCN GIỎI</h2>
         <p className="text-sky-100 opacity-90">Hoàn thành nhanh chóng, đúng chuẩn và tự nhiên</p>
       </div>
 
