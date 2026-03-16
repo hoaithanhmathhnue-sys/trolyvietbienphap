@@ -93,7 +93,7 @@ const App: React.FC = () => {
   const [apiKey, setApiKey] = useState('');
   const [showApiModal, setShowApiModal] = useState(false);
   const [selectedModel, setSelectedModel] = useState(FALLBACK_MODELS[0]);
-  
+
   // App Navigation State
   const [activeAppTab, setActiveAppTab] = useState<'create' | 'heal' | 'methods'>('create');
   const [healingContext, setHealingContext] = useState<{
@@ -1896,7 +1896,7 @@ Tổ: [Tổ chuyên môn]
             <Wand2 className="h-6 w-6 text-blue-500" />
             BIỆN PHÁP GVG
           </h1>
-          <p className="text-xs text-blue-800 font-medium mt-1.5 tracking-wide">✨ Trợ lý viết biện pháp GVG/GVCN giỏi</p>
+          <p className="text-xs text-blue-800 font-medium mt-1.5 tracking-wide">✨TRỢ LÝ VIẾT BIỆN PHÁP GVG/GVCN GIỎI</p>
         </div>
 
         {/* Progress Stepper */}
@@ -2035,11 +2035,11 @@ Tổ: [Tổ chuyên môn]
                       <Button onClick={() => { generateNextSection(); }} className="w-full" icon={<ChevronRight size={16} />}>
                         {state.step === GenerationStep.OUTLINE ? 'Chốt Dàn ý & Viết tiếp' : 'Viết phần tiếp theo'}
                       </Button>
-                      
+
                       {state.step > GenerationStep.INPUT_FORM && state.step < GenerationStep.COMPLETED && (
                         <label className="flex items-center justify-center gap-2 cursor-pointer text-sm text-gray-600 hover:text-gray-800 bg-white/50 py-1.5 px-3 rounded-md border border-gray-200 transition-colors">
-                          <input 
-                            type="checkbox" 
+                          <input
+                            type="checkbox"
                             checked={isAutoGenerate}
                             onChange={(e) => setIsAutoGenerate(e.target.checked)}
                             className="rounded border-gray-300 text-sky-600 focus:ring-sky-500 w-4 h-4 cursor-pointer"
@@ -2181,40 +2181,37 @@ Tổ: [Tổ chuyên môn]
 
       {/* Main Content */}
       <div className="flex-1 min-h-0 p-3 lg:p-6 flex flex-col overflow-y-auto relative main-scroll bg-gray-50/50">
-        
+
         {/* Main App Navigation Tabs */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 p-1.5 flex gap-2 lg:max-w-2xl mx-auto w-full sticky top-0 z-10 backdrop-blur-xl bg-white/80">
           <button
             onClick={() => setActiveAppTab('create')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${
-              activeAppTab === 'create' 
-                ? 'bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-md transform scale-[1.02]' 
-                : 'text-gray-500 hover:bg-sky-50 hover:text-sky-700'
-            }`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${activeAppTab === 'create'
+              ? 'bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-md transform scale-[1.02]'
+              : 'text-gray-500 hover:bg-sky-50 hover:text-sky-700'
+              }`}
           >
             <PenTool className="w-5 h-5" /> 📝 VIẾT BIỆN PHÁP MỚI
           </button>
-          
+
           <button
             onClick={() => setActiveAppTab('heal')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${
-              activeAppTab === 'heal' 
-                ? 'bg-gradient-to-r from-teal-600 to-emerald-500 text-white shadow-md transform scale-[1.02]' 
-                : 'text-gray-500 hover:bg-teal-50 hover:text-teal-700'
-            }`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${activeAppTab === 'heal'
+              ? 'bg-gradient-to-r from-teal-600 to-emerald-500 text-white shadow-md transform scale-[1.02]'
+              : 'text-gray-500 hover:bg-teal-50 hover:text-teal-700'
+              }`}
           >
-             <Microscope className="w-5 h-5" /> 🔬 THẨM ĐỊNH BIỆN PHÁP
+            <Microscope className="w-5 h-5" /> 🔬 THẨM ĐỊNH BIỆN PHÁP
           </button>
 
           <button
             onClick={() => setActiveAppTab('methods')}
-            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${
-              activeAppTab === 'methods' 
-                ? 'bg-gradient-to-r from-violet-600 to-indigo-500 text-white shadow-md transform scale-[1.02]' 
-                : 'text-gray-500 hover:bg-violet-50 hover:text-violet-700'
-            }`}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${activeAppTab === 'methods'
+              ? 'bg-gradient-to-r from-violet-600 to-indigo-500 text-white shadow-md transform scale-[1.02]'
+              : 'text-gray-500 hover:bg-violet-50 hover:text-violet-700'
+              }`}
           >
-             <BookOpen className="w-5 h-5" /> 📖 FULL PP/KT DẠY HỌC
+            <BookOpen className="w-5 h-5" /> 📖 FULL PP/KT DẠY HỌC
           </button>
         </div>
 
@@ -2225,205 +2222,205 @@ Tổ: [Tổ chuyên môn]
           </div>
         ) : activeAppTab === 'heal' ? (
           <div className="flex-1 w-full max-w-6xl mx-auto h-full animate-fade-in">
-             <ReviewOldDocPanel 
-                apiKey={apiKey}
-                selectedModel={selectedModel}
-                onHealDoc={(originalContent, analysisResult) => {
-                  setHealingContext({ originalContent, analysisResult });
-                  setActiveAppTab('create');
-                  // Auto-trigger sinh dàn ý cải thiện sau khi state update
-                  setTimeout(() => {
-                    startGeneration();
-                  }, 500);
-                }} 
-             />
+            <ReviewOldDocPanel
+              apiKey={apiKey}
+              selectedModel={selectedModel}
+              onHealDoc={(originalContent, analysisResult) => {
+                setHealingContext({ originalContent, analysisResult });
+                setActiveAppTab('create');
+                // Auto-trigger sinh dàn ý cải thiện sau khi state update
+                setTimeout(() => {
+                  startGeneration();
+                }, 500);
+              }}
+            />
           </div>
         ) : (
           <div className="flex-1 w-full max-w-6xl mx-auto h-full flex flex-col animate-fade-in relative pb-20">
             {/* Show error context if healing mode */}
             {healingContext && state.step === GenerationStep.INPUT_FORM && (
-               <div className="mb-6 bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg shadow-sm">
-                 <div className="flex items-start gap-3">
-                    <Microscope className="w-6 h-6 text-teal-600 mt-0.5" />
-                    <div>
-                      <h3 className="font-bold text-teal-800 text-lg">Đang ở chế độ: Thẩm định Biện Pháp</h3>
-                      <p className="text-teal-700 text-sm mt-1">Hệ thống đã nạp "Bản phân tích" vào dòng chảy AI. Hãy điền thêm thông tin cơ bản bên dưới (Tên đề tài, Môn học...) để cấu hình bài làm, sau đó bấm <strong>Tiếp Theo</strong> để AI tiến hành viết lại bài.</p>
-                      
-                      <button 
-                         onClick={() => setHealingContext(null)}
-                         className="mt-3 text-xs font-semibold bg-white border border-teal-200 text-teal-600 px-3 py-1.5 rounded-md hover:bg-teal-100 transition-colors"
-                      >
-                         Hủy bỏ chế độ Thẩm định
-                      </button>
-                    </div>
-                 </div>
-               </div>
+              <div className="mb-6 bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg shadow-sm">
+                <div className="flex items-start gap-3">
+                  <Microscope className="w-6 h-6 text-teal-600 mt-0.5" />
+                  <div>
+                    <h3 className="font-bold text-teal-800 text-lg">Đang ở chế độ: Thẩm định Biện Pháp</h3>
+                    <p className="text-teal-700 text-sm mt-1">Hệ thống đã nạp "Bản phân tích" vào dòng chảy AI. Hãy điền thêm thông tin cơ bản bên dưới (Tên đề tài, Môn học...) để cấu hình bài làm, sau đó bấm <strong>Tiếp Theo</strong> để AI tiến hành viết lại bài.</p>
+
+                    <button
+                      onClick={() => setHealingContext(null)}
+                      className="mt-3 text-xs font-semibold bg-white border border-teal-200 text-teal-600 px-3 py-1.5 rounded-md hover:bg-teal-100 transition-colors"
+                    >
+                      Hủy bỏ chế độ Thẩm định
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
 
 
-        {/* Mobile Header */}
-        <div className="lg:hidden mb-4 bg-gradient-to-r from-white to-sky-50 p-4 rounded-xl shadow-lg border border-sky-100 flex flex-col gap-2">
-          <div className="flex justify-between items-center">
-            <h1 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500 text-xl" style={{ fontFamily: 'Nunito, sans-serif' }}>BIỆN PHÁP GVG</h1>
-            <span className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-medium">
-              {STEPS_INFO[state.step < 9 ? state.step : 8].label}
-            </span>
-          </div>
-          <p className="text-xs text-blue-700 font-medium">✨ Trợ lý viết biện pháp GVG/GVCN giỏi</p>
-        </div>
-
-        {state.error && (() => {
-          const errorInfo = getFriendlyErrorMessage({ message: state.error });
-          return (
-            <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl p-5 mb-4 shadow-sm">
-              {/* Header */}
-              <div className="flex items-start gap-3 mb-3">
-                <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-red-600" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-red-800 text-lg">{errorInfo.title}</h3>
-                  <p className="text-red-700 text-sm mt-1">{errorInfo.message}</p>
-                </div>
+            {/* Mobile Header */}
+            <div className="lg:hidden mb-4 bg-gradient-to-r from-white to-sky-50 p-4 rounded-xl shadow-lg border border-sky-100 flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <h1 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500 text-xl" style={{ fontFamily: 'Nunito, sans-serif' }}>BIỆN PHÁP GVG</h1>
+                <span className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-medium">
+                  {STEPS_INFO[state.step < 9 ? state.step : 8].label}
+                </span>
               </div>
+              <p className="text-xs text-blue-700 font-medium">✨ Trợ lý viết biện pháp GVG/GVCN giỏi</p>
+            </div>
 
-              {/* Suggestions */}
-              <div className="bg-white/70 rounded-lg p-4 mt-3 border border-red-100">
-                <p className="text-sm font-semibold text-gray-700 mb-2">💡 Gợi ý khắc phục:</p>
-                <ul className="space-y-2">
-                  {errorInfo.suggestions.map((suggestion, index) => (
-                    <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
-                      <span className="text-gray-400">•</span>
-                      {suggestion}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Hướng dẫn thao tác cho người dùng */}
-              {state.step > GenerationStep.INPUT_FORM && (
-                <div className="bg-gradient-to-r from-blue-50 to-emerald-50 rounded-lg p-4 mt-3 border border-blue-200">
-                  <p className="text-sm font-bold text-blue-800 mb-2">📋 Bạn có 2 lựa chọn:</p>
-                  <div className="space-y-2">
-                    <div className="flex items-start gap-2">
-                      <span className="text-emerald-600 font-bold text-sm mt-0.5">1.</span>
-                      <p className="text-sm text-gray-700">
-                        <span className="font-semibold text-emerald-700">Bấm "🔄 Thử lại (đổi key)"</span> - App sẽ tự động chuyển sang API key dự phòng và tiếp tục chạy ngay, không mất dữ liệu.
-                      </p>
+            {state.error && (() => {
+              const errorInfo = getFriendlyErrorMessage({ message: state.error });
+              return (
+                <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl p-5 mb-4 shadow-sm">
+                  {/* Header */}
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="flex-shrink-0 w-10 h-10 bg-red-100 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="w-5 h-5 text-red-600" />
                     </div>
-                    <div className="flex items-start gap-2">
-                      <span className="text-sky-600 font-bold text-sm mt-0.5">2.</span>
-                      <p className="text-sm text-gray-700">
-                        <span className="font-semibold text-sky-700">Bấm "💾 Lưu phiên" ở thanh bên trái</span> rồi tắt app. Hôm sau mở lại, API key sẽ được reset và bạn tiếp tục từ chỗ đã dừng.
-                      </p>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-red-800 text-lg">{errorInfo.title}</h3>
+                      <p className="text-red-700 text-sm mt-1">{errorInfo.message}</p>
                     </div>
                   </div>
+
+                  {/* Suggestions */}
+                  <div className="bg-white/70 rounded-lg p-4 mt-3 border border-red-100">
+                    <p className="text-sm font-semibold text-gray-700 mb-2">💡 Gợi ý khắc phục:</p>
+                    <ul className="space-y-2">
+                      {errorInfo.suggestions.map((suggestion, index) => (
+                        <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
+                          <span className="text-gray-400">•</span>
+                          {suggestion}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Hướng dẫn thao tác cho người dùng */}
+                  {state.step > GenerationStep.INPUT_FORM && (
+                    <div className="bg-gradient-to-r from-blue-50 to-emerald-50 rounded-lg p-4 mt-3 border border-blue-200">
+                      <p className="text-sm font-bold text-blue-800 mb-2">📋 Bạn có 2 lựa chọn:</p>
+                      <div className="space-y-2">
+                        <div className="flex items-start gap-2">
+                          <span className="text-emerald-600 font-bold text-sm mt-0.5">1.</span>
+                          <p className="text-sm text-gray-700">
+                            <span className="font-semibold text-emerald-700">Bấm "🔄 Thử lại (đổi key)"</span> - App sẽ tự động chuyển sang API key dự phòng và tiếp tục chạy ngay, không mất dữ liệu.
+                          </p>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <span className="text-sky-600 font-bold text-sm mt-0.5">2.</span>
+                          <p className="text-sm text-gray-700">
+                            <span className="font-semibold text-sky-700">Bấm "💾 Lưu phiên" ở thanh bên trái</span> rồi tắt app. Hôm sau mở lại, API key sẽ được reset và bạn tiếp tục từ chỗ đã dừng.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Action buttons */}
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    <button
+                      onClick={() => setState(prev => ({ ...prev, error: null }))}
+                      className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      ✕ Đóng thông báo
+                    </button>
+                    <button
+                      onClick={() => setShowApiModal(true)}
+                      className="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-medium hover:bg-sky-700 transition-colors"
+                    >
+                      🔑 Đổi API Key
+                    </button>
+                    {/* 🆕 Nút Thử lại - xoay sang API key dự phòng và retry */}
+                    {state.step > GenerationStep.INPUT_FORM && (
+                      <button
+                        onClick={() => {
+                          // Xoay sang API key tiếp theo trước khi thử lại
+                          const rotation = apiKeyManager.rotateToNextKey('manual_retry');
+                          let keyToUse = apiKey;
+                          if (rotation.success && rotation.newKey) {
+                            keyToUse = rotation.newKey;
+                            setApiKey(keyToUse);
+                            localStorage.setItem('gemini_api_key', keyToUse);
+                            console.log(`🔑 Đã xoay sang key mới: ${rotation.message}`);
+                          } else {
+                            // Nếu không có key khác, reset tất cả key và thử lại
+                            apiKeyManager.resetAllKeys();
+                            const freshKey = apiKeyManager.getActiveKey();
+                            if (freshKey) {
+                              keyToUse = freshKey;
+                              setApiKey(keyToUse);
+                              localStorage.setItem('gemini_api_key', keyToUse);
+                              console.log('🔄 Đã reset tất cả key và thử lại');
+                            }
+                          }
+                          setState(prev => ({ ...prev, error: null }));
+                          initializeGeminiChat(keyToUse, selectedModel);
+                          // Khôi phục chat history trước khi retry
+                          const savedHistory = getChatHistory();
+                          if (savedHistory.length > 0) {
+                            setChatHistory(savedHistory);
+                          }
+                          setTimeout(() => {
+                            generateNextSection();
+                          }, 300);
+                        }}
+                        className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2"
+                      >
+                        <RefreshCw size={16} />
+                        🔄 Thử lại (đổi key)
+                      </button>
+                    )}
+                    <a
+                      href="https://ai.google.dev/gemini-api/docs/api-key"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
+                    >
+                      📖 Hướng dẫn lấy API Key
+                    </a>
+                  </div>
                 </div>
-              )}
+              );
+            })()}
 
-              {/* Action buttons */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                <button
-                  onClick={() => setState(prev => ({ ...prev, error: null }))}
-                  className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                >
-                  ✕ Đóng thông báo
-                </button>
-                <button
-                  onClick={() => setShowApiModal(true)}
-                  className="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-medium hover:bg-sky-700 transition-colors"
-                >
-                  🔑 Đổi API Key
-                </button>
-                {/* 🆕 Nút Thử lại - xoay sang API key dự phòng và retry */}
-                {state.step > GenerationStep.INPUT_FORM && (
-                  <button
-                    onClick={() => {
-                      // Xoay sang API key tiếp theo trước khi thử lại
-                      const rotation = apiKeyManager.rotateToNextKey('manual_retry');
-                      let keyToUse = apiKey;
-                      if (rotation.success && rotation.newKey) {
-                        keyToUse = rotation.newKey;
-                        setApiKey(keyToUse);
-                        localStorage.setItem('gemini_api_key', keyToUse);
-                        console.log(`🔑 Đã xoay sang key mới: ${rotation.message}`);
-                      } else {
-                        // Nếu không có key khác, reset tất cả key và thử lại
-                        apiKeyManager.resetAllKeys();
-                        const freshKey = apiKeyManager.getActiveKey();
-                        if (freshKey) {
-                          keyToUse = freshKey;
-                          setApiKey(keyToUse);
-                          localStorage.setItem('gemini_api_key', keyToUse);
-                          console.log('🔄 Đã reset tất cả key và thử lại');
-                        }
-                      }
-                      setState(prev => ({ ...prev, error: null }));
-                      initializeGeminiChat(keyToUse, selectedModel);
-                      // Khôi phục chat history trước khi retry
-                      const savedHistory = getChatHistory();
-                      if (savedHistory.length > 0) {
-                        setChatHistory(savedHistory);
-                      }
-                      setTimeout(() => {
-                        generateNextSection();
-                      }, 300);
-                    }}
-                    className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2"
-                  >
-                    <RefreshCw size={16} />
-                    🔄 Thử lại (đổi key)
-                  </button>
-                )}
-                <a
-                  href="https://ai.google.dev/gemini-api/docs/api-key"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
-                >
-                  📖 Hướng dẫn lấy API Key
-                </a>
+            {state.step === GenerationStep.INPUT_FORM ? (
+              <div className="flex-1 flex flex-col items-center">
+                <SKKNForm
+                  apiKey={apiKey}
+                  selectedModel={selectedModel}
+                  userInfo={userInfo}
+                  onChange={handleUserChange}
+                  onSubmit={startGeneration}
+                  onManualSubmit={handleManualOutlineSubmit}
+                  isSubmitting={state.isStreaming}
+                />
               </div>
-            </div>
-          );
-        })()}
+            ) : (
+              <div className="flex-1 flex flex-col min-h-0 relative">
+                <DocumentPreview
+                  content={state.fullDocument}
+                  onUpdate={handleDocumentUpdate}
+                  // Only allow direct editing in the OUTLINE step and when not streaming
+                  isEditable={state.step === GenerationStep.OUTLINE && !state.isStreaming}
+                />
 
-        {state.step === GenerationStep.INPUT_FORM ? (
-          <div className="flex-1 flex flex-col items-center">
-             <SKKNForm
-                apiKey={apiKey}
-                selectedModel={selectedModel}
-                userInfo={userInfo}
-                onChange={handleUserChange}
-                onSubmit={startGeneration}
-                onManualSubmit={handleManualOutlineSubmit}
-                isSubmitting={state.isStreaming}
-              />
-          </div>
-        ) : (
-          <div className="flex-1 flex flex-col min-h-0 relative">
-            <DocumentPreview
-              content={state.fullDocument}
-              onUpdate={handleDocumentUpdate}
-              // Only allow direct editing in the OUTLINE step and when not streaming
-              isEditable={state.step === GenerationStep.OUTLINE && !state.isStreaming}
-            />
-
-            {/* Mobile Controls Floating */}
-            <div className="lg:hidden absolute bottom-4 left-4 right-4 flex gap-2 shadow-lg">
-              {!state.isStreaming && state.step < GenerationStep.COMPLETED && (
-                <Button onClick={() => generateNextSection()} className="flex-1 shadow-xl">
-                  {state.step === GenerationStep.OUTLINE ? 'Chốt & Tiếp tục' : 'Viết tiếp'}
-                </Button>
-              )}
-              <Button onClick={exportToWord} variant="secondary" className="bg-white shadow-xl text-sky-700">
-                <Download size={20} />
-              </Button>
-            </div>
+                {/* Mobile Controls Floating */}
+                <div className="lg:hidden absolute bottom-4 left-4 right-4 flex gap-2 shadow-lg">
+                  {!state.isStreaming && state.step < GenerationStep.COMPLETED && (
+                    <Button onClick={() => generateNextSection()} className="flex-1 shadow-xl">
+                      {state.step === GenerationStep.OUTLINE ? 'Chốt & Tiếp tục' : 'Viết tiếp'}
+                    </Button>
+                  )}
+                  <Button onClick={exportToWord} variant="secondary" className="bg-white shadow-xl text-sky-700">
+                    <Download size={20} />
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         )}
-       </div>
-      )}
       </div>
     </div>
   );
