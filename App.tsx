@@ -2191,7 +2191,7 @@ Tổ: [Tổ chuyên môn]
               : 'text-gray-500 hover:bg-sky-50 hover:text-sky-700'
               }`}
           >
-            <PenTool className="w-5 h-5" /> 📝 VIẾT BIỆN PHÁP MỚI
+            <PenTool className="w-5 h-5" /> <span className="text-center leading-tight">📝 VIẾT<br/>BIỆN PHÁP</span>
           </button>
 
           <button
@@ -2201,7 +2201,7 @@ Tổ: [Tổ chuyên môn]
               : 'text-gray-500 hover:bg-teal-50 hover:text-teal-700'
               }`}
           >
-            <Microscope className="w-5 h-5" /> 🔬 THẨM ĐỊNH BIỆN PHÁP
+            <Microscope className="w-5 h-5" /> <span className="text-center leading-tight">🔬 THẨM ĐỊNH<br/>BIỆN PHÁP</span>
           </button>
 
           <button
@@ -2211,7 +2211,7 @@ Tổ: [Tổ chuyên môn]
               : 'text-gray-500 hover:bg-violet-50 hover:text-violet-700'
               }`}
           >
-            <BookOpen className="w-5 h-5" /> 📖 FULL PP/KT DẠY HỌC
+            <BookOpen className="w-5 h-5" /> <span className="text-center leading-tight">📖 FULL PP/KT<br/>DẠY HỌC</span>
           </button>
         </div>
 
@@ -2266,7 +2266,7 @@ Tổ: [Tổ chuyên môn]
                   {STEPS_INFO[state.step < 9 ? state.step : 8].label}
                 </span>
               </div>
-              <p className="text-xs text-blue-700 font-medium">✨ Trợ lý viết biện pháp GVG/GVCN giỏi</p>
+              <p className="text-xs text-blue-700 font-medium">✨ TRỢ LÝ VIẾT BIỆN PHÁP GVG/GVCN GIỎI</p>
             </div>
 
             {state.error && (() => {
