@@ -8,7 +8,7 @@ import { SKKNForm } from './components/SKKNForm';
 import { DocumentPreview } from './components/DocumentPreview';
 import { Button } from './components/Button';
 import { ApiKeyModal } from './components/ApiKeyModal';
-import { SolutionReviewModal } from './components/SolutionReviewModal';
+
 import {
   FileText, Brain, LayoutTemplate, PenTool, BookOpen, User, Users,
   CheckCircle, ChevronRight, Save, Wand2, Download, Trash2, Settings, AlertTriangle, RefreshCw, Microscope
@@ -367,11 +367,6 @@ const App: React.FC = () => {
     console.log('🗑 Đã xóa phiên làm việc đã lưu');
   }, []);
 
-  // State cho popup review giải pháp
-  const [showSolutionReview, setShowSolutionReview] = useState(false);
-  const [currentSolutionNumber, setCurrentSolutionNumber] = useState(0);
-  const [currentSolutionContent, setCurrentSolutionContent] = useState('');
-  const [isRevisingSolution, setIsRevisingSolution] = useState(false);
 
   // Helper: Tính toán phân bổ trang cho từng phần Biện pháp
   const getPageAllocation = useCallback(() => {
@@ -1097,11 +1092,11 @@ Sử dụng icon để dễ nhìn: ✓ → • ○ ▪ ■
 QUAN TRỌNG:
 1. HIỂN THỊ "📱 MENU NAVIGATION" ĐẦU TIÊN(Bước 2: Đang thực hiện).
 2. Cuối dàn ý, hiển thị hộp thoại xác nhận:
-┌─────────────────────────────────┐
-│ ✅ Đồng ý dàn ý này ?            │
-│ ✏️ Bạn có thể CHỈNH SỬA trực   │
-│    tiếp bằng nút "Chỉnh sửa"    │
-└─────────────────────────────────┘
+      ┌─────────────────────────────────┐
+      │ ✅ Đồng ý dàn ý này ?            │
+      │ ✏️ Bạn có thể CHỈNH SỬA trực   │
+      │    tiếp bằng nút "Chỉnh sửa"    │
+      └─────────────────────────────────┘
 `;
 
       let generatedText = "";
@@ -1326,13 +1321,6 @@ SGK: ${userInfo.textbook}
           nextStep: GenerationStep.BP1
         },
         [GenerationStep.BP1]: {
-          // Sau khi viết xong GP1 → Chuyển sang REVIEW GP1 (KHÔNG viết GP2 ở đây)
-          prompt: `✅ HOÀN THÀNH GIẢI PHÁP 1. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.BP1_REVIEW, // Chuyển sang review GP1
-          skipAppend: true // Không append vào fullDocument để tránh lặp nội dung
-        },
-        // GP1 Review → GP2
-        [GenerationStep.BP1_REVIEW]: {
           prompt: `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái(Viết Giải pháp 2 - Đang thực hiện).
 
@@ -1357,14 +1345,7 @@ SGK: ${userInfo.textbook}
   ${getSectionPagePrompt('Giải pháp 2', 'perSolution')} `,
           nextStep: GenerationStep.BP2
         },
-        // GP2 → GP2 Review (KHÔNG viết GP3 ở đây)
         [GenerationStep.BP2]: {
-          prompt: `✅ HOÀN THÀNH GIẢI PHÁP 2. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.BP2_REVIEW,
-          skipAppend: true // Không append vào fullDocument để tránh lặp nội dung
-        },
-        // GP2 Review → GP3 (Viết GP3 sau khi approve GP2)
-        [GenerationStep.BP2_REVIEW]: {
           prompt: `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái(Viết Giải pháp 3 - Đang thực hiện).
 
@@ -1388,14 +1369,7 @@ SGK: ${userInfo.textbook}
   ${getSectionPagePrompt('Giải pháp 3', 'perSolution')} `,
           nextStep: GenerationStep.BP3
         },
-        // GP3 → GP3 Review (KHÔNG viết GP4 hoặc Phần V-VI ở đây)
         [GenerationStep.BP3]: {
-          prompt: `✅ HOÀN THÀNH GIẢI PHÁP 3. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.BP3_REVIEW,
-          skipAppend: true // Không append vào fullDocument để tránh lặp nội dung
-        },
-        // BP3 Review → GP4 (nếu includeSolution4_5) hoặc 2.4 Tính mới (nếu chỉ 3 GP)
-        [GenerationStep.BP3_REVIEW]: {
           prompt: userInfo.includeSolution4_5
             ? `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Giải pháp 4 - Đang thực hiện).
@@ -1447,14 +1421,7 @@ SGK: ${userInfo.textbook}
               ${getPageLimitPrompt()}`,
           nextStep: userInfo.includeSolution4_5 ? GenerationStep.BP4 : GenerationStep.TINH_MOI
         },
-        // GP4 → GP4 Review
         [GenerationStep.BP4]: {
-          prompt: `✅ HOÀN THÀNH GIẢI PHÁP 4. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.BP4_REVIEW,
-          skipAppend: true
-        },
-        // GP4 Review → GP5
-        [GenerationStep.BP4_REVIEW]: {
           prompt: `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Giải pháp 5 - Đang thực hiện).
 
@@ -1478,14 +1445,7 @@ SGK: ${userInfo.textbook}
   ${getSectionPagePrompt('Giải pháp 5', 'perSolution')} `,
           nextStep: GenerationStep.BP5
         },
-        // GP5 → GP5 Review
         [GenerationStep.BP5]: {
-          prompt: `✅ HOÀN THÀNH GIẢI PHÁP 5. Vui lòng xem xét và duyệt trước khi tiếp tục.`,
-          nextStep: GenerationStep.BP5_REVIEW,
-          skipAppend: true
-        },
-        // GP5 Review → 2.4 Tính mới, tính sáng tạo
-        [GenerationStep.BP5_REVIEW]: {
           prompt: `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết mục 2.4 Tính mới, tính sáng tạo - Đang thực hiện).
 
@@ -1515,14 +1475,7 @@ SGK: ${userInfo.textbook}
               ${getPageLimitPrompt()}`,
           nextStep: GenerationStep.TINH_MOI
         },
-        // 2.4 → Review Tính mới
         [GenerationStep.TINH_MOI]: {
-          prompt: '✅ HOÀN THÀNH MỤC 2.4 TÍNH MỚI, TÍNH SÁNG TẠO. Vui lòng xem xét và duyệt trước khi tiếp tục.',
-          nextStep: GenerationStep.TINH_MOI_REVIEW,
-          skipAppend: true
-        },
-        // Review Tính mới → 3. Phạm vi ảnh hưởng
-        [GenerationStep.TINH_MOI_REVIEW]: {
           prompt: `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Phần 3 - Phạm vi ảnh hưởng - Đang thực hiện).
 
@@ -1558,14 +1511,7 @@ SGK: ${userInfo.textbook}
               ${getPageLimitPrompt()}`,
           nextStep: GenerationStep.PHAM_VI
         },
-        // Phạm vi → Review Phạm vi
         [GenerationStep.PHAM_VI]: {
-          prompt: '✅ HOÀN THÀNH PHẦN 3 - PHẠM VI ẢNH HƯỞNG. Vui lòng xem xét và duyệt trước khi tiếp tục.',
-          nextStep: GenerationStep.PHAM_VI_REVIEW,
-          skipAppend: true
-        },
-        // Review Phạm vi → 4. Kết luận và kiến nghị
-        [GenerationStep.PHAM_VI_REVIEW]: {
           prompt: `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết Phần 4 - Kết luận và kiến nghị - Đang thực hiện).
 
@@ -1657,18 +1603,7 @@ SGK: ${userInfo.textbook}
       // Tự động gọi hàm kế tiếp nếu chưa tới bài toán COMPLETED
       // Timeout một xíu để mượt UX render
       if (nextStepEnum !== GenerationStep.COMPLETED) {
-        // NGĂN chặn auto-advance nếu bước tiếp theo là bước cần REVIEW (Modal sẽ xử lý việc đi tiếp)
-        const isNextStepReview = [
-          GenerationStep.BP1_REVIEW,
-          GenerationStep.BP2_REVIEW,
-          GenerationStep.BP3_REVIEW,
-          GenerationStep.BP4_REVIEW,
-          GenerationStep.BP5_REVIEW,
-          GenerationStep.TINH_MOI_REVIEW,
-          GenerationStep.PHAM_VI_REVIEW,
-        ].includes(nextStepEnum);
-
-        if (!isNextStepReview && autoGenerateRef.current) {
+        if (autoGenerateRef.current) {
           setTimeout(() => {
             generateNextSection(nextStepEnum);
           }, 1500);
@@ -1712,286 +1647,7 @@ SGK: ${userInfo.textbook}
     }
   };
 
-  // ====== REVIEW SOLUTION HANDLERS ======
 
-  // Xác định số giải pháp dựa trên step hiện tại
-  const getSolutionNumberFromStep = (step: GenerationStep): number => {
-    const stepToSolution: Record<number, number> = {
-      [GenerationStep.BP1_REVIEW]: 1,
-      [GenerationStep.BP2_REVIEW]: 2,
-      [GenerationStep.BP3_REVIEW]: 3,
-      [GenerationStep.TINH_MOI_REVIEW]: 4,
-      [GenerationStep.PHAM_VI_REVIEW]: 5,
-    };
-    return stepToSolution[step] || 0;
-  };
-
-  // Kiểm tra có phải step review không
-  const isReviewStep = (step: GenerationStep): boolean => {
-    return [
-      GenerationStep.BP1_REVIEW,
-      GenerationStep.BP2_REVIEW,
-      GenerationStep.BP3_REVIEW,
-      GenerationStep.TINH_MOI_REVIEW,
-      GenerationStep.PHAM_VI_REVIEW,
-    ].includes(step);
-  };
-
-  // Duyệt giải pháp và tiếp tục
-  const handleApproveSolution = () => {
-    const solutionNum = getSolutionNumberFromStep(state.step);
-    // ⚠️ Capture step NGAY TẠI ĐÂY để tránh stale closure trong setTimeout
-    const currentStep = state.step;
-
-    // Lưu giải pháp đã duyệt
-    setSolutionsState(prev => ({
-      ...prev,
-      [`solution${solutionNum}`]: {
-        content: currentSolutionContent,
-        isApproved: true,
-        revisionHistory: [],
-      },
-    }));
-
-    // Đóng popup
-    setShowSolutionReview(false);
-    setCurrentSolutionContent('');
-
-    // Chuyển sang bước tiếp theo CHỈ KHI Bật Tự Động
-    if (autoGenerateRef.current) {
-      console.log(`✅ Duyệt GP${solutionNum} → auto-advance từ step ${currentStep}`);
-      setTimeout(() => {
-        generateNextSection(currentStep);
-      }, 500);
-    } else {
-      console.log(`✅ Duyệt GP${solutionNum} → chờ user bấm "Viết tiếp" (auto OFF)`);
-    }
-  };
-
-  // Yêu cầu viết lại giải pháp
-  const handleReviseSolution = async (feedback: string, referenceDoc?: string) => {
-    if (!apiKey) {
-      setShowApiModal(true);
-      return;
-    }
-
-    setIsRevisingSolution(true);
-    const solutionNum = getSolutionNumberFromStep(state.step);
-
-    try {
-      const revisionPrompt = `
-        NHIỆM VỤ: VIẾT LẠI GIẢI PHÁP ${solutionNum} theo yêu cầu mới.
-        
-        ⚠️ YÊU CẦU SỬA TỪ NGƯỜI DÙNG:
-        ${feedback}
-        
-        ${referenceDoc ? `
-        📄 TÀI LIỆU THAM KHẢO MỚI:
-        Dựa vào nội dung tài liệu sau để viết lại giải pháp:
-        ---
-        ${referenceDoc.substring(0, 5000)}
-        ---
-        ` : ''
-        }
-        
-        ⚠️ NỘI DUNG CŨ(ĐỂ THAM KHẢO):
-        ${currentSolutionContent.substring(0, 3000)}
-        
-        Hãy viết lại GIẢI PHÁP ${solutionNum} hoàn toàn mới, đảm bảo:
-1. Tuân thủ YÊU CẦU SỬA từ người dùng
-2. Tham khảo tài liệu mới nếu có
-3. Giữ nguyên cấu trúc: Mục tiêu - Cơ sở - Quy trình - Ví dụ - Công cụ - Lưu ý
-4. Format chuẩn Biện pháp
-        
-        ${getPageLimitPrompt()}
-`;
-
-      let revisedContent = "";
-      await sendMessageStream(revisionPrompt, (chunk) => {
-        revisedContent += chunk;
-        setCurrentSolutionContent(revisedContent);
-      });
-
-      setIsRevisingSolution(false);
-    } catch (error: any) {
-      console.error('Revision error:', error);
-      setIsRevisingSolution(false);
-      alert('Có lỗi khi viết lại. Vui lòng thử lại.');
-    }
-  };
-
-  // Xuất Word riêng cho 1 giải pháp
-  const exportSolutionToWord = async () => {
-    try {
-      const { exportMarkdownToDocx } = await import('./services/docxExporter');
-      const solutionNum = getSolutionNumberFromStep(state.step);
-      const filename = `Giai_phap_${solutionNum}_${userInfo.topic.substring(0, 20).replace(/[^a-zA-Z0-9\u00C0-\u1EF9]/g, '_')}.docx`;
-      await exportMarkdownToDocx(currentSolutionContent, filename);
-    } catch (error: any) {
-      console.error('Export solution error:', error);
-      alert('Có lỗi khi xuất file. Vui lòng thử lại.');
-    }
-  };
-
-  // Effect để hiện popup review khi đến step review
-  useEffect(() => {
-    if (isReviewStep(state.step) && !state.isStreaming) {
-      // Lấy nội dung giải pháp vừa viết từ fullDocument
-      const solutionNum = getSolutionNumberFromStep(state.step);
-
-      // Tìm nội dung giải pháp trong document - cải thiện logic tìm kiếm
-      const docContent = state.fullDocument;
-
-      let solutionContent = '';
-
-      // QUAN TRỌNG: Nội dung giải pháp chi tiết nằm trong phần:
-      // "📋 MÔ TẢ SÁNG KIẾN" -> "4. CÁC GIẢI PHÁP, BIỆN PHÁP THỰC HIỆN"
-      // KHÔNG phải trong phần Dàn ý (ngắn, chỉ chứa tiêu đề)
-
-      // Bước 1: Tìm vị trí bắt đầu của phần "4. CÁC GIẢI PHÁP" sau "📋 MÔ TẢ SÁNG KIẾN"
-      let sectionStartIdx = -1;
-
-      // Tìm vị trí "📋 MÔ TẢ SÁNG KIẾN" (đây là tiêu đề của phần nội dung chính)
-      const moTaSangKienIdx = docContent.indexOf('📋 MÔ TẢ SÁNG KIẾN');
-
-      // Tìm vị trí "4. CÁC GIẢI PHÁP" hoặc các biến thể
-      const giaiphapSectionPatterns = [
-        /4\.\s*CÁC GIẢI PHÁP/i,
-        /PHẦN\s*(IV|4)[:\s]*.*GIẢI PHÁP/i,
-        /IV\.\s*CÁC GIẢI PHÁP/i,
-        /4\.\s*GIẢI PHÁP/i,
-      ];
-
-      for (const pattern of giaiphapSectionPatterns) {
-        const match = pattern.exec(docContent);
-        if (match && match.index !== undefined) {
-          // Nếu có "📋 MÔ TẢ SÁNG KIẾN", chỉ lấy phần sau nó
-          if (moTaSangKienIdx !== -1 && match.index > moTaSangKienIdx) {
-            sectionStartIdx = match.index;
-            break;
-          } else if (moTaSangKienIdx === -1) {
-            // Không có "📋 MÔ TẢ SÁNG KIẾN", lấy vị trí đầu tiên tìm được
-            sectionStartIdx = match.index;
-            break;
-          }
-        }
-      }
-
-      let startIdx = -1;
-
-      // Bước 2: Tìm GIẢI PHÁP X trong phạm vi phần "4. CÁC GIẢI PHÁP"
-      // Ưu tiên tìm từ vị trí sectionStartIdx nếu có
-      const searchFromIdx = sectionStartIdx !== -1 ? sectionStartIdx : 0;
-      const searchContent = docContent.substring(searchFromIdx);
-
-      // Pattern tìm GIẢI PHÁP có nội dung chi tiết (separator + tiêu đề)
-      const detailPatterns = [
-        // Pattern cho format chuẩn Biện pháp (có separator và icon)
-        new RegExp(`━+\\s *\\n ?\\s *📋\\s * GIẢI PHÁP\\s * ${solutionNum} \\s * [-–: ]`, 'i'),
-        new RegExp(`━+\\s *\\n ?\\s * GIẢI PHÁP\\s *\\[?${solutionNum}\\] ?\\s * [-–: ]`, 'i'),
-        // Pattern với số mục 4.1, 4.2 (trong phần IV)
-        new RegExp(`4\\.${solutionNum} [.: \\s] + GIẢI PHÁP\\s * ${solutionNum} `, 'i'),
-        // Pattern GIẢI PHÁP với tên tiêu đề (có dấu : hoặc -)
-        new RegExp(`GIẢI PHÁP\\s * ${solutionNum} \\s * [:–-]\\s * [^\\n]{ 10,} `, 'i'),
-      ];
-
-      // Thử từng pattern chi tiết trước
-      for (const pattern of detailPatterns) {
-        const match = pattern.exec(searchContent);
-        if (match && match.index !== undefined) {
-          startIdx = searchFromIdx + match.index;
-          break;
-        }
-      }
-
-      // Fallback: Tìm GIẢI PHÁP X với nội dung chi tiết (có ít nhất 1 mục con)
-      if (startIdx === -1) {
-        const solutionMarker = `GIẢI PHÁP ${solutionNum} `;
-        let searchStart = searchFromIdx;
-
-        while (true) {
-          const idx = docContent.indexOf(solutionMarker, searchStart);
-          if (idx === -1) break;
-
-          // Kiểm tra 1500 ký tự tiếp theo xem có phải nội dung chi tiết không
-          const nextChars = docContent.substring(idx, idx + 1500);
-
-          // Nội dung chi tiết có các pattern này:
-          // - "1. MỤC TIÊU" hoặc "1.1." hoặc "**1."
-          // - "CƠ SỞ KHOA HỌC" hoặc "NỘI DUNG"
-          // - "QUY TRÌNH THỰC HIỆN" hoặc "Bước 1:"
-          // - "VÍ DỤ MINH HỌA" hoặc "ĐIỀU KIỆN"
-          const hasDetailContent = nextChars.match(/(?:1\.\s*MỤC TIÊU|\*\*1\.|1\.1\.|CƠ SỞ KHOA HỌC|NỘI DUNG VÀ|QUY TRÌNH|Bước\s*1|VÍ DỤ MINH HỌA|ĐIỀU KIỆN THỰC HIỆN)/i);
-
-          // Đảm bảo không phải trong dàn ý (dàn ý thường ngắn)
-          // Nội dung chi tiết phải có >500 ký tự và có các mục con
-          const isNotOutline = hasDetailContent && nextChars.length > 500;
-
-          if (isNotOutline) {
-            startIdx = idx;
-            break;
-          }
-          searchStart = idx + 1;
-        }
-      }
-
-      if (startIdx !== -1) {
-        // Tìm điểm kết thúc
-        // Ưu tiên tìm "KẾT THÚC GIẢI PHÁP"
-        const endMarker = `KẾT THÚC GIẢI PHÁP`;
-        let endIdx = docContent.indexOf(endMarker, startIdx);
-
-        if (endIdx !== -1) {
-          // Lấy hết dòng chứa "KẾT THÚC GIẢI PHÁP" và phần hướng dẫn copy
-          const endBlock = docContent.indexOf('━━━━━━━━━━━━━━━━━━━━━', endIdx + 20);
-          if (endBlock !== -1 && endBlock - endIdx < 500) {
-            endIdx = endBlock;
-          } else {
-            const endOfLine = docContent.indexOf('\n\n', endIdx);
-            endIdx = endOfLine !== -1 ? endOfLine + 1 : docContent.length;
-          }
-        } else {
-          // Không tìm thấy end marker - tìm GIẢI PHÁP tiếp theo hoặc "5. KẾT QUẢ" hoặc separator
-          const nextSolutionIdx = docContent.indexOf(`GIẢI PHÁP ${solutionNum + 1} `, startIdx + 100);
-          const nextPartIdx = docContent.search(/(?:5\.\s*KẾT QUẢ|Phần\s*V|PHẦN\s*V)/i);
-          const nextSeparator = docContent.indexOf('━━━━━━━━━━━', startIdx + 500);
-
-          // Lấy vị trí gần nhất
-          const possibleEnds = [nextSolutionIdx, nextPartIdx, nextSeparator, docContent.length]
-            .filter(idx => idx > startIdx + 500);
-          endIdx = Math.min(...possibleEnds);
-        }
-
-        solutionContent = docContent.substring(startIdx, endIdx).trim();
-      }
-
-      // Nếu vẫn không tìm được hoặc nội dung quá ngắn (có thể là dàn ý)
-      // Không sử dụng fallback lấy phần cuối vì sẽ lấy nhầm dàn ý
-      if (!solutionContent || solutionContent.length < 500) {
-        // Thử tìm từ cuối document ngược lên, bỏ qua phần dàn ý
-        const parts = docContent.split(/(?:━{10,}|---{3,})/);
-        for (let i = parts.length - 1; i >= 0; i--) {
-          const part = parts[i].trim();
-          // Kiểm tra phần này có phải nội dung giải pháp chi tiết không
-          if (part.includes(`GIẢI PHÁP ${solutionNum} `) &&
-            part.length > 500 &&
-            (part.includes('MỤC TIÊU') || part.includes('QUY TRÌNH') || part.includes('Bước 1'))) {
-            solutionContent = part;
-            break;
-          }
-        }
-      }
-
-      // Cuối cùng: nếu vẫn không có, hiển thị thông báo
-      if (!solutionContent || solutionContent.length < 100) {
-        solutionContent = `⚠️ Không tìm thấy nội dung chi tiết của GIẢI PHÁP ${solutionNum}.\n\nVui lòng kiểm tra lại hoặc yêu cầu AI viết lại giải pháp này.`;
-      }
-
-      setCurrentSolutionContent(solutionContent);
-      setCurrentSolutionNumber(solutionNum);
-      setShowSolutionReview(true);
-    }
-  }, [state.step, state.isStreaming, state.fullDocument]);
 
   // Generate Appendix - Function riêng để tạo phụ lục
   const generateAppendix = async () => {
@@ -2450,18 +2106,7 @@ Tổ: [Tổ chuyên môn]
         isDismissible={!!apiKey}
       />
 
-      {/* Solution Review Modal */}
-      <SolutionReviewModal
-        isOpen={showSolutionReview}
-        solutionNumber={currentSolutionNumber}
-        solutionContent={currentSolutionContent}
-        isLoading={state.isStreaming}
-        isRevising={isRevisingSolution}
-        onClose={() => setShowSolutionReview(false)}
-        onApprove={handleApproveSolution}
-        onRevise={handleReviseSolution}
-        onDownloadWord={exportSolutionToWord}
-      />
+
 
       {/* Session Restore Modal */}
       {showRestoreModal && pendingSessionData && (
@@ -2751,7 +2396,7 @@ Tổ: [Tổ chuyên môn]
             {/* Mobile Controls Floating */}
             <div className="lg:hidden absolute bottom-4 left-4 right-4 flex gap-2 shadow-lg">
               {!state.isStreaming && state.step < GenerationStep.COMPLETED && (
-                <Button onClick={generateNextSection} className="flex-1 shadow-xl">
+                <Button onClick={() => generateNextSection()} className="flex-1 shadow-xl">
                   {state.step === GenerationStep.OUTLINE ? 'Chốt & Tiếp tục' : 'Viết tiếp'}
                 </Button>
               )}

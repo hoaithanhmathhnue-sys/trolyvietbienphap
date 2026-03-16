@@ -57,22 +57,15 @@ export enum GenerationStep {
   PART_2 = 3,
   // Phần 2.3: Nội dung các biện pháp
   BP1 = 4,
-  BP1_REVIEW = 5,
   BP2 = 6,
-  BP2_REVIEW = 7,
   BP3 = 8,
-  BP3_REVIEW = 9,
   // Giải pháp 4, 5 (tùy chọn)
   BP4 = 10,
-  BP4_REVIEW = 11,
   BP5 = 12,
-  BP5_REVIEW = 13,
   // Phần 2.4: Tính mới, tính sáng tạo
   TINH_MOI = 14,
-  TINH_MOI_REVIEW = 15,
   // Phần 3: Phạm vi ảnh hưởng, khả năng áp dụng
   PHAM_VI = 16,
-  PHAM_VI_REVIEW = 17,
   // Phần 4: Kết luận và kiến nghị
   KET_LUAN = 18,
   APPENDIX = 19,
