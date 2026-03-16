@@ -9,6 +9,8 @@ export interface SubjectItem {
 }
 
 export const SUBJECTS_DATA: SubjectItem[] = [
+    { id: 100, name: 'GVG', group: '⭐ Danh hiệu thi đua', description: 'Biện pháp Giáo viên giỏi — AI ưu tiên dùng data app để tạo dàn ý xuất sắc, sáng tạo, không trùng lặp' },
+    { id: 101, name: 'GVCN', group: '⭐ Danh hiệu thi đua', description: 'Biện pháp Giáo viên chủ nhiệm giỏi — AI ưu tiên dùng data app để tạo dàn ý xuất sắc' },
     { id: 1, name: 'Bồi dưỡng giáo viên', group: 'Giáo dục - Đào tạo', description: 'Các phương pháp, kinh nghiệm trong việc bồi dưỡng chuyên môn, nghiệp vụ cho giáo viên' },
     { id: 2, name: 'Chăm sóc nuôi dưỡng', group: 'Mầm non', description: 'Kinh nghiệm chăm sóc, nuôi dưỡng trẻ em tại các cơ sở giáo dục mầm non' },
     { id: 3, name: 'Chủ nhiệm', group: 'Quản lý lớp học', description: 'Kinh nghiệm công tác chủ nhiệm lớp, quản lý học sinh, xây dựng tập thể lớp' },
