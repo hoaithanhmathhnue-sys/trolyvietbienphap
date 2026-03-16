@@ -191,7 +191,7 @@ const TeachingMethodsCatalog: React.FC<TeachingMethodsCatalogProps> = ({ onClose
                 Tổng hợp {totalMethods} phương pháp & kỹ thuật dạy học tích cực — từ truyền thống đến AI
               </p>
               <p className="text-cyan-300/60 text-xs mt-2">
-                Nguồn: TongHop_KyThuat_DayHoc_v4.docx • Trần Hoài Thanh • Phiên bản 4.0 • 2026
+                Nguồn: Tổng hợp và biên soạn • Trần Hoài Thanh • Phiên bản 4.0 • 2026
               </p>
             </div>
           </div>
