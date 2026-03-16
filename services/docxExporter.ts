@@ -266,43 +266,105 @@ function elementsToDocxChildren(elements: ParsedElement[], numberingConfig: any[
 }
 
 /**
- * Lọc bỏ các lệnh điều hướng và hướng dẫn của AI khỏi nội dung xuất Word
+ * Lọc bỏ các lệnh điều hướng và hướng dẫn của AI khỏi nội dung xuất Word.
+ * 
+ * Các loại rác đã xác định từ file Word thực tế:
+ * 1. Block MENU NAVIGATION (📱 MENU NAVIGATION + danh sách Bước)
+ * 2. Dòng trạng thái Bước (• Bước X: ... Đang thực hiện/Chờ/Hoàn thành)
+ * 3. Câu hỏi xác nhận AI (❓ Bạn muốn tôi tiếp tục...)
+ * 4. Lệnh tiếp theo (**Lệnh tiếp theo của bạn:**...)
+ * 5. Hộp thoại xác nhận (┌───┐ ... └───┘)
+ * 6. Các ký hiệu đường kẻ dài (━━━, ───, ---)
+ * 7. Chú thích hướng dẫn copy, KẾT THÚC GIẢI PHÁP
  */
 function cleanMarkdownForExport(markdown: string): string {
   if (!markdown) return markdown;
 
-  // Pattern 1: Bảng menu trạng thái và xác nhận
-  // Bao gồm các khung dạng:
-  // ┌─────────────────────────────────┐
-  // │ ✅ Đồng ý nội dung Phần 1 này?   │
-  // │ ✏️ Bạn có thể CHỈNH SỬA trực   │
-  // │    tiếp bằng nút "Chỉnh sửa"    │
-  // └─────────────────────────────────┘
-  // Hoặc các dòng tương tự
-  let cleaned = markdown
-    .replace(/┌[─]+┐[\s\S]*?└[─]+┘/g, '')
-    // Lọc các dòng hỏi đáp cuối các giải pháp
-    .replace(/❓ Bạn muốn tôi tiếp tục viết Giải pháp.*/g, '')
-    // Mệnh lệnh của AI về MENU NAVIGATION
-    .replace(/.*?📱 MENU NAVIGATION.*/g, '')
-    .replace(/.*?BẮT ĐẦU phản hồi bằng MENU NAVIGATION.*/g, '')
-    .replace(/.*?✅ Đồng ý nội dung Phần.*/g, '')
-    .replace(/.*?✅ Đồng ý dàn ý này.*/g, '')
-    .replace(/.*?✏️ Bạn có thể CHỈNH SỬA.*/g, '')
-    .replace(/.*?\*\*Nếu bạn đồng ý với nội dung này.*/g, '')
-    .replace(/.*?tiếp bằng nút "Chỉnh sửa".*/g, '')
-    // Các lệnh menu con (Bước 1:, Bước 2:...)
-    .replace(/^\s*[•\-*]?\s*Bước \d+:.*?(Hoàn thành|Đang thực hiện|Chờ lệnh|ĐANG THỰC HIỆN|CHỜ LỆNH).*$/gm, '')
-    // Các block trạng thái Bước (không có dấu gạch)
-    .replace(/^Bước \d+:.*?(Hoàn thành|Đang thực hiện|Chờ lệnh|ĐANG THỰC HIỆN|CHỜ LỆNH).*$/gm, '')
-    // Các đường gạch ngang dài --- hoặc ━━━ thường đi kèm menu
-    .replace(/^[─━]{10,}.*$/gm, '')
-    .replace(/^---$/gm, '')
-    // Các chú thích dạng 📋 HƯỚNG DẪN COPY:
-    .replace(/📋 HƯỚNG DẪN COPY:[\s\S]*?5\. Format lại nếu cần \(font chữ, cỡ chữ\)/g, '')
-    .replace(/✅ KẾT THÚC GIẢI PHÁP.*/g, '');
+  let cleaned = markdown;
 
-  // Lọc thêm khoảng trắng thừa
+  // ══════════════════════════════════════════════════════════════
+  // 1. Hộp thoại viền (┌─┐ ... └─┘) - xóa toàn bộ block
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/┌[─]+┐[\s\S]*?└[─]+┘/g, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 2. Block MENU NAVIGATION - xóa từ 📱 MENU đến hết danh sách Bước
+  //    Pattern: "📱 MENU NAVIGATION" theo sau bởi các dòng "• Bước X: ..."
+  //    Có thể nằm giữa câu (ví dụ: "...triển khai chi tiết).📱 **MENU...")
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/📱\s*\**MENU NAVIGATION\**/g, '\n__MENU_NAV_START__');
+  // Xóa marker và tất cả dòng Bước liền kề sau nó
+  cleaned = cleaned.replace(/__MENU_NAV_START__[\s\S]*?(?=\n[^\s•\-\*\n]|\n\n[^\s•\-\*]|$)/g, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 3. Dòng trạng thái Bước đơn lẻ (có thể sót sau bước 2)
+  //    Pattern: "• Bước X: ... (Đang thực hiện/Chờ/Hoàn thành/🔵)"
+  //    hoặc  "• **Bước X: ... (Đang thực hiện 🔵)**"
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/^[\s]*[•\-\*]?\s*\**Bước\s+\d+[\-\d]*\s*:.*?(Đang thực hiện|Chờ|Hoàn thành|ĐANG THỰC HIỆN|CHỜ LỆNH|Chờ lệnh|Đợi lệnh|🔵)\)?\**\s*$/gm, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 4. Câu hỏi xác nhận / đề nghị tiếp tục từ AI
+  //    "❓ Bạn muốn tôi tiếp tục viết..."
+  //    "❓ Bạn đã hoàn thành toàn bộ..."
+  //    "Bạn đã sẵn sàng để tôi hoàn thiện..."
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/❓\s*Bạn.*?(tiếp tục viết|hoàn thành toàn bộ|hoàn thiện)[\s\S]*?(?=\n\n|\n[A-Z0-9#]|$)/gm, '');
+  cleaned = cleaned.replace(/^.*?Bạn đã sẵn sàng để tôi hoàn thiện.*$/gm, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 5. Dòng "Lệnh tiếp theo của bạn:" 
+  //    "**Lệnh tiếp theo của bạn:** \"Viết Phần 2\" (Tôi sẽ triển khai...)"
+  //    Có thể chiếm nhiều dòng cho đến khi gặp dòng nội dung thật
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/\*{0,2}Lệnh tiếp theo của bạn:?\*{0,2}[\s\S]*?(?=\n\n[A-ZĐ0-9#📋]|$)/gm, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 6. Xác nhận / hộp thoại đồng ý
+  //    "✅ Đồng ý nội dung...", "✅ Đồng ý dàn ý này..."
+  //    "✏️ Bạn có thể CHỈNH SỬA..."
+  //    "**Nếu bạn đồng ý với nội dung này..."
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/^.*?✅\s*Đồng ý.*$/gm, '');
+  cleaned = cleaned.replace(/^.*?✏️\s*Bạn có thể.*$/gm, '');
+  cleaned = cleaned.replace(/^.*?\*\*Nếu bạn đồng ý.*$/gm, '');
+  cleaned = cleaned.replace(/^.*?tiếp bằng nút\s*"Chỉnh sửa".*$/gm, '');
+  cleaned = cleaned.replace(/^.*?nút\s*"Chỉnh sửa".*$/gm, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 7. Kết thúc giải pháp và hướng dẫn copy
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/✅\s*KẾT THÚC GIẢI PHÁP.*/gm, '');
+  cleaned = cleaned.replace(/📋\s*HƯỚNG DẪN COPY[\s\S]*?(?:font chữ.*?cỡ chữ\)?|$)/g, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 7b. Dòng sót chứa trạng thái bước bị tách xuống dòng
+  //     VD: "và hiệu quả (Đang thực hiện 🔵)**"
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/^.*?\(Đang thực hiện[^)]*🔵[^)]*\)\*{0,2}\s*$/gm, '');
+  cleaned = cleaned.replace(/^.*?\(Chờ\)\s*$/gm, '');
+  cleaned = cleaned.replace(/^.*?\(Hoàn thành\)\s*$/gm, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 8. Đường kẻ trang trí dài (━━━, ───) - xóa dòng chỉ có ký tự này
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/^[━─]{5,}\s*$/gm, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 9. Dấu phân cách --- (thường là separator giữa các phần)
+  //    Giữ lại --- nếu nó có ý nghĩa Markdown (thematic break)
+  //    nhưng xóa nếu nó chỉ là separator của AI
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/^\s*---\s*$/gm, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 10. BẮT ĐẦU phản hồi bằng MENU NAVIGATION (lệnh prompt sót)
+  // ══════════════════════════════════════════════════════════════
+  cleaned = cleaned.replace(/^.*?BẮT ĐẦU phản hồi bằng MENU NAVIGATION.*$/gm, '');
+
+  // ══════════════════════════════════════════════════════════════
+  // 11. Dọn dẹp khoảng trắng thừa: 3+ dòng trống → 2 dòng trống
+  // ══════════════════════════════════════════════════════════════
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n').trim();
 
   return cleaned;
