@@ -16,6 +16,7 @@ import {
 
 import { LockScreen } from './components/LockScreen';
 import ReviewOldDocPanel from './components/ReviewOldDocPanel';
+import TeachingMethodsCatalog from './components/TeachingMethodsCatalog';
 
 // Helper: Truncate text dài cho AI prompt - giữ phần đầu (nội dung chính) và thông báo lược bớt
 const MAX_REF_DOCS_FOR_PROMPT = 80000; // ~80K ký tự tối đa cho tài liệu tham khảo trong prompt
@@ -94,7 +95,7 @@ const App: React.FC = () => {
   const [selectedModel, setSelectedModel] = useState(FALLBACK_MODELS[0]);
   
   // App Navigation State
-  const [activeAppTab, setActiveAppTab] = useState<'create' | 'heal'>('create');
+  const [activeAppTab, setActiveAppTab] = useState<'create' | 'heal' | 'methods'>('create');
   const [healingContext, setHealingContext] = useState<{
     originalContent: string;
     analysisResult: any;
@@ -2204,10 +2205,25 @@ Tổ: [Tổ chuyên môn]
           >
              <Microscope className="w-5 h-5" /> 🔬 THẨM ĐỊNH BIỆN PHÁP
           </button>
+
+          <button
+            onClick={() => setActiveAppTab('methods')}
+            className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-300 ${
+              activeAppTab === 'methods' 
+                ? 'bg-gradient-to-r from-violet-600 to-indigo-500 text-white shadow-md transform scale-[1.02]' 
+                : 'text-gray-500 hover:bg-violet-50 hover:text-violet-700'
+            }`}
+          >
+             <BookOpen className="w-5 h-5" /> 📖 FULL PP/KT DẠY HỌC
+          </button>
         </div>
 
         {/* View Routing */}
-        {activeAppTab === 'heal' ? (
+        {activeAppTab === 'methods' ? (
+          <div className="flex-1 w-full max-w-6xl mx-auto h-full animate-fade-in pb-20">
+            <TeachingMethodsCatalog onClose={() => setActiveAppTab('create')} />
+          </div>
+        ) : activeAppTab === 'heal' ? (
           <div className="flex-1 w-full max-w-6xl mx-auto h-full animate-fade-in">
              <ReviewOldDocPanel 
                 apiKey={apiKey}
