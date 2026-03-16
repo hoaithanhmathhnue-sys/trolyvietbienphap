@@ -54,14 +54,9 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
     });
   };
 
-  const validateStep = (currentStep: number) => {
-    if (currentStep === 1) {
-      return formData.subject && formData.level && formData.grade;
-    }
-    if (currentStep === 2) {
-      return formData.topicArea || formData.chapter;
-    }
-    return true; // Bước 3 có thể chọn hoặc không
+  const validateStep = (_currentStep: number) => {
+    // Không bắt buộc điền hết — user có thể bỏ trống bất kỳ field nào
+    return true;
   };
 
   const handleNext = () => {
@@ -161,8 +156,8 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
             <div className="space-y-4 animate-in fade-in">
               <h4 className="font-semibold text-lg text-gray-800 mb-4">Bước 1: Bối cảnh cơ bản</h4>
               <div>
-                <label className="block text-sm font-medium mb-1">Môn học</label>
-                <input type="text" value={formData.subject} onChange={e => handleChange('subject', e.target.value)} className="w-full border rounded p-2" placeholder="VD: Toán, Ngữ Văn..." />
+                <label className="block text-sm font-medium mb-1">Môn học / Lĩnh vực</label>
+                <input type="text" value={formData.subject} onChange={e => handleChange('subject', e.target.value)} className="w-full border rounded p-2" placeholder="VD: Toán, Văn, Công tác chủ nhiệm, Quản lý..." />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Cấp học</label>
