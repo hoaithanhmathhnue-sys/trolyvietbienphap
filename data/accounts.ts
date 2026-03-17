@@ -1,6 +1,6 @@
 // File tài khoản đăng nhập - Thêm/xóa tài khoản tại đây
 export const accounts = [
-    { username: "admin", password: "admin123", name: "Quản trị viên" },
+    { username: "THT", password: "admin123", name: "Quản trị viên" },
     { username: "duonghangdtntls@gmail.com", password: "SKKN100", name: "GV" },
     { username: "quoc1581998@gmail.com", password: "SKKN100", name: "GV" },
     { username: "giaovien", password: "gv2025", name: "Giáo viên" },
