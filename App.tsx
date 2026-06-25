@@ -3,6 +3,7 @@ import { UserInfo, GenerationStep, GenerationState, SKKNTemplate, SolutionsState
 import { STEPS_INFO, SOLUTION_MODE_PROMPT, FALLBACK_MODELS, HIGHER_ED_LEVELS, HIGHER_ED_SYSTEM_INSTRUCTION } from './constants';
 import { initializeGeminiChat, sendMessageStream, getFriendlyErrorMessage, parseApiError, getChatHistory, setChatHistory } from './services/geminiService';
 import { apiKeyManager } from './services/apiKeyManager';
+import { isValidGoogleAiApiKey, parseGoogleAiApiKeys } from './services/googleAiApiKey';
 import { getSubjectInfo } from './data/subjectsData';
 import { SKKNForm } from './components/SKKNForm';
 import { DocumentPreview } from './components/DocumentPreview';
@@ -122,11 +123,14 @@ const App: React.FC = () => {
     const savedKey = localStorage.getItem('gemini_api_key');
     const savedModel = localStorage.getItem('selected_model');
 
-    if (savedKey) {
-      setApiKey(savedKey);
+    if (savedKey && isValidGoogleAiApiKey(savedKey)) {
+      setApiKey(savedKey.trim());
     } else {
-      // Thử lấy key từ biến môi trường (.env)
-      const envKeys = (import.meta.env.VITE_GEMINI_API_KEYS || '').split(',').map((k: string) => k.trim()).filter((k: string) => k.length > 0);
+      if (savedKey) {
+        localStorage.removeItem('gemini_api_key');
+      }
+
+      const envKeys = parseGoogleAiApiKeys(import.meta.env.VITE_GEMINI_API_KEYS || '');
       if (envKeys.length > 0) {
         const firstEnvKey = envKeys[0];
         setApiKey(firstEnvKey);
@@ -346,8 +350,8 @@ const App: React.FC = () => {
       // Initialize Gemini chat với API key
       const savedKey = localStorage.getItem('gemini_api_key');
       const savedModel = localStorage.getItem('selected_model');
-      if (savedKey) {
-        initializeGeminiChat(savedKey, savedModel || undefined);
+      if (savedKey && isValidGoogleAiApiKey(savedKey)) {
+        initializeGeminiChat(savedKey.trim(), savedModel || undefined);
         // Khôi phục history SAU khi init (vì init reset history)
         if (sessionData.chatHistory && sessionData.chatHistory.length > 0) {
           setChatHistory(sessionData.chatHistory);

@@ -1,7 +1,6 @@
 import JSZip from 'jszip';
-import { GoogleGenAI } from '@google/genai';
 import { SYSTEM_INSTRUCTION } from '../constants';
-import { getFriendlyErrorMessage } from './geminiService';
+import { generateContentWithModelFallback } from './geminiService';
 
 const W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
@@ -32,8 +31,6 @@ function createRedRunElement(xmlDoc: Document, text: string): Node {
 
 // Gửi một mảng text sang AI
 async function rewriteTextBatch(apiKey: string, selectedModel: string, items: { [key: string]: string }, aiReductionPrompt?: string) {
-    const ai = new GoogleGenAI({ apiKey });
-    
     const prompt = `Bạn là chuyên gia thẩm định và viết Sáng kiến kinh nghiệm, biện pháp GVG/GVCN chuyên nghiệp.
 Nhiệm vụ: CẢI THIỆN các đoạn văn bản dưới đây thành một phiên bản học thuật, khoa học, thực tế và thuyết phục hơn.
 - KHÔNG gộp các đoạn lại với nhau. Giữ nguyên số lượng đoạn.
@@ -46,13 +43,15 @@ Dữ liệu gốc:
 ${JSON.stringify(items, null, 2)}
 `;
     
-    const response = await ai.models.generateContent({
-        model: selectedModel,
+    const response = await generateContentWithModelFallback({
+        apiKey,
+        selectedModel,
         contents: prompt,
         config: {
             temperature: 0.7,
             systemInstruction: SYSTEM_INSTRUCTION
-        }
+        },
+        logLabel: 'Rewrite DOCX batch'
     });
 
     let jsonText = response.text || '';

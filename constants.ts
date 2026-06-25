@@ -6,8 +6,10 @@ export const MODEL_NAME = 'gemini-3-flash-preview';
 // Thứ tự fallback: nếu model đang chọn lỗi, tự động thử các model khác theo thứ tự này
 export const FALLBACK_MODELS = [
    'gemini-3-flash-preview',
+   'gemini-2.5-flash',
+   'gemini-2.5-flash-lite',
    'gemini-3-pro-preview',
-   'gemini-2.5-flash'
+   'gemini-2.5-pro'
 ];
 
 // Thông tin hiển thị cho các model AI
@@ -24,6 +26,14 @@ export const MODEL_INFO: Record<string, { name: string; description: string; isD
    'gemini-2.5-flash': {
       name: 'Gemini 2.5 Flash',
       description: 'Ổn định, tốc độ cao'
+   },
+   'gemini-2.5-flash-lite': {
+      name: 'Gemini 2.5 Flash Lite',
+      description: 'Nhẹ hơn, phù hợp khi model chính quá tải'
+   },
+   'gemini-2.5-pro': {
+      name: 'Gemini 2.5 Pro',
+      description: 'Ổn định cho tác vụ cần suy luận sâu'
    }
 };
 
@@ -569,4 +579,3 @@ Cấu trúc Biện pháp bậc đại học/cao đẳng phải có thêm:
 - [ ] Có so sánh với mô hình quốc tế?
 - [ ] Có phần phản biện/hạn chế?
 `;
-

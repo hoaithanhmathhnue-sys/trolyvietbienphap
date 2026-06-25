@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from './Button';
 import { Key, X, Zap, Cpu, Sparkles, ExternalLink } from 'lucide-react';
 import { FALLBACK_MODELS, MODEL_INFO } from '../constants';
+import { isValidGoogleAiApiKey, maskGoogleAiApiKey, parseGoogleAiApiKeys } from '../services/googleAiApiKey';
 
 interface ApiKeyModalProps {
     isOpen: boolean;
@@ -12,9 +13,7 @@ interface ApiKeyModalProps {
 
 // Đọc API keys từ biến môi trường
 const getEnvApiKeys = (): string[] => {
-    const envKeys = import.meta.env.VITE_GEMINI_API_KEYS || '';
-    if (!envKeys) return [];
-    return envKeys.split(',').map((k: string) => k.trim()).filter((k: string) => k.length > 0);
+    return parseGoogleAiApiKeys(import.meta.env.VITE_GEMINI_API_KEYS || '');
 };
 
 const ModelIcon: React.FC<{ modelId: string }> = ({ modelId }) => {
@@ -59,8 +58,8 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
             return;
         }
 
-        if (!keyToSave.startsWith('AIza')) {
-            setError('API Key không hợp lệ. Key phải bắt đầu bằng "AIza..."');
+        if (!isValidGoogleAiApiKey(keyToSave)) {
+            setError('API Key không hợp lệ. Key phải bắt đầu bằng "AIzaSy..." hoặc "AQ..."');
             return;
         }
 
@@ -165,7 +164,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
                                 setApiKey(e.target.value);
                                 setError('');
                             }}
-                            placeholder={hasEnvKeys ? "Để trống để dùng key mặc định, hoặc nhập key riêng (AIza...)" : "Nhập API Key (AIza...)"}
+                            placeholder={hasEnvKeys ? "Để trống để dùng key mặc định, hoặc nhập key riêng (AIzaSy... hoặc AQ...)" : "Nhập API Key (AIzaSy... hoặc AQ...)"}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none text-sm font-mono"
                         />
 
@@ -191,7 +190,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
                                 </p>
                                 <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
                                     {envKeys.map((key, idx) => {
-                                        const masked = `AIza••••••${key.slice(-4)}`;
+                                        const masked = maskGoogleAiApiKey(key);
                                         const isActive = apiKey === key;
                                         return (
                                             <button

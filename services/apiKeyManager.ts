@@ -1,6 +1,7 @@
 /**
  * API Key Manager - Quản lý nhiều API key với cơ chế xoay vòng
  */
+import { isValidGoogleAiApiKey, maskGoogleAiApiKey, parseGoogleAiApiKeys } from './googleAiApiKey';
 
 // Trạng thái của một API key
 export type ApiKeyStatus = 'active' | 'error' | 'cooldown';
@@ -35,12 +36,7 @@ const MAX_ERROR_COUNT = 1; // Xoay key ngay lập tức khi có lỗi quota (1 l
 
 // Đọc danh sách API key từ biến môi trường (.env)
 const getEnvKeys = (): { key: string; name: string }[] => {
-    const envKeys = import.meta.env.VITE_GEMINI_API_KEYS || '';
-    if (!envKeys) return [];
-    return envKeys
-        .split(',')
-        .map((k: string) => k.trim())
-        .filter((k: string) => k.length > 0)
+    return parseGoogleAiApiKeys(import.meta.env.VITE_GEMINI_API_KEYS || '')
         .map((k: string, i: number) => ({ key: k, name: `Key ${i + 1}` }));
 };
 
@@ -186,9 +182,9 @@ class ApiKeyManager {
             return { success: false, message: 'Key này đã tồn tại' };
         }
 
-        // Validate format cơ bản
-        if (!trimmedKey || trimmedKey.length < 10) {
-            return { success: false, message: 'Key không hợp lệ' };
+        // Validate Google AI key format: legacy AIzaSy... or new AQ...
+        if (!isValidGoogleAiApiKey(trimmedKey)) {
+            return { success: false, message: 'Key không hợp lệ. Key phải bắt đầu bằng AIzaSy... hoặc AQ...' };
         }
 
         const newKey: ApiKeyInfo = {
@@ -261,6 +257,16 @@ class ApiKeyManager {
         const keyInfo = this.keys.find(k => k.key === key);
         if (!keyInfo) {
             return { success: false, hasMoreKeys: false, message: 'Không tìm thấy key' };
+        }
+
+        if (errorType === 'MODEL_OVERLOADED') {
+            keyInfo.lastError = errorType;
+            this.saveToStorage();
+            return {
+                success: false,
+                hasMoreKeys: this.hasAvailableKeys(),
+                message: 'Model Gemini đang quá tải tạm thời; API key vẫn được giữ hoạt động.'
+            };
         }
 
         keyInfo.lastError = errorType;
@@ -391,8 +397,7 @@ class ApiKeyManager {
      * Ẩn bớt ký tự của key để hiển thị
      */
     maskKey(key: string): string {
-        if (!key || key.length < 8) return '***';
-        return key.substring(0, 4) + '...' + key.substring(key.length - 4);
+        return maskGoogleAiApiKey(key);
     }
 
     /**

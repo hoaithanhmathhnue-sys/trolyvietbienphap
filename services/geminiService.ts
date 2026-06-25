@@ -7,33 +7,50 @@ import { TitleAnalysisResult } from '../types';
 // Hàm phân tích và trả về thông báo lỗi thân thiện
 export const parseApiError = (error: any): string => {
   const errorMessage = error?.message || error?.toString() || '';
-  const errorString = JSON.stringify(error);
+  let errorString = '';
+  try {
+    errorString = JSON.stringify(error) || '';
+  } catch {
+    errorString = '';
+  }
+  const combinedError = `${errorMessage} ${errorString}`;
+  const lowerError = combinedError.toLowerCase();
 
   // Kiểm tra lỗi quota exceeded (429)
   if (errorString.includes('429') ||
-    errorMessage.includes('quota') ||
+    lowerError.includes('quota') ||
     errorMessage.includes('RESOURCE_EXHAUSTED') ||
-    errorMessage.includes('exceeded')) {
+    lowerError.includes('resource_exhausted') ||
+    lowerError.includes('exceeded')) {
     return 'QUOTA_EXCEEDED';
   }
 
   // Kiểm tra lỗi rate limit
-  if (errorMessage.includes('rate') || errorMessage.includes('limit')) {
+  if (lowerError.includes('rate limit') || lowerError.includes('too many requests')) {
     return 'RATE_LIMIT';
+  }
+
+  // Kiểm tra lỗi model quá tải tạm thời (không phải lỗi API key)
+  if (errorString.includes('503') ||
+    errorMessage.includes('UNAVAILABLE') ||
+    lowerError.includes('high demand') ||
+    lowerError.includes('overloaded') ||
+    lowerError.includes('try again later')) {
+    return 'MODEL_OVERLOADED';
   }
 
   // Kiểm tra lỗi API key không hợp lệ
   if (errorMessage.includes('API_KEY_INVALID') ||
     errorMessage.includes('401') ||
-    errorMessage.includes('unauthorized') ||
+    lowerError.includes('unauthorized') ||
     errorMessage.includes('PERMISSION_DENIED')) {
     return 'INVALID_API_KEY';
   }
 
   // Kiểm tra lỗi kết nối
-  if (errorMessage.includes('network') ||
-    errorMessage.includes('fetch') ||
-    errorMessage.includes('connection')) {
+  if (lowerError.includes('network') ||
+    lowerError.includes('fetch') ||
+    lowerError.includes('connection')) {
     return 'NETWORK_ERROR';
   }
 
@@ -66,6 +83,18 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
         suggestions: [
           '⏳ Đợi 30-60 giây rồi thử lại',
           '🔄 Không bấm nút nhiều lần liên tiếp'
+        ]
+      };
+
+    case 'MODEL_OVERLOADED':
+      return {
+        type: 'model_overloaded',
+        title: '⏳ Model Gemini đang quá tải',
+        message: 'Model Google Gemini đang quá tải tạm thời. API Key của bạn vẫn hợp lệ; hệ thống sẽ thử model dự phòng nếu có thể.',
+        suggestions: [
+          '⏰ Đợi một lát rồi thử lại',
+          '⚡ Chọn model nhẹ hơn như Gemini Flash hoặc Flash Lite',
+          '🔄 Thử tạo lại nội dung sau vài phút'
         ]
       };
 
@@ -150,19 +179,64 @@ const createChatSession = (model: string) => {
 };
 
 // Sắp xếp models với model được chọn đầu tiên
-const getOrderedModels = (): string[] => {
-  if (!currentSelectedModel || !FALLBACK_MODELS.includes(currentSelectedModel)) {
+const getOrderedModels = (selectedModel?: string | null): string[] => {
+  const preferredModel = selectedModel || currentSelectedModel;
+
+  if (!preferredModel || !FALLBACK_MODELS.includes(preferredModel)) {
     return FALLBACK_MODELS;
   }
 
   // Đưa model được chọn lên đầu, giữ nguyên thứ tự các model còn lại
-  const orderedModels = [currentSelectedModel];
+  const orderedModels = [preferredModel];
   for (const model of FALLBACK_MODELS) {
-    if (model !== currentSelectedModel) {
+    if (model !== preferredModel) {
       orderedModels.push(model);
     }
   }
   return orderedModels;
+};
+
+const shouldTryFallbackModel = (errorType: string): boolean => {
+  return errorType === 'MODEL_OVERLOADED' || errorType === 'UNKNOWN';
+};
+
+export const generateContentWithModelFallback = async ({
+  apiKey,
+  selectedModel,
+  contents,
+  config,
+  logLabel = 'Gemini request'
+}: {
+  apiKey: string;
+  selectedModel?: string;
+  contents: any;
+  config?: any;
+  logLabel?: string;
+}) => {
+  const ai = new GoogleGenAI({ apiKey });
+  const modelsToTry = getOrderedModels(selectedModel);
+  let lastError: any = null;
+
+  for (const model of modelsToTry) {
+    try {
+      console.log(`🤖 ${logLabel}: thử model ${model}`);
+      return await ai.models.generateContent({
+        model,
+        contents,
+        ...(config ? { config } : {})
+      });
+    } catch (error: any) {
+      lastError = error;
+      const errorType = parseApiError(error);
+      console.warn(`⚠️ ${logLabel}: model ${model} lỗi ${errorType}`, error?.message || error);
+
+      if (!shouldTryFallbackModel(errorType)) {
+        break;
+      }
+    }
+  }
+
+  throw lastError || new Error('Tất cả model Gemini đều thất bại. Vui lòng thử lại sau.');
 };
 
 export const sendMessageStream = async (message: string, onChunk: (text: string) => void) => {
@@ -178,6 +252,8 @@ export const sendMessageStream = async (message: string, onChunk: (text: string)
 
   // Thử lần lượt các model theo thứ tự fallback
   for (const model of modelsToTry) {
+    let fullResponse = "";
+
     try {
       console.log(`🤖 Đang thử model: ${model}`);
 
@@ -199,7 +275,6 @@ export const sendMessageStream = async (message: string, onChunk: (text: string)
 
       const responseStream = await chatSession.sendMessageStream({ message });
 
-      let fullResponse = "";
       for await (const chunk of responseStream) {
         if (chunk.text) {
           onChunk(chunk.text);
@@ -218,10 +293,18 @@ export const sendMessageStream = async (message: string, onChunk: (text: string)
       lastError = error;
 
       const errorType = parseApiError(error);
-      console.log(`⏭️ Lỗi ${errorType}, thử model tiếp theo...`);
+      if (fullResponse.length > 0) {
+        console.warn(`⚠️ Model ${model} lỗi sau khi đã stream một phần nội dung; dừng fallback để tránh trộn kết quả.`);
+        break;
+      }
 
-      // Tiếp tục thử model tiếp theo
-      continue;
+      if (shouldTryFallbackModel(errorType)) {
+        console.log(`⏭️ Lỗi ${errorType}, thử model tiếp theo...`);
+        continue;
+      }
+
+      console.log(`⛔ Lỗi ${errorType} không nên fallback model.`);
+      break;
     }
   }
 
@@ -237,8 +320,6 @@ export const analyzeDocumentForSKKN = async (
   documentType: 'reference' | 'template',
   selectedModel?: string
 ): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey });
-
   // Giới hạn nội dung để tránh vượt token limit
   const truncatedContent = documentContent.substring(0, 20000);
 
@@ -301,12 +382,12 @@ Hãy phân tích và trả về kết quả theo format sau:
 
 ⚠️ Lưu ý: Trả lời ngắn gọn, súc tích, tập trung vào thông tin cần thiết nhất.`;
 
-  const model = selectedModel || FALLBACK_MODELS[0];
-
   try {
-    const response = await ai.models.generateContent({
-      model: model,
-      contents: prompt
+    const response = await generateContentWithModelFallback({
+      apiKey,
+      selectedModel,
+      contents: prompt,
+      logLabel: 'Phân tích tài liệu SKKN'
     });
 
     return response.text || 'Không thể phân tích tài liệu. Vui lòng thử lại.';
@@ -330,8 +411,6 @@ export const extractSKKNStructure = async (
   templateContent: string,
   selectedModel?: string
 ): Promise<SKKNSection[]> => {
-  const ai = new GoogleGenAI({ apiKey });
-
   // Giới hạn nội dung để tránh vượt token limit
   const truncatedContent = templateContent.substring(0, 25000);
 
@@ -367,12 +446,12 @@ QUY TẮC QUAN TRỌNG:
 
 BẮT ĐẦU JSON NGAY:`;
 
-  const model = selectedModel || FALLBACK_MODELS[0];
-
   try {
-    const response = await ai.models.generateContent({
-      model: model,
-      contents: prompt
+    const response = await generateContentWithModelFallback({
+      apiKey,
+      selectedModel,
+      contents: prompt,
+      logLabel: 'Trích xuất cấu trúc SKKN'
     });
 
     const responseText = response.text || '[]';
@@ -418,8 +497,6 @@ export const analyzeTitleSKKN = async (
   selectedModel?: string,
   teachingMethod?: string
 ): Promise<TitleAnalysisResult> => {
-  const ai = new GoogleGenAI({ apiKey });
-
   const prompt = `Bạn là chuyên gia phân tích tên đề tài Sáng kiến kinh nghiệm (SKKN) với 20 năm kinh nghiệm.
 
 ## THÔNG TIN ĐỀ TÀI CẦN PHÂN TÍCH:
@@ -553,12 +630,12 @@ TRẢ VỀ JSON (KHÔNG có markdown code block, CHỈ JSON thuần):
 
 BẮT ĐẦU JSON NGAY:`;
 
-  const model = selectedModel || FALLBACK_MODELS[0];
-
   try {
-    const response = await ai.models.generateContent({
-      model: model,
-      contents: prompt
+    const response = await generateContentWithModelFallback({
+      apiKey,
+      selectedModel,
+      contents: prompt,
+      logLabel: 'Phân tích tên đề tài'
     });
 
     const responseText = response.text || '{}';
@@ -631,9 +708,6 @@ export const analyzeOldDocument = async (
   selectedModel?: string
 ): Promise<EnhancedAnalysisResult> => {
   try {
-    const genAI = new GoogleGenAI({ apiKey });
-    const modelName = selectedModel || 'gemini-2.5-flash';
-
     // Truncate content if too long (keep first 20000 chars)
     const truncatedContent = content.length > 20000
       ? content.substring(0, 20000) + '\n\n[... nội dung còn lại đã được cắt bớt ...]'
@@ -727,9 +801,11 @@ Kiểm tra xem văn bản có dấu hiệu được viết bởi AI không:
 
 CHỈ TRẢ VỀ JSON THUẦN, KHÔNG GIẢI THÍCH, KHÔNG MARKDOWN CODE BLOCK.`;
 
-    const response = await genAI.models.generateContent({
-      model: modelName,
+    const response = await generateContentWithModelFallback({
+      apiKey,
+      selectedModel,
       contents: prompt,
+      logLabel: 'Thẩm định biện pháp cũ'
     });
 
     let jsonText = response.text || '';
@@ -818,8 +894,6 @@ export const brainstormTopicNames = async (
   },
   selectedModel?: string
 ): Promise<Array<{ title: string; rationale: string }>> => {
-  const ai = new GoogleGenAI({ apiKey });
-  
   const prompt = `Bạn là chuyên gia thiết kế Sáng kiến kinh nghiệm (SKKN) và Biện pháp giáo viên giỏi xuất sắc nhất Việt Nam.
 Hãy đề xuất 5 tên đề tài Biện pháp/SKKN siêu sáng tạo, độc đáo và đúng chuẩn cấu trúc khoa học dựa trên các thông tin sau:
 - Môn học: ${inputs.subject}
@@ -848,12 +922,12 @@ TRẢ VỀ JSON ARRAY DƯỚI ĐÂY (CHỈ TRẢ VỀ JSON THUẦN, KHÔNG FORMA
 ]
 CHỈ OUTPUT JSON KHÔNG DIỄN GIẢI THÊM:`;
 
-  const model = selectedModel || FALLBACK_MODELS[0];
-
   try {
-    const response = await ai.models.generateContent({
-      model: model,
-      contents: prompt
+    const response = await generateContentWithModelFallback({
+      apiKey,
+      selectedModel,
+      contents: prompt,
+      logLabel: 'Brainstorm tên đề tài'
     });
 
     const responseText = response.text || '[]';
@@ -896,8 +970,6 @@ export const suggestMethods = async (
   },
   selectedModel?: string
 ): Promise<Array<{ method: string; reason: string }>> => {
-  const ai = new GoogleGenAI({ apiKey });
-
   const methodList = TEACHING_METHODS.map((m, i) => `${i + 1}. ${m}`).join('\n');
 
   const prompt = `Bạn là chuyên gia thiết kế giáo dục hàng đầu Việt Nam, am hiểu sâu 46 kỹ thuật/phương pháp dạy học tích cực.
@@ -936,12 +1008,12 @@ TRẢ VỀ JSON ARRAY (CHỈ JSON THUẦN, KHÔNG MARKDOWN CODE BLOCK):
 ]
 BẮT ĐẦU JSON NGAY:`;
 
-  const model = selectedModel || FALLBACK_MODELS[0];
-
   try {
-    const response = await ai.models.generateContent({
-      model: model,
-      contents: prompt
+    const response = await generateContentWithModelFallback({
+      apiKey,
+      selectedModel,
+      contents: prompt,
+      logLabel: 'Gợi ý phương pháp'
     });
 
     const responseText = response.text || '[]';
