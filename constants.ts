@@ -1,27 +1,59 @@
 import { KNOWLEDGE_BASE } from './data/knowledgeBase';
 import { WRITING_RULES } from './data/writingRules';
 
-export const MODEL_NAME = 'gemini-3-flash-preview';
+export const MODEL_NAME = 'gemini-3.6-flash';
 
-// Thứ tự fallback: nếu model đang chọn lỗi, tự động thử các model khác theo thứ tự này
+// Thứ tự fallback cho Google Gemini Provider
 export const FALLBACK_MODELS = [
-   'gemini-3-flash-preview',
+   'gemini-3.6-flash',
+   'gemini-3.5-flash',
+   'gemini-3.5-flash-lite',
+   'gemini-3.1-flash-lite',
    'gemini-2.5-flash',
+   'gemini-3-flash-preview',
    'gemini-2.5-flash-lite',
    'gemini-3-pro-preview',
    'gemini-2.5-pro'
 ];
 
+// Thứ tự fallback cho Agent Platform API Provider
+export const AGENT_PLATFORM_MODELS = [
+   'gemini-2.5-flash',
+   'gemini-2.5-flash-lite',
+   'gemini-2.5-pro',
+   'gemini-3.1-pro-preview'
+];
+
 // Thông tin hiển thị cho các model AI
 export const MODEL_INFO: Record<string, { name: string; description: string; isDefault?: boolean }> = {
-   'gemini-3-flash-preview': {
-      name: 'Gemini 3 Flash',
-      description: 'Nhanh, hiệu quả cho tác vụ thông thường',
+   'gemini-3.6-flash': {
+      name: 'Gemini 3.6 Flash',
+      description: 'Model mới nhất, siêu nhanh & tối ưu suy luận',
       isDefault: true
    },
+   'gemini-3.5-flash': {
+      name: 'Gemini 3.5 Flash',
+      description: 'Tốc độ cao, xử lý đa tác vụ vượt trội'
+   },
+   'gemini-3.5-flash-lite': {
+      name: 'Gemini 3.5 Flash Lite',
+      description: 'Phiên bản gọn nhẹ, phản hồi tức thì'
+   },
+   'gemini-3.1-flash-lite': {
+      name: 'Gemini 3.1 Flash Lite',
+      description: 'Ổn định, tiết kiệm tài nguyên'
+   },
+   'gemini-3-flash-preview': {
+      name: 'Gemini 3 Flash Preview',
+      description: 'Nhanh, hiệu quả cho tác vụ thông thường'
+   },
    'gemini-3-pro-preview': {
-      name: 'Gemini 3 Pro',
+      name: 'Gemini 3 Pro Preview',
       description: 'Mạnh mẽ, phù hợp tác vụ phức tạp'
+   },
+   'gemini-3.1-pro-preview': {
+      name: 'Gemini 3.1 Pro Preview',
+      description: 'Chuyên dụng cho suy luận nâng cao trên Agent Platform'
    },
    'gemini-2.5-flash': {
       name: 'Gemini 2.5 Flash',

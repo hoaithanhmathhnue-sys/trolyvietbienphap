@@ -165,8 +165,17 @@ const App: React.FC = () => {
     setCheckingAuth(false);
   }, []);
 
-  const handleSaveApiKey = (key: string, model: string) => {
-    localStorage.setItem('gemini_api_key', key);
+  const handleSaveApiKey = (key: string, model: string, newProvider?: AiProvider) => {
+    const targetProvider = newProvider || provider;
+    setProvider(targetProvider);
+    localStorage.setItem('google_ai_provider', targetProvider);
+
+    if (targetProvider === 'agent-platform') {
+      localStorage.setItem('agent_platform_api_key', key);
+    } else {
+      localStorage.setItem('gemini_api_key', key);
+    }
+
     localStorage.setItem('selected_model', model);
     setApiKey(key);
     setSelectedModel(model);

@@ -1,3 +1,5 @@
+export type AiProvider = 'gemini' | 'agent-platform';
+
 // Cấu trúc một mục trong mẫu SKKN tùy chỉnh
 export interface SKKNSection {
   id: string;           // ID duy nhất (1, 1.1, 1.1.1...)

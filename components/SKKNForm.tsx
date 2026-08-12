@@ -13,6 +13,8 @@ import { BookOpen, School, GraduationCap, PenTool, MapPin, Calendar, Users, Cpu,
 import * as mammoth from 'mammoth';
 import * as pdfjsLib from 'pdfjs-dist';
 
+import { UserInfo, SKKNTemplate, SKKNSection, TitleAnalysisResult, AiProvider } from '../types';
+
 // Define worker source for PDF.js
 // Using a CDN to avoid complex build configuration for web workers in standard Vite setups
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
@@ -25,6 +27,7 @@ interface Props {
   isSubmitting: boolean;
   apiKey?: string;  // Thêm API key để gọi AI phân tích
   selectedModel?: string;  // Model đang sử dụng
+  provider?: AiProvider;
 }
 
 interface InputGroupProps {
@@ -50,7 +53,7 @@ const InputGroup: React.FC<InputGroupProps> = ({ label, icon: Icon, required, ch
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
-export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManualSubmit, isSubmitting, apiKey, selectedModel }) => {
+export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManualSubmit, isSubmitting, apiKey, selectedModel, provider }) => {
   const [mode, setMode] = useState<'ai' | 'manual'>('ai');
   const [manualContent, setManualContent] = useState('');
   const [isProcessingFile, setIsProcessingFile] = useState(false);
@@ -366,7 +369,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
         if (apiKey) {
           setIsExtractingStructure(true);
           try {
-            const sections = await extractSKKNStructure(apiKey, extractedText, selectedModel);
+            const sections = await extractSKKNStructure(apiKey, extractedText, selectedModel, provider);
 
             if (sections.length > 0) {
               const customTemplate: SKKNTemplate = {
@@ -430,7 +433,8 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
         apiKey,
         userInfo.referenceDocuments,
         'reference',
-        selectedModel
+        selectedModel,
+        provider
       );
       setRefAnalysisResult(result);
       setShowAnalysisModal('ref');
@@ -453,7 +457,8 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
         apiKey,
         userInfo.skknTemplate,
         'template',
-        selectedModel
+        selectedModel,
+        provider
       );
       setTemplateAnalysisResult(result);
       setShowAnalysisModal('template');
@@ -482,7 +487,8 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
         userInfo.subject,
         userInfo.level,
         selectedModel,
-        userInfo.teachingMethod
+        userInfo.teachingMethod,
+        provider
       );
       setTitleAnalysis(result);
     } catch (error: any) {
@@ -1326,6 +1332,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
         onClose={() => setIsBrainstormModalOpen(false)}
         apiKey={apiKey}
         selectedModel={selectedModel}
+        provider={provider}
         initialSubject={userInfo.subject}
         initialLevel={userInfo.level}
         onSelectTopic={(topic, method) => {

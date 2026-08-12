@@ -1,6 +1,7 @@
 import JSZip from 'jszip';
 import { SYSTEM_INSTRUCTION } from '../constants';
 import { generateContentWithModelFallback } from './geminiService';
+import { AiProvider } from '../types';
 
 const W_NS = "http://schemas.openxmlformats.org/wordprocessingml/2006/main";
 
@@ -30,7 +31,7 @@ function createRedRunElement(xmlDoc: Document, text: string): Node {
 }
 
 // Gửi một mảng text sang AI
-async function rewriteTextBatch(apiKey: string, selectedModel: string, items: { [key: string]: string }, aiReductionPrompt?: string) {
+async function rewriteTextBatch(apiKey: string, selectedModel: string, items: { [key: string]: string }, aiReductionPrompt?: string, provider?: AiProvider) {
     const prompt = `Bạn là chuyên gia thẩm định và viết Sáng kiến kinh nghiệm, biện pháp GVG/GVCN chuyên nghiệp.
 Nhiệm vụ: CẢI THIỆN các đoạn văn bản dưới đây thành một phiên bản học thuật, khoa học, thực tế và thuyết phục hơn.
 - KHÔNG gộp các đoạn lại với nhau. Giữ nguyên số lượng đoạn.
@@ -46,6 +47,7 @@ ${JSON.stringify(items, null, 2)}
     const response = await generateContentWithModelFallback({
         apiKey,
         selectedModel,
+        provider,
         contents: prompt,
         config: {
             temperature: 0.7,
@@ -108,7 +110,8 @@ export async function processDocxFile(
     apiKey: string,
     selectedModel: string,
     onProgress: (percent: number, message: string) => void,
-    analysisResult?: any
+    analysisResult?: any,
+    provider?: AiProvider
 ): Promise<Blob> {
     const aiReductionPrompt = buildAIReductionPrompt(analysisResult);
     onProgress(5, "Đang mở file tài liệu gốc...");
@@ -166,7 +169,7 @@ export async function processDocxFile(
         });
         
         try {
-            const rewrittenObj = await rewriteTextBatch(apiKey, selectedModel, payload, aiReductionPrompt);
+            const rewrittenObj = await rewriteTextBatch(apiKey, selectedModel, payload, aiReductionPrompt, provider);
             
             // Tiến hành thay thế trong DOM
             Object.keys(rewrittenObj).forEach(key => {

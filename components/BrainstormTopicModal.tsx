@@ -3,18 +3,21 @@ import { X, Search, ChevronRight, ChevronLeft, CheckCircle, Loader2, Wand2, Spar
 import { TEACHING_METHODS } from '../data/teachingMethods';
 import { brainstormTopicNames, suggestMethods } from '../services/geminiService';
 
+import { AiProvider } from '../types';
+
 interface BrainstormTopicModalProps {
   isOpen: boolean;
   onClose: () => void;
   apiKey?: string;
   selectedModel?: string;
+  provider?: AiProvider;
   initialSubject: string;
   initialLevel: string;
   onSelectTopic: (topic: string, method?: string) => void;
 }
 
 export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
-  isOpen, onClose, apiKey, selectedModel, initialSubject, initialLevel, onSelectTopic
+  isOpen, onClose, apiKey, selectedModel, provider, initialSubject, initialLevel, onSelectTopic
 }) => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -77,7 +80,7 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
     setError('');
     setIsLoading(true);
     try {
-      const resp = await brainstormTopicNames(apiKey, formData, selectedModel);
+      const resp = await brainstormTopicNames(apiKey, formData, selectedModel, provider);
       setResults(resp);
       setStep(4); // Bước hiển thị kết quả
     } catch (err: any) {
@@ -96,7 +99,7 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
     setSuggestError('');
     setIsSuggesting(true);
     try {
-      const resp = await suggestMethods(apiKey, formData, selectedModel);
+      const resp = await suggestMethods(apiKey, formData, selectedModel, provider);
       setSuggestedMethods(resp);
       // Tự động check các PP được AI gợi ý
       const suggestedNames = resp.map(r => r.method);

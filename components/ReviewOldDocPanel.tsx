@@ -8,10 +8,13 @@ import { exportReviewToDocx, exportReviewToPdf } from '../services/reviewExportS
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
+import { AiProvider } from '../types';
+
 interface ReviewOldDocPanelProps {
   onHealDoc: (originalContent: string, analysisResult: any) => void;
   apiKey?: string;
   selectedModel?: string;
+  provider?: AiProvider;
 }
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -157,7 +160,7 @@ const StructureChecklist: React.FC<{ sections: EnhancedAnalysisResult['detectedS
 };
 
 // ===================== Main Component =====================
-export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: ReviewOldDocPanelProps) {
+export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, provider }: ReviewOldDocPanelProps) {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessingFile, setIsProcessingFile] = useState(false);
   const [fileProgress, setFileProgress] = useState('');
@@ -233,7 +236,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
     }
     setIsAnalyzing(true);
     try {
-      const result = await analyzeOldDocument(apiKey, originalContent, selectedModel);
+      const result = await analyzeOldDocument(apiKey, originalContent, selectedModel, provider);
       setAnalysisResult(result);
     } catch (error: any) {
       alert("Lỗi phân tích biện pháp AI: " + error.message);
@@ -256,7 +259,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel }: 
       const blob = await processDocxFile(file, apiKey, selectedModel || 'gemini-2.5-flash', (percent, msg) => {
         setImproveProgress(percent);
         setImproveMessage(msg);
-      }, analysisResult || undefined);
+      }, analysisResult || undefined, provider);
       const url = window.URL.createObjectURL(blob);
       setImprovedDocxUrl(url);
       setImprovedDocxName(`[DA_CAI_THIEN]_${file.name}`);

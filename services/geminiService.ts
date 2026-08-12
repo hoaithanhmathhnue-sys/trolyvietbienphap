@@ -1,8 +1,8 @@
 
 import { GoogleGenAI, Chat } from "@google/genai";
-import { SYSTEM_INSTRUCTION, FALLBACK_MODELS } from "../constants";
+import { SYSTEM_INSTRUCTION, FALLBACK_MODELS, AGENT_PLATFORM_MODELS } from "../constants";
 import { TEACHING_METHODS, METHOD_SUGGESTION_RULES } from "../data/teachingMethods";
-import { TitleAnalysisResult } from '../types';
+import { TitleAnalysisResult, AiProvider } from '../types';
 
 // Hàm phân tích và trả về thông báo lỗi thân thiện
 export const parseApiError = (error: any): string => {
@@ -136,14 +136,25 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
   }
 };
 
+// Factory function tập trung khởi tạo SDK GoogleGenAI theo provider
+export const createGoogleAiClient = (apiKey: string, provider: AiProvider = 'gemini'): GoogleGenAI => {
+  if (provider === 'agent-platform') {
+    return new GoogleGenAI({ vertexai: true, apiKey });
+  }
+  return new GoogleGenAI({ apiKey });
+};
+
 let chatSession: Chat | null = null;
 let currentApiKey: string | null = null;
 let currentSelectedModel: string | null = null;
+let currentProvider: AiProvider = 'gemini';
 let history: any[] = []; // Store history to restore when switching models
 
-export const initializeGeminiChat = (apiKey: string, selectedModel?: string) => {
+export const initializeGeminiChat = (apiKey: string, selectedModel?: string, provider: AiProvider = 'gemini') => {
   currentApiKey = apiKey;
-  currentSelectedModel = selectedModel || FALLBACK_MODELS[0];
+  currentProvider = provider;
+  const defaultModel = provider === 'agent-platform' ? AGENT_PLATFORM_MODELS[0] : FALLBACK_MODELS[0];
+  currentSelectedModel = selectedModel || defaultModel;
   chatSession = null;
   history = []; // Reset history on new initialization
 };
@@ -158,37 +169,18 @@ export const setChatHistory = (savedHistory: any[]) => {
   history = savedHistory || [];
 };
 
-const createChatSession = (model: string) => {
-  if (!currentApiKey) throw new Error("API Key not found");
-
-  const ai = new GoogleGenAI({ apiKey: currentApiKey });
-
-  return ai.chats.create({
-    model: model,
-    config: {
-      systemInstruction: SYSTEM_INSTRUCTION,
-      temperature: 0.7,
-      topK: 64,
-      topP: 0.95,
-      maxOutputTokens: 65536,
-      thinkingConfig: { thinkingBudget: 2048 },
-      tools: [{ googleSearch: {} }]
-    },
-    history: history
-  });
-};
-
 // Sắp xếp models với model được chọn đầu tiên
-const getOrderedModels = (selectedModel?: string | null): string[] => {
+const getOrderedModels = (selectedModel?: string | null, provider: AiProvider = 'gemini'): string[] => {
   const preferredModel = selectedModel || currentSelectedModel;
+  const fallbackList = provider === 'agent-platform' ? AGENT_PLATFORM_MODELS : FALLBACK_MODELS;
 
-  if (!preferredModel || !FALLBACK_MODELS.includes(preferredModel)) {
-    return FALLBACK_MODELS;
+  if (!preferredModel || !fallbackList.includes(preferredModel as any)) {
+    return [...fallbackList];
   }
 
   // Đưa model được chọn lên đầu, giữ nguyên thứ tự các model còn lại
   const orderedModels = [preferredModel];
-  for (const model of FALLBACK_MODELS) {
+  for (const model of fallbackList) {
     if (model !== preferredModel) {
       orderedModels.push(model);
     }
@@ -196,8 +188,12 @@ const getOrderedModels = (selectedModel?: string | null): string[] => {
   return orderedModels;
 };
 
-const shouldTryFallbackModel = (errorType: string): boolean => {
-  return errorType === 'MODEL_OVERLOADED' || errorType === 'UNKNOWN';
+const shouldTryFallbackModel = (errorType: string, provider: AiProvider = 'gemini'): boolean => {
+  if (errorType === 'MODEL_OVERLOADED' || errorType === 'UNKNOWN') return true;
+  if (provider === 'agent-platform' && errorType === 'INVALID_API_KEY') {
+    return true;
+  }
+  return false;
 };
 
 export const generateContentWithModelFallback = async ({
@@ -205,21 +201,23 @@ export const generateContentWithModelFallback = async ({
   selectedModel,
   contents,
   config,
-  logLabel = 'Gemini request'
+  logLabel = 'Gemini request',
+  provider = 'gemini'
 }: {
   apiKey: string;
   selectedModel?: string;
   contents: any;
   config?: any;
   logLabel?: string;
+  provider?: AiProvider;
 }) => {
-  const ai = new GoogleGenAI({ apiKey });
-  const modelsToTry = getOrderedModels(selectedModel);
+  const ai = createGoogleAiClient(apiKey, provider);
+  const modelsToTry = getOrderedModels(selectedModel, provider);
   let lastError: any = null;
 
   for (const model of modelsToTry) {
     try {
-      console.log(`🤖 ${logLabel}: thử model ${model}`);
+      console.log(`🤖 ${logLabel} [${provider}]: thử model ${model}`);
       return await ai.models.generateContent({
         model,
         contents,
@@ -228,37 +226,37 @@ export const generateContentWithModelFallback = async ({
     } catch (error: any) {
       lastError = error;
       const errorType = parseApiError(error);
-      console.warn(`⚠️ ${logLabel}: model ${model} lỗi ${errorType}`, error?.message || error);
+      console.warn(`⚠️ ${logLabel} [${provider}]: model ${model} lỗi ${errorType}`, error?.message || error);
 
-      if (!shouldTryFallbackModel(errorType)) {
+      if (!shouldTryFallbackModel(errorType, provider)) {
         break;
       }
     }
   }
 
-  throw lastError || new Error('Tất cả model Gemini đều thất bại. Vui lòng thử lại sau.');
+  throw lastError || new Error(`Tất cả model ${provider === 'agent-platform' ? 'Agent Platform' : 'Gemini'} đều thất bại. Vui lòng thử lại sau.`);
 };
 
-export const sendMessageStream = async (message: string, onChunk: (text: string) => void) => {
-  // Sử dụng API key từ localStorage (đã được khởi tạo qua initializeGeminiChat)
+export const sendMessageStream = async (message: string, onChunk: (text: string) => void, provider?: AiProvider) => {
+  const activeProvider = provider || currentProvider || 'gemini';
   if (!currentApiKey) {
     throw new Error("Không có API Key. Vui lòng nhập API key trong phần Cài đặt.");
   }
 
   let lastError: any = null;
-  const modelsToTry = getOrderedModels();
+  const modelsToTry = getOrderedModels(undefined, activeProvider);
 
-  console.log(`🚀 Bắt đầu gửi tin nhắn. Sẽ thử ${modelsToTry.length} model theo thứ tự: ${modelsToTry.join(' → ')}`);
+  console.log(`🚀 Bắt đầu gửi tin nhắn (${activeProvider}). Sẽ thử ${modelsToTry.length} model theo thứ tự: ${modelsToTry.join(' → ')}`);
 
   // Thử lần lượt các model theo thứ tự fallback
   for (const model of modelsToTry) {
     let fullResponse = "";
 
     try {
-      console.log(`🤖 Đang thử model: ${model}`);
+      console.log(`🤖 Đang thử model: ${model} (${activeProvider})`);
 
-      // Tạo session với model hiện tại
-      const ai = new GoogleGenAI({ apiKey: currentApiKey });
+      // Tạo session với model hiện tại theo factory pattern
+      const ai = createGoogleAiClient(currentApiKey, activeProvider);
       chatSession = ai.chats.create({
         model: model,
         config: {
@@ -268,7 +266,7 @@ export const sendMessageStream = async (message: string, onChunk: (text: string)
           topP: 0.95,
           maxOutputTokens: 65536,
           thinkingConfig: { thinkingBudget: 2048 },
-          tools: [{ googleSearch: {} }]
+          tools: activeProvider === 'agent-platform' ? [] : [{ googleSearch: {} }]
         },
         history: history
       });
@@ -298,7 +296,7 @@ export const sendMessageStream = async (message: string, onChunk: (text: string)
         break;
       }
 
-      if (shouldTryFallbackModel(errorType)) {
+      if (shouldTryFallbackModel(errorType, activeProvider)) {
         console.log(`⏭️ Lỗi ${errorType}, thử model tiếp theo...`);
         continue;
       }
@@ -318,7 +316,8 @@ export const analyzeDocumentForSKKN = async (
   apiKey: string,
   documentContent: string,
   documentType: 'reference' | 'template',
-  selectedModel?: string
+  selectedModel?: string,
+  provider?: AiProvider
 ): Promise<string> => {
   // Giới hạn nội dung để tránh vượt token limit
   const truncatedContent = documentContent.substring(0, 20000);
@@ -387,7 +386,8 @@ Hãy phân tích và trả về kết quả theo format sau:
       apiKey,
       selectedModel,
       contents: prompt,
-      logLabel: 'Phân tích tài liệu SKKN'
+      logLabel: 'Phân tích tài liệu SKKN',
+      provider
     });
 
     return response.text || 'Không thể phân tích tài liệu. Vui lòng thử lại.';
@@ -409,7 +409,8 @@ interface SKKNSection {
 export const extractSKKNStructure = async (
   apiKey: string,
   templateContent: string,
-  selectedModel?: string
+  selectedModel?: string,
+  provider?: AiProvider
 ): Promise<SKKNSection[]> => {
   // Giới hạn nội dung để tránh vượt token limit
   const truncatedContent = templateContent.substring(0, 25000);
@@ -451,7 +452,8 @@ BẮT ĐẦU JSON NGAY:`;
       apiKey,
       selectedModel,
       contents: prompt,
-      logLabel: 'Trích xuất cấu trúc SKKN'
+      logLabel: 'Trích xuất cấu trúc SKKN',
+      provider
     });
 
     const responseText = response.text || '[]';
@@ -495,7 +497,8 @@ export const analyzeTitleSKKN = async (
   subject?: string,
   level?: string,
   selectedModel?: string,
-  teachingMethod?: string
+  teachingMethod?: string,
+  provider?: AiProvider
 ): Promise<TitleAnalysisResult> => {
   const prompt = `Bạn là chuyên gia phân tích tên đề tài Sáng kiến kinh nghiệm (SKKN) với 20 năm kinh nghiệm.
 
@@ -635,7 +638,8 @@ BẮT ĐẦU JSON NGAY:`;
       apiKey,
       selectedModel,
       contents: prompt,
-      logLabel: 'Phân tích tên đề tài'
+      logLabel: 'Phân tích tên đề tài',
+      provider
     });
 
     const responseText = response.text || '{}';
@@ -705,7 +709,8 @@ export interface EnhancedAnalysisResult {
 export const analyzeOldDocument = async (
   apiKey: string,
   content: string,
-  selectedModel?: string
+  selectedModel?: string,
+  provider?: AiProvider
 ): Promise<EnhancedAnalysisResult> => {
   try {
     // Truncate content if too long (keep first 20000 chars)
@@ -805,7 +810,8 @@ CHỈ TRẢ VỀ JSON THUẦN, KHÔNG GIẢI THÍCH, KHÔNG MARKDOWN CODE BLOCK.
       apiKey,
       selectedModel,
       contents: prompt,
-      logLabel: 'Thẩm định biện pháp cũ'
+      logLabel: 'Thẩm định biện pháp cũ',
+      provider
     });
 
     let jsonText = response.text || '';
@@ -892,7 +898,8 @@ export const brainstormTopicNames = async (
     otherRequirements: string;
     selectedMethods: string[];
   },
-  selectedModel?: string
+  selectedModel?: string,
+  provider?: AiProvider
 ): Promise<Array<{ title: string; rationale: string }>> => {
   const prompt = `Bạn là chuyên gia thiết kế Sáng kiến kinh nghiệm (SKKN) và Biện pháp giáo viên giỏi xuất sắc nhất Việt Nam.
 Hãy đề xuất 5 tên đề tài Biện pháp/SKKN siêu sáng tạo, độc đáo và đúng chuẩn cấu trúc khoa học dựa trên các thông tin sau:
@@ -927,7 +934,8 @@ CHỈ OUTPUT JSON KHÔNG DIỄN GIẢI THÊM:`;
       apiKey,
       selectedModel,
       contents: prompt,
-      logLabel: 'Brainstorm tên đề tài'
+      logLabel: 'Brainstorm tên đề tài',
+      provider
     });
 
     const responseText = response.text || '[]';
@@ -968,7 +976,8 @@ export const suggestMethods = async (
     targetCompetence: string;
     otherRequirements: string;
   },
-  selectedModel?: string
+  selectedModel?: string,
+  provider?: AiProvider
 ): Promise<Array<{ method: string; reason: string }>> => {
   const methodList = TEACHING_METHODS.map((m, i) => `${i + 1}. ${m}`).join('\n');
 
@@ -1013,7 +1022,8 @@ BẮT ĐẦU JSON NGAY:`;
       apiKey,
       selectedModel,
       contents: prompt,
-      logLabel: 'Gợi ý phương pháp'
+      logLabel: 'Gợi ý phương pháp',
+      provider
     });
 
     const responseText = response.text || '[]';
