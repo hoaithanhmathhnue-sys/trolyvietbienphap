@@ -1,22 +1,28 @@
 import { KNOWLEDGE_BASE } from './data/knowledgeBase';
 import { WRITING_RULES } from './data/writingRules';
 
-export const MODEL_NAME = 'gemini-3.6-flash';
+export const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
+export const DEFAULT_AGENT_PLATFORM_MODEL = 'gemini-2.5-flash';
+export const MODEL_NAME = DEFAULT_GEMINI_MODEL;
 
-// Thứ tự fallback cho Google Gemini Provider
+export const GEMINI_MODEL_STORAGE_KEY = 'gemini_model_id_v38';
+export const LEGACY_GEMINI_MODEL_STORAGE_KEY = 'GEMINI_MODEL_ID';
+export const LEGACY_SELECTED_MODEL_STORAGE_KEY = 'selected_model';
+
+// Thứ tự fallback chuẩn cho Google Gemini Provider (cập nhật 10/2026)
 export const FALLBACK_MODELS = [
+   'gemini-3.8-flash',
+   'gemini-3.7-flash',
+   'gemini-3.5-flash-lite',
    'gemini-3.6-flash',
    'gemini-3.5-flash',
-   'gemini-3.5-flash-lite',
    'gemini-3.1-flash-lite',
    'gemini-2.5-flash',
-   'gemini-3-flash-preview',
-   'gemini-2.5-flash-lite',
-   'gemini-3-pro-preview',
-   'gemini-2.5-pro'
 ];
 
-// Thứ tự fallback cho Agent Platform API Provider
+export const FALLBACK_GEMINI_MODELS = FALLBACK_MODELS;
+
+// Danh sách model hiển thị cho Agent Platform API Provider
 export const AGENT_PLATFORM_MODELS = [
    'gemini-2.5-flash',
    'gemini-2.5-flash-lite',
@@ -24,32 +30,38 @@ export const AGENT_PLATFORM_MODELS = [
    'gemini-3.1-pro-preview'
 ];
 
+// Thứ tự fallback an toàn cho Agent Platform API Provider
+export const AGENT_PLATFORM_FALLBACK_MODELS = [
+   'gemini-2.5-flash',
+   'gemini-2.5-flash-lite',
+];
+
 // Thông tin hiển thị cho các model AI
 export const MODEL_INFO: Record<string, { name: string; description: string; isDefault?: boolean }> = {
-   'gemini-3.6-flash': {
-      name: 'Gemini 3.6 Flash',
-      description: 'Model mới nhất, siêu nhanh & tối ưu suy luận',
+   'gemini-3.8-flash': {
+      name: 'Gemini 3.8 Flash',
+      description: 'Mặc định khuyên dùng (GA 09/2026) — thông minh, tốc độ cao & chịu tải tốt nhất',
       isDefault: true
    },
-   'gemini-3.5-flash': {
-      name: 'Gemini 3.5 Flash',
-      description: 'Tốc độ cao, xử lý đa tác vụ vượt trội'
+   'gemini-3.7-flash': {
+      name: 'Gemini 3.7 Flash',
+      description: 'Bản ổn định tốc độ cao (GA 08/2026), thực thi đa bước tin cậy'
    },
    'gemini-3.5-flash-lite': {
       name: 'Gemini 3.5 Flash Lite',
-      description: 'Phiên bản gọn nhẹ, phản hồi tức thì'
+      description: 'Siêu nhanh, dung lượng chịu tải cực lớn & chi phí thấp (GA 07/2026)'
+   },
+   'gemini-3.6-flash': {
+      name: 'Gemini 3.6 Flash',
+      description: 'Bản ổn định thế hệ 3.6 (GA 07/2026), cân bằng đa phương thức'
+   },
+   'gemini-3.5-flash': {
+      name: 'Gemini 3.5 Flash',
+      description: 'Tốc độ cao, ổn định thế hệ 3.5'
    },
    'gemini-3.1-flash-lite': {
       name: 'Gemini 3.1 Flash Lite',
-      description: 'Ổn định, tiết kiệm tài nguyên'
-   },
-   'gemini-3-flash-preview': {
-      name: 'Gemini 3 Flash Preview',
-      description: 'Nhanh, hiệu quả cho tác vụ thông thường'
-   },
-   'gemini-3-pro-preview': {
-      name: 'Gemini 3 Pro Preview',
-      description: 'Mạnh mẽ, phù hợp tác vụ phức tạp'
+      description: 'Ổn định, tương thích ngược & tiết kiệm tài nguyên'
    },
    'gemini-3.1-pro-preview': {
       name: 'Gemini 3.1 Pro Preview',
@@ -57,7 +69,7 @@ export const MODEL_INFO: Record<string, { name: string; description: string; isD
    },
    'gemini-2.5-flash': {
       name: 'Gemini 2.5 Flash',
-      description: 'Ổn định, tốc độ cao'
+      description: 'Ổn định, tốc độ cao — mặc định cho Agent Platform API'
    },
    'gemini-2.5-flash-lite': {
       name: 'Gemini 2.5 Flash Lite',
@@ -65,7 +77,7 @@ export const MODEL_INFO: Record<string, { name: string; description: string; isD
    },
    'gemini-2.5-pro': {
       name: 'Gemini 2.5 Pro',
-      description: 'Ổn định cho tác vụ cần suy luận sâu'
+      description: 'Ổn định cho tác vụ cần suy luận sâu trên Agent Platform'
    }
 };
 

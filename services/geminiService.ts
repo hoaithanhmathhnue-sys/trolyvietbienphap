@@ -1,10 +1,31 @@
-
-import { GoogleGenAI, Chat } from "@google/genai";
-import { SYSTEM_INSTRUCTION, FALLBACK_MODELS, AGENT_PLATFORM_MODELS } from "../constants";
+import { GoogleGenAI, Chat, ThinkingLevel } from "@google/genai";
+import {
+  SYSTEM_INSTRUCTION,
+  FALLBACK_MODELS,
+  AGENT_PLATFORM_MODELS,
+  AGENT_PLATFORM_FALLBACK_MODELS,
+  DEFAULT_GEMINI_MODEL,
+  DEFAULT_AGENT_PLATFORM_MODEL
+} from "../constants";
 import { TEACHING_METHODS, METHOD_SUGGESTION_RULES } from "../data/teachingMethods";
 import { TitleAnalysisResult, AiProvider } from '../types';
 
-// Hàm phân tích và trả về thông báo lỗi thân thiện
+export { ThinkingLevel };
+
+// Callback hiển thị thông báo chuyển model tạm thời (tự ẩn khi hoàn tất)
+let fallbackNoticeCallback: ((notice: string | null) => void) | null = null;
+
+export const setOnFallbackNotice = (callback: ((notice: string | null) => void) | null) => {
+  fallbackNoticeCallback = callback;
+};
+
+export const notifyFallback = (notice: string | null) => {
+  if (fallbackNoticeCallback) {
+    fallbackNoticeCallback(notice);
+  }
+};
+
+// Hàm phân tích và trả về phân loại lỗi chuẩn theo API.md
 export const parseApiError = (error: any): string => {
   const errorMessage = error?.message || error?.toString() || '';
   let errorString = '';
@@ -16,41 +37,87 @@ export const parseApiError = (error: any): string => {
   const combinedError = `${errorMessage} ${errorString}`;
   const lowerError = combinedError.toLowerCase();
 
-  // Kiểm tra lỗi quota exceeded (429)
-  if (errorString.includes('429') ||
-    lowerError.includes('quota') ||
-    errorMessage.includes('RESOURCE_EXHAUSTED') ||
+  // 1. Lỗi quota / rate limit (429)
+  if (
+    lowerError.includes('429') ||
     lowerError.includes('resource_exhausted') ||
-    lowerError.includes('exceeded')) {
+    lowerError.includes('quota')
+  ) {
     return 'QUOTA_EXCEEDED';
   }
 
-  // Kiểm tra lỗi rate limit
   if (lowerError.includes('rate limit') || lowerError.includes('too many requests')) {
     return 'RATE_LIMIT';
   }
 
-  // Kiểm tra lỗi model quá tải tạm thời (không phải lỗi API key)
-  if (errorString.includes('503') ||
-    errorMessage.includes('UNAVAILABLE') ||
+  // 2. Lỗi model quá tải tạm thời (503 UNAVAILABLE) - tuyệt đối không đổ lỗi cho API key
+  if (
+    lowerError.includes('503') ||
+    lowerError.includes('unavailable') ||
     lowerError.includes('high demand') ||
     lowerError.includes('overloaded') ||
-    lowerError.includes('try again later')) {
+    lowerError.includes('try again later') ||
+    lowerError.includes('temporarily unavailable')
+  ) {
     return 'MODEL_OVERLOADED';
   }
 
-  // Kiểm tra lỗi API key không hợp lệ
-  if (errorMessage.includes('API_KEY_INVALID') ||
-    errorMessage.includes('401') ||
+  // 3. Lỗi máy chủ hoặc mạng tạm thời (500, 502, 504, fetch failed) - được phép fallback
+  if (
+    lowerError.includes('500') ||
+    lowerError.includes('502') ||
+    lowerError.includes('504') ||
+    lowerError.includes('deadline_exceeded') ||
+    lowerError.includes('deadline exceeded') ||
+    lowerError.includes('bad gateway') ||
+    lowerError.includes('fetch failed') ||
+    lowerError.includes('failed to fetch') ||
+    lowerError.includes('networkerror') ||
+    lowerError.includes('econnreset') ||
+    lowerError.includes('etimedout')
+  ) {
+    return 'TRANSIENT_SERVER_ERROR';
+  }
+
+  // 4. Lỗi 404 model/endpoint không còn khả dụng - được phép fallback
+  if (
+    lowerError.includes('404') ||
+    lowerError.includes('not_found') ||
+    lowerError.includes('is not found')
+  ) {
+    return 'MODEL_NOT_FOUND';
+  }
+
+  // 5. Lỗi 403 PERMISSION_DENIED - tách riêng khỏi 401 để xử lý chuẩn cho Agent Platform
+  if (
+    lowerError.includes('403') ||
+    lowerError.includes('permission_denied') ||
+    lowerError.includes('caller does not have permission')
+  ) {
+    return 'PERMISSION_DENIED';
+  }
+
+  // 6. Lỗi 401 API key không hợp lệ / hết hạn
+  if (
+    lowerError.includes('api_key_invalid') ||
+    lowerError.includes('401') ||
     lowerError.includes('unauthorized') ||
-    errorMessage.includes('PERMISSION_DENIED')) {
+    lowerError.includes('invalid api key')
+  ) {
     return 'INVALID_API_KEY';
   }
 
-  // Kiểm tra lỗi kết nối
-  if (lowerError.includes('network') ||
+  // 7. Lỗi 400 INVALID_ARGUMENT (dừng ngay, không fallback)
+  if (lowerError.includes('400') || lowerError.includes('invalid_argument')) {
+    return 'INVALID_ARGUMENT';
+  }
+
+  // 8. Lỗi kết nối mạng chung
+  if (
+    lowerError.includes('network') ||
     lowerError.includes('fetch') ||
-    lowerError.includes('connection')) {
+    lowerError.includes('connection')
+  ) {
     return 'NETWORK_ERROR';
   }
 
@@ -66,7 +133,7 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
       return {
         type: 'quota',
         title: '⚠️ Đã vượt quá giới hạn sử dụng',
-        message: 'Bạn đã sử dụng hết lượt gọi API miễn phí trong ngày. Đây là giới hạn từ phía Google, không phải lỗi của ứng dụng.',
+        message: 'Đã hết quota hoặc vượt giới hạn tốc độ API. Vui lòng đợi rồi thử lại.',
         suggestions: [
           '⏰ Đợi khoảng 1-2 phút rồi thử lại',
           '🔑 Sử dụng API Key khác nếu có',
@@ -79,7 +146,7 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
       return {
         type: 'rate_limit',
         title: '🚦 Đang gửi yêu cầu quá nhanh',
-        message: 'Bạn đang gửi quá nhiều yêu cầu trong thời gian ngắn. Hãy chờ một chút rồi thử lại.',
+        message: 'Đã hết quota hoặc vượt giới hạn tốc độ API. Vui lòng đợi rồi thử lại.',
         suggestions: [
           '⏳ Đợi 30-60 giây rồi thử lại',
           '🔄 Không bấm nút nhiều lần liên tiếp'
@@ -87,14 +154,27 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
       };
 
     case 'MODEL_OVERLOADED':
+    case 'TRANSIENT_SERVER_ERROR':
       return {
         type: 'model_overloaded',
-        title: '⏳ Model Gemini đang quá tải',
-        message: 'Model Google Gemini đang quá tải tạm thời. API Key của bạn vẫn hợp lệ; hệ thống sẽ thử model dự phòng nếu có thể.',
+        title: '⏳ Model Gemini đang quá tải tạm thời',
+        message: 'Máy chủ Google AI đang có lưu lượng truy cập cao. API Key của bạn vẫn hợp lệ; vui lòng thử lại sau giây lát hoặc chọn model nhẹ hơn.',
         suggestions: [
-          '⏰ Đợi một lát rồi thử lại',
-          '⚡ Chọn model nhẹ hơn như Gemini Flash hoặc Flash Lite',
-          '🔄 Thử tạo lại nội dung sau vài phút'
+          '⏰ Đợi vài giây rồi bấm Thử lại',
+          '⚡ Chọn model Gemini 3.8 Flash hoặc Gemini 3.5 Flash Lite trong Cài đặt',
+          '🔄 Hệ thống tự động thử qua chuỗi model dự phòng khi gọi lại'
+        ]
+      };
+
+    case 'PERMISSION_DENIED':
+      return {
+        type: 'permission',
+        title: '🔒 Chưa có quyền truy cập dịch vụ / model',
+        message: 'Google đã nhận khóa API nhưng dự án hoặc khóa của bạn chưa được cấp quyền gọi API hoặc model đang chọn.',
+        suggestions: [
+          '⚙️ Kiểm tra đã chọn đúng nhà cung cấp (Gemini API hoặc Agent Platform API)',
+          '💳 Kiểm tra quyền bật API, Billing và API restrictions trên Google Cloud / AI Studio',
+          '🔄 Thử chọn model khác tương thích như Gemini 3.8 Flash (Gemini) hoặc Gemini 2.5 Flash (Agent Platform)'
         ]
       };
 
@@ -102,10 +182,10 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
       return {
         type: 'auth',
         title: '🔐 API Key không hợp lệ',
-        message: 'API Key bạn đang sử dụng không đúng hoặc đã hết hạn.',
+        message: 'API Key không hợp lệ hoặc đã hết hạn. Vui lòng kiểm tra lại trong Cài đặt.',
         suggestions: [
-          '🔑 Kiểm tra lại API Key đã nhập',
-          '🆕 Tạo API Key mới tại Google AI Studio',
+          '🔑 Kiểm tra lại API Key đã nhập (bắt đầu bằng AIzaSy... hoặc AQ...)',
+          '🆕 Tạo API Key mới tại Google AI Studio hoặc Agent Platform',
           '📋 Đảm bảo copy đầy đủ API Key (không thừa/thiếu ký tự)'
         ]
       };
@@ -129,7 +209,7 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
         message: error?.message || 'Có lỗi không xác định xảy ra khi gọi AI.',
         suggestions: [
           '🔄 Thử làm mới trang và thực hiện lại',
-          '🔑 Kiểm tra API Key',
+          '🔑 Kiểm tra API Key và nhà cung cấp trong Cài đặt',
           '⏰ Đợi một lúc rồi thử lại'
         ]
       };
@@ -139,9 +219,50 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
 // Factory function tập trung khởi tạo SDK GoogleGenAI theo provider
 export const createGoogleAiClient = (apiKey: string, provider: AiProvider = 'gemini'): GoogleGenAI => {
   if (provider === 'agent-platform') {
+    // Cờ kỹ thuật của Google Gen AI SDK để định tuyến tới aiplatform.googleapis.com trong chế độ API key
     return new GoogleGenAI({ vertexai: true, apiKey });
   }
   return new GoogleGenAI({ apiKey });
+};
+
+/**
+ * Chuẩn hóa cấu hình request theo đúng thế hệ model (Gemini 3.x vs 2.5) và provider.
+ * - Không gửi temperature, topP, topK cho mọi model gemini-3*
+ * - Mặc định ThinkingLevel.MEDIUM cho bước sinh chính, ThinkingLevel.LOW cho bước phụ trợ
+ * - Không gửi ThinkingLevel.MINIMAL cho gemini-3.8-flash hoặc gemini-3.7-flash
+ */
+export const createGeminiConfig = ({
+  provider = 'gemini',
+  model,
+  systemInstruction,
+  responseMimeType,
+  maxOutputTokens,
+  thinkingLevel = ThinkingLevel.MEDIUM,
+  tools,
+}: {
+  provider?: AiProvider;
+  model: string;
+  systemInstruction?: string;
+  responseMimeType?: string;
+  maxOutputTokens?: number;
+  thinkingLevel?: ThinkingLevel;
+  tools?: any[];
+}) => {
+  const isGemini3 = model.startsWith('gemini-3');
+  const safeThinkingLevel =
+    thinkingLevel === ThinkingLevel.MINIMAL ? ThinkingLevel.LOW : thinkingLevel;
+
+  return {
+    ...(systemInstruction ? { systemInstruction } : {}),
+    ...(responseMimeType ? { responseMimeType } : {}),
+    ...(maxOutputTokens ? { maxOutputTokens } : {}),
+    // Chỉ truyền temperature cho dòng 2.5 trở xuống
+    ...(!isGemini3 ? { temperature: 0.3 } : {}),
+    ...(provider === 'gemini' && isGemini3
+      ? { thinkingConfig: { thinkingLevel: safeThinkingLevel } }
+      : {}),
+    ...(tools && tools.length > 0 ? { tools } : {}),
+  };
 };
 
 let chatSession: Chat | null = null;
@@ -153,8 +274,16 @@ let history: any[] = []; // Store history to restore when switching models
 export const initializeGeminiChat = (apiKey: string, selectedModel?: string, provider: AiProvider = 'gemini') => {
   currentApiKey = apiKey;
   currentProvider = provider;
-  const defaultModel = provider === 'agent-platform' ? AGENT_PLATFORM_MODELS[0] : FALLBACK_MODELS[0];
-  currentSelectedModel = selectedModel || defaultModel;
+  const defaultModel = provider === 'agent-platform' ? DEFAULT_AGENT_PLATFORM_MODEL : DEFAULT_GEMINI_MODEL;
+  const trimmedSelected = selectedModel?.trim();
+  if (provider === 'agent-platform') {
+    currentSelectedModel =
+      trimmedSelected && AGENT_PLATFORM_MODELS.includes(trimmedSelected)
+        ? trimmedSelected
+        : defaultModel;
+  } else {
+    currentSelectedModel = trimmedSelected || defaultModel;
+  }
   chatSession = null;
   history = []; // Reset history on new initialization
 };
@@ -169,28 +298,35 @@ export const setChatHistory = (savedHistory: any[]) => {
   history = savedHistory || [];
 };
 
-// Sắp xếp models với model được chọn đầu tiên
-const getOrderedModels = (selectedModel?: string | null, provider: AiProvider = 'gemini'): string[] => {
-  const preferredModel = selectedModel || currentSelectedModel;
-  const fallbackList = provider === 'agent-platform' ? AGENT_PLATFORM_MODELS : FALLBACK_MODELS;
-
-  if (!preferredModel || !fallbackList.includes(preferredModel as any)) {
-    return [...fallbackList];
+// Sắp xếp models: model người dùng chọn luôn thử trước, sau đó nối chuỗi fallback không trùng lặp
+export const getOrderedModels = (selectedModel?: string | null, provider: AiProvider = 'gemini'): string[] => {
+  const rawPreferred = selectedModel?.trim() || currentSelectedModel?.trim();
+  if (provider === 'agent-platform') {
+    const validPreferred =
+      rawPreferred && AGENT_PLATFORM_MODELS.includes(rawPreferred)
+        ? rawPreferred
+        : DEFAULT_AGENT_PLATFORM_MODEL;
+    return [validPreferred, ...AGENT_PLATFORM_FALLBACK_MODELS].filter(
+      (model, index, models) => models.indexOf(model) === index
+    );
   }
 
-  // Đưa model được chọn lên đầu, giữ nguyên thứ tự các model còn lại
-  const orderedModels = [preferredModel];
-  for (const model of fallbackList) {
-    if (model !== preferredModel) {
-      orderedModels.push(model);
-    }
-  }
-  return orderedModels;
+  const preferred = rawPreferred || DEFAULT_GEMINI_MODEL;
+  return [preferred, ...FALLBACK_MODELS].filter(
+    (model, index, models) => models.indexOf(model) === index
+  );
 };
 
-const shouldTryFallbackModel = (errorType: string, provider: AiProvider = 'gemini'): boolean => {
-  if (errorType === 'MODEL_OVERLOADED' || errorType === 'UNKNOWN') return true;
-  if (provider === 'agent-platform' && errorType === 'INVALID_API_KEY') {
+export const shouldTryFallbackModel = (errorType: string, provider: AiProvider = 'gemini'): boolean => {
+  if (
+    errorType === 'MODEL_OVERLOADED' ||
+    errorType === 'TRANSIENT_SERVER_ERROR' ||
+    errorType === 'NETWORK_ERROR' ||
+    errorType === 'MODEL_NOT_FOUND'
+  ) {
+    return true;
+  }
+  if (provider === 'agent-platform' && errorType === 'PERMISSION_DENIED') {
     return true;
   }
   return false;
@@ -201,6 +337,10 @@ export const generateContentWithModelFallback = async ({
   selectedModel,
   contents,
   config,
+  thinkingLevel = ThinkingLevel.LOW,
+  maxOutputTokens,
+  responseMimeType,
+  systemInstruction,
   logLabel = 'Gemini request',
   provider = 'gemini'
 }: {
@@ -208,39 +348,68 @@ export const generateContentWithModelFallback = async ({
   selectedModel?: string;
   contents: any;
   config?: any;
+  thinkingLevel?: ThinkingLevel;
+  maxOutputTokens?: number;
+  responseMimeType?: string;
+  systemInstruction?: string;
   logLabel?: string;
   provider?: AiProvider;
 }) => {
-  const ai = createGoogleAiClient(apiKey, provider);
-  const modelsToTry = getOrderedModels(selectedModel, provider);
+  const activeProvider = provider || currentProvider || 'gemini';
+  const ai = createGoogleAiClient(apiKey, activeProvider);
+  const modelsToTry = getOrderedModels(selectedModel, activeProvider);
   let lastError: any = null;
 
-  for (const model of modelsToTry) {
+  for (let i = 0; i < modelsToTry.length; i++) {
+    const model = modelsToTry[i];
     try {
-      console.log(`🤖 ${logLabel} [${provider}]: thử model ${model}`);
-      return await ai.models.generateContent({
+      console.log(`🤖 ${logLabel} [${activeProvider}]: thử model ${model}`);
+      const mergedConfig = createGeminiConfig({
+        provider: activeProvider,
+        model,
+        systemInstruction: systemInstruction ?? config?.systemInstruction,
+        responseMimeType: responseMimeType ?? config?.responseMimeType,
+        maxOutputTokens: maxOutputTokens ?? config?.maxOutputTokens,
+        thinkingLevel: config?.thinkingConfig?.thinkingLevel ?? thinkingLevel,
+        tools: config?.tools,
+      });
+
+      const response = await ai.models.generateContent({
         model,
         contents,
-        ...(config ? { config } : {})
+        ...(Object.keys(mergedConfig).length > 0 ? { config: mergedConfig } : {})
       });
+      notifyFallback(null);
+      return response;
     } catch (error: any) {
       lastError = error;
       const errorType = parseApiError(error);
-      console.warn(`⚠️ ${logLabel} [${provider}]: model ${model} lỗi ${errorType}`, error?.message || error);
+      console.warn(`⚠️ ${logLabel} [${activeProvider}]: model ${model} lỗi ${errorType}`, error?.message || error);
 
-      if (!shouldTryFallbackModel(errorType, provider)) {
+      if (!shouldTryFallbackModel(errorType, activeProvider)) {
         break;
+      }
+
+      const nextModel = modelsToTry[i + 1];
+      if (nextModel) {
+        notifyFallback(`Đang tự động chuyển từ ${model} sang ${nextModel} (do ${model} đang bận)...`);
       }
     }
   }
 
-  throw lastError || new Error(`Tất cả model ${provider === 'agent-platform' ? 'Agent Platform' : 'Gemini'} đều thất bại. Vui lòng thử lại sau.`);
+  notifyFallback(null);
+  throw lastError || new Error(`Tất cả model ${activeProvider === 'agent-platform' ? 'Agent Platform' : 'Gemini'} đều thất bại. Vui lòng thử lại sau.`);
 };
 
-export const sendMessageStream = async (message: string, onChunk: (text: string) => void, provider?: AiProvider) => {
+export const sendMessageStream = async (
+  message: string,
+  onChunk: (text: string) => void,
+  provider?: AiProvider,
+  thinkingLevel: ThinkingLevel = ThinkingLevel.MEDIUM
+) => {
   const activeProvider = provider || currentProvider || 'gemini';
   if (!currentApiKey) {
-    throw new Error("Không có API Key. Vui lòng nhập API key trong phần Cài đặt.");
+    throw new Error("Vui lòng cấu hình API Key trước khi sử dụng tính năng này.");
   }
 
   let lastError: any = null;
@@ -249,26 +418,28 @@ export const sendMessageStream = async (message: string, onChunk: (text: string)
   console.log(`🚀 Bắt đầu gửi tin nhắn (${activeProvider}). Sẽ thử ${modelsToTry.length} model theo thứ tự: ${modelsToTry.join(' → ')}`);
 
   // Thử lần lượt các model theo thứ tự fallback
-  for (const model of modelsToTry) {
+  for (let i = 0; i < modelsToTry.length; i++) {
+    const model = modelsToTry[i];
     let fullResponse = "";
 
     try {
       console.log(`🤖 Đang thử model: ${model} (${activeProvider})`);
 
-      // Tạo session với model hiện tại theo factory pattern
+      // Tạo session với model hiện tại theo factory pattern & config chuẩn Gemini 3.x / 2.5
       const ai = createGoogleAiClient(currentApiKey, activeProvider);
+      const chatConfig = createGeminiConfig({
+        provider: activeProvider,
+        model,
+        systemInstruction: SYSTEM_INSTRUCTION,
+        maxOutputTokens: 32768,
+        thinkingLevel,
+        tools: activeProvider === 'agent-platform' ? [] : [{ googleSearch: {} }]
+      });
+
       chatSession = ai.chats.create({
-        model: model,
-        config: {
-          systemInstruction: SYSTEM_INSTRUCTION,
-          temperature: 0.7,
-          topK: 64,
-          topP: 0.95,
-          maxOutputTokens: 65536,
-          thinkingConfig: { thinkingBudget: 2048 },
-          tools: activeProvider === 'agent-platform' ? [] : [{ googleSearch: {} }]
-        },
-        history: history
+        model,
+        config: chatConfig,
+        history
       });
 
       const responseStream = await chatSession.sendMessageStream({ message });
@@ -280,9 +451,10 @@ export const sendMessageStream = async (message: string, onChunk: (text: string)
         }
       }
 
-      // Thành công - cập nhật history và return
+      // Thành công - cập nhật history, xóa thông báo fallback và return
       history.push({ role: 'user', parts: [{ text: message }] });
       history.push({ role: 'model', parts: [{ text: fullResponse }] });
+      notifyFallback(null);
       console.log(`✅ Thành công với model ${model}`);
       return;
 
@@ -297,6 +469,10 @@ export const sendMessageStream = async (message: string, onChunk: (text: string)
       }
 
       if (shouldTryFallbackModel(errorType, activeProvider)) {
+        const nextModel = modelsToTry[i + 1];
+        if (nextModel) {
+          notifyFallback(`Đang tự động chuyển từ ${model} sang ${nextModel} (do ${model} đang bận)...`);
+        }
         console.log(`⏭️ Lỗi ${errorType}, thử model tiếp theo...`);
         continue;
       }
@@ -306,7 +482,7 @@ export const sendMessageStream = async (message: string, onChunk: (text: string)
     }
   }
 
-  // Tất cả models đều thất bại
+  notifyFallback(null);
   console.error(`💀 Tất cả ${modelsToTry.length} models đều thất bại.`);
   throw lastError || new Error("Tất cả models đều thất bại. Vui lòng kiểm tra API key hoặc thử lại sau.");
 };
@@ -387,7 +563,9 @@ Hãy phân tích và trả về kết quả theo format sau:
       selectedModel,
       contents: prompt,
       logLabel: 'Phân tích tài liệu SKKN',
-      provider
+      provider,
+      thinkingLevel: ThinkingLevel.LOW,
+      config: { maxOutputTokens: 8192 }
     });
 
     return response.text || 'Không thể phân tích tài liệu. Vui lòng thử lại.';
@@ -453,7 +631,9 @@ BẮT ĐẦU JSON NGAY:`;
       selectedModel,
       contents: prompt,
       logLabel: 'Trích xuất cấu trúc SKKN',
-      provider
+      provider,
+      thinkingLevel: ThinkingLevel.LOW,
+      config: { maxOutputTokens: 8192, responseMimeType: 'application/json' }
     });
 
     const responseText = response.text || '[]';
@@ -639,7 +819,9 @@ BẮT ĐẦU JSON NGAY:`;
       selectedModel,
       contents: prompt,
       logLabel: 'Phân tích tên đề tài',
-      provider
+      provider,
+      thinkingLevel: ThinkingLevel.LOW,
+      config: { maxOutputTokens: 8192, responseMimeType: 'application/json' }
     });
 
     const responseText = response.text || '{}';
@@ -811,7 +993,9 @@ CHỈ TRẢ VỀ JSON THUẦN, KHÔNG GIẢI THÍCH, KHÔNG MARKDOWN CODE BLOCK.
       selectedModel,
       contents: prompt,
       logLabel: 'Thẩm định biện pháp cũ',
-      provider
+      provider,
+      thinkingLevel: ThinkingLevel.LOW,
+      config: { maxOutputTokens: 8192, responseMimeType: 'application/json' }
     });
 
     let jsonText = response.text || '';
@@ -935,7 +1119,9 @@ CHỈ OUTPUT JSON KHÔNG DIỄN GIẢI THÊM:`;
       selectedModel,
       contents: prompt,
       logLabel: 'Brainstorm tên đề tài',
-      provider
+      provider,
+      thinkingLevel: ThinkingLevel.LOW,
+      config: { maxOutputTokens: 8192, responseMimeType: 'application/json' }
     });
 
     const responseText = response.text || '[]';
@@ -1023,7 +1209,9 @@ BẮT ĐẦU JSON NGAY:`;
       selectedModel,
       contents: prompt,
       logLabel: 'Gợi ý phương pháp',
-      provider
+      provider,
+      thinkingLevel: ThinkingLevel.LOW,
+      config: { maxOutputTokens: 8192, responseMimeType: 'application/json' }
     });
 
     const responseText = response.text || '[]';

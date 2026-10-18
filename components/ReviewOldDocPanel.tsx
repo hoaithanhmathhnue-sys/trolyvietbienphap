@@ -9,6 +9,7 @@ import { exportReviewToDocx, exportReviewToPdf } from '../services/reviewExportS
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js`;
 
 import { AiProvider } from '../types';
+import { DEFAULT_GEMINI_MODEL, DEFAULT_AGENT_PLATFORM_MODEL } from '../constants';
 
 interface ReviewOldDocPanelProps {
   onHealDoc: (originalContent: string, analysisResult: any) => void;
@@ -256,7 +257,8 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
     setImproveProgress(0);
     setImproveMessage('Bắt đầu xử lý...');
     try {
-      const blob = await processDocxFile(file, apiKey, selectedModel || 'gemini-2.5-flash', (percent, msg) => {
+      const defaultModel = provider === 'agent-platform' ? DEFAULT_AGENT_PLATFORM_MODEL : DEFAULT_GEMINI_MODEL;
+      const blob = await processDocxFile(file, apiKey, selectedModel || defaultModel, (percent, msg) => {
         setImproveProgress(percent);
         setImproveMessage(msg);
       }, analysisResult || undefined, provider);

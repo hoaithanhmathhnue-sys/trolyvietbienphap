@@ -1,4 +1,5 @@
 import JSZip from 'jszip';
+import { ThinkingLevel } from '@google/genai';
 import { SYSTEM_INSTRUCTION } from '../constants';
 import { generateContentWithModelFallback } from './geminiService';
 import { AiProvider } from '../types';
@@ -49,9 +50,11 @@ ${JSON.stringify(items, null, 2)}
         selectedModel,
         provider,
         contents: prompt,
+        thinkingLevel: ThinkingLevel.MEDIUM,
         config: {
-            temperature: 0.7,
-            systemInstruction: SYSTEM_INSTRUCTION
+            systemInstruction: SYSTEM_INSTRUCTION,
+            responseMimeType: 'application/json',
+            maxOutputTokens: 16384
         },
         logLabel: 'Rewrite DOCX batch'
     });

@@ -259,7 +259,12 @@ class ApiKeyManager {
             return { success: false, hasMoreKeys: false, message: 'Không tìm thấy key' };
         }
 
-        if (errorType === 'MODEL_OVERLOADED') {
+        if (
+            errorType === 'MODEL_OVERLOADED' ||
+            errorType === 'TRANSIENT_SERVER_ERROR' ||
+            errorType === 'NETWORK_ERROR' ||
+            errorType === 'MODEL_NOT_FOUND'
+        ) {
             keyInfo.lastError = errorType;
             this.saveToStorage();
             return {
@@ -281,10 +286,13 @@ class ApiKeyManager {
             // Invalid key thì đánh dấu error ngay (không cooldown, cần xóa hoặc sửa key)
             keyInfo.status = 'error';
             console.log(`❌ Key ${this.maskKey(key)} không hợp lệ, đã đánh dấu lỗi`);
-        } else if (keyInfo.errorCount >= MAX_ERROR_COUNT) {
-            // Các lỗi khác: đưa vào cooldown sau MAX_ERROR_COUNT lần
-            keyInfo.status = 'cooldown';
-            keyInfo.cooldownUntil = Date.now() + COOLDOWN_DURATION;
+        } else {
+            this.saveToStorage();
+            return {
+                success: false,
+                hasMoreKeys: this.hasAvailableKeys(),
+                message: 'API key vẫn được giữ hoạt động.'
+            };
         }
 
         this.saveToStorage();

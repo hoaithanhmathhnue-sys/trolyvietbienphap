@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { UserInfo, SKKNTemplate, SKKNSection, TitleAnalysisResult } from '../types';
+import { UserInfo, SKKNTemplate, SKKNSection, TitleAnalysisResult, AiProvider } from '../types';
 import { Button } from './Button';
 import { InputWithHistory, TextareaWithHistory } from './InputWithHistory';
 import { saveFormToHistory } from '../services/inputHistory';
@@ -12,8 +12,6 @@ import { BrainstormTopicModal } from './BrainstormTopicModal';
 import { BookOpen, School, GraduationCap, PenTool, MapPin, Calendar, Users, Cpu, Target, Monitor, FileUp, Sparkles, ClipboardPaste, Loader2, FileText, Search, X, CheckCircle, List, Save, ChevronDown } from 'lucide-react';
 import * as mammoth from 'mammoth';
 import * as pdfjsLib from 'pdfjs-dist';
-
-import { UserInfo, SKKNTemplate, SKKNSection, TitleAnalysisResult, AiProvider } from '../types';
 
 // Define worker source for PDF.js
 // Using a CDN to avoid complex build configuration for web workers in standard Vite setups

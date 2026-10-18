@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from './Button';
 import { Key, X, Zap, Cpu, Sparkles, ExternalLink, Server } from 'lucide-react';
-import { FALLBACK_MODELS, AGENT_PLATFORM_MODELS, MODEL_INFO } from '../constants';
+import {
+    FALLBACK_MODELS,
+    AGENT_PLATFORM_MODELS,
+    MODEL_INFO,
+    GEMINI_MODEL_STORAGE_KEY,
+    LEGACY_GEMINI_MODEL_STORAGE_KEY,
+    LEGACY_SELECTED_MODEL_STORAGE_KEY
+} from '../constants';
 import { isValidGoogleAiApiKey, maskGoogleAiApiKey, parseGoogleAiApiKeys } from '../services/googleAiApiKey';
 import { AiProvider } from '../types';
 
@@ -18,8 +25,10 @@ const getEnvApiKeys = (): string[] => {
 };
 
 const ModelIcon: React.FC<{ modelId: string }> = ({ modelId }) => {
-    if (modelId.includes('3-flash')) return <Zap className="w-5 h-5" />;
-    if (modelId.includes('3-pro')) return <Sparkles className="w-5 h-5" />;
+    if (modelId.includes('3.8-flash') || modelId.includes('3.7-flash') || modelId.includes('pro')) {
+        return <Sparkles className="w-5 h-5" />;
+    }
+    if (modelId.includes('flash')) return <Zap className="w-5 h-5" />;
     return <Cpu className="w-5 h-5" />;
 };
 
@@ -36,14 +45,23 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
     // Load từ localStorage khi modal mở
     useEffect(() => {
         if (isOpen) {
-            const savedProvider = (localStorage.getItem('google_ai_provider') as AiProvider) || 'gemini';
+            localStorage.removeItem(LEGACY_GEMINI_MODEL_STORAGE_KEY);
+            localStorage.removeItem(LEGACY_SELECTED_MODEL_STORAGE_KEY);
+
+            const rawProvider = localStorage.getItem('google_ai_provider');
+            const selectionSource = localStorage.getItem('google_ai_provider_selection_source');
+            const savedProvider: AiProvider =
+                rawProvider === 'agent-platform' && selectionSource === 'manual'
+                    ? 'agent-platform'
+                    : 'gemini';
+
             setProvider(savedProvider);
 
             const savedKey = savedProvider === 'agent-platform'
                 ? (localStorage.getItem('agent_platform_api_key') || '')
                 : (localStorage.getItem('gemini_api_key') || '');
-            
-            const savedModel = localStorage.getItem('selected_model');
+
+            const savedModel = localStorage.getItem(GEMINI_MODEL_STORAGE_KEY);
 
             const currentModels = savedProvider === 'agent-platform' ? AGENT_PLATFORM_MODELS : FALLBACK_MODELS;
             setApiKey(savedKey);
@@ -62,7 +80,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
             ? (localStorage.getItem('agent_platform_api_key') || '')
             : (localStorage.getItem('gemini_api_key') || '');
         setApiKey(savedKey);
-        
+
         const models = newProvider === 'agent-platform' ? AGENT_PLATFORM_MODELS : FALLBACK_MODELS;
         setSelectedModel(models[0]);
         setError('');
@@ -77,23 +95,26 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
         }
 
         if (!keyToSave) {
-            setError(`Vui lòng nhập API Key cho ${provider === 'gemini' ? 'Google Gemini' : 'Agent Platform'}`);
+            setError(`Vui lòng nhập API Key cho ${provider === 'gemini' ? 'Google Gemini' : 'Agent Platform API'}`);
             return;
         }
 
-        if (provider === 'gemini' && !isValidGoogleAiApiKey(keyToSave)) {
-            setError('API Key Gemini không hợp lệ. Key phải bắt đầu bằng "AIzaSy..." hoặc "AQ..."');
+        if (!isValidGoogleAiApiKey(keyToSave)) {
+            setError('API Key không hợp lệ. Key phải bắt đầu bằng "AIzaSy..." hoặc "AQ..."');
             return;
         }
 
-        // Lưu vào localStorage
+        // Lưu vào localStorage và dọn sạch key cũ
+        localStorage.removeItem(LEGACY_GEMINI_MODEL_STORAGE_KEY);
+        localStorage.removeItem(LEGACY_SELECTED_MODEL_STORAGE_KEY);
         localStorage.setItem('google_ai_provider', provider);
+        localStorage.setItem('google_ai_provider_selection_source', 'manual');
         if (provider === 'agent-platform') {
             localStorage.setItem('agent_platform_api_key', keyToSave);
         } else {
             localStorage.setItem('gemini_api_key', keyToSave);
         }
-        localStorage.setItem('selected_model', selectedModel);
+        localStorage.setItem(GEMINI_MODEL_STORAGE_KEY, selectedModel);
 
         setError('');
         onSave(keyToSave, selectedModel, provider);
@@ -123,7 +144,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
                         </div>
                         <div>
                             <h2 className="text-xl font-bold text-gray-900">Thiết lập Model & API Key</h2>
-                            <p className="text-sm text-gray-500">Cấu hình kết nối AI Multi-Provider</p>
+                            <p className="text-sm text-gray-500">Cấu hình kết nối Gemini API hoặc Agent Platform API</p>
                         </div>
                     </div>
                 </div>
@@ -146,7 +167,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
                                 }`}
                             >
                                 <Sparkles size={16} />
-                                Google Gemini
+                                Gemini API
                             </button>
                             <button
                                 type="button"
@@ -166,7 +187,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
                     {/* Model Selection */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-3">
-                            Chọn Model AI ({provider === 'agent-platform' ? 'Agent Platform' : 'Gemini'})
+                            Chọn Model AI ({provider === 'agent-platform' ? 'Agent Platform API' : 'Gemini API'})
                         </label>
                         <div className="grid grid-cols-1 gap-3">
                             {availableModels.map((modelId) => {
@@ -219,7 +240,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
                     {/* API Key Input */}
                     <div className="border-t pt-6">
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            🔑 API Key ({provider === 'gemini' ? 'Google Gemini' : 'Agent Platform'}) {provider === 'gemini' && hasEnvKeys && <span className="text-green-600 font-normal">(Tùy chọn - đã có key mặc định)</span>}
+                            🔑 API Key ({provider === 'gemini' ? 'Gemini API' : 'Agent Platform API'}) {provider === 'gemini' && hasEnvKeys && <span className="text-green-600 font-normal">(Tùy chọn - đã có key mặc định)</span>}
                         </label>
                         <input
                             type="password"
@@ -228,7 +249,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
                                 setApiKey(e.target.value);
                                 setError('');
                             }}
-                            placeholder={provider === 'gemini' && hasEnvKeys ? "Để trống để dùng key mặc định, hoặc nhập key riêng" : `Nhập ${provider === 'gemini' ? 'Gemini' : 'Agent Platform'} API Key`}
+                            placeholder={provider === 'gemini' && hasEnvKeys ? "Để trống để dùng key mặc định, hoặc nhập key (AIzaSy... / AQ...)" : "Nhập API Key (AIzaSy... hoặc AQ...)"}
                             className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-sky-500 focus:border-transparent outline-none text-sm font-mono"
                         />
 
@@ -292,7 +313,7 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
                                         <li>Truy cập Google AI Studio</li>
                                         <li>Đăng nhập bằng tài khoản Google</li>
                                         <li>Nhấn "Create API Key" hoặc "Get API Key"</li>
-                                        <li>Copy key và dán vào ô trên</li>
+                                        <li>Sao chép key (AIzaSy... hoặc AQ...) và dán vào ô trên</li>
                                     </ol>
                                     <a
                                         href="https://aistudio.google.com/api-keys"
@@ -301,13 +322,26 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
                                         className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors text-sm font-medium"
                                     >
                                         <ExternalLink size={16} />
-                                        Lấy API Key tại đây
+                                        Lấy Gemini API Key tại đây
                                     </a>
                                 </>
                             ) : (
-                                <p className="text-sm text-amber-700">
-                                    Agent Platform API Key là khóa API được cấp riêng để kết nối tới endpoint Google Cloud AI Platform (Express / Vertex AI). Hãy dán khóa API của bạn vào ô trên để sử dụng dịch vụ.
-                                </p>
+                                <>
+                                    <ol className="text-sm text-amber-700 space-y-1 list-decimal list-inside">
+                                        <li>Mở trang thông tin xác thực Google Cloud Console</li>
+                                        <li>Chọn đúng Project, nhấn <strong>"+ Create credentials" &rarr; "API key"</strong> (hoặc chọn key sẵn có)</li>
+                                        <li>Sao chép giá trị key (<code>AQ...</code> hoặc <code>AIzaSy...</code>) và dán vào ô API Key phía trên</li>
+                                    </ol>
+                                    <a
+                                        href="https://console.cloud.google.com/apis/credentials"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium"
+                                    >
+                                        <ExternalLink size={16} />
+                                        Lấy Agent Platform API Key
+                                    </a>
+                                </>
                             )}
                         </div>
 
