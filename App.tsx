@@ -669,16 +669,26 @@ QUY TẮC BẮT BUỘC:
   };
 
   // Start the Generation Process
-  const startGeneration = async () => {
-    if (!apiKey) {
+  const startGeneration = async (attempt: number = 0) => {
+    const activeApiKey = (provider === 'gemini' ? localStorage.getItem('gemini_api_key') : null) || apiKey;
+    if (!activeApiKey) {
       setShowApiModal(true);
+      return;
+    }
+
+    if (attempt >= 3) {
+      setState(prev => ({
+        ...prev,
+        isStreaming: false,
+        error: 'Đã thử lại 3 lần nhưng chưa thành công. Vui lòng kiểm tra API Key trong Cài đặt.'
+      }));
       return;
     }
 
     try {
       setState(prev => ({ ...prev, step: GenerationStep.OUTLINE, isStreaming: true, error: null }));
 
-      initializeGeminiChat(apiKey, selectedModel, provider);
+      initializeGeminiChat(activeApiKey, selectedModel, provider);
 
       const isHigherEd = HIGHER_ED_LEVELS.includes(userInfo.level);
       const learnerTerm = isHigherEd ? 'sinh viên' : 'học sinh';
@@ -1234,18 +1244,18 @@ QUAN TRỌNG:
 
     } catch (error: any) {
       setFallbackNotice(null);
-      // Thử xoay API key nếu lỗi quota/rate limit (chỉ áp dụng cho Gemini API)
       const errorType = parseApiError(error);
-      if (provider === 'gemini' && (errorType === 'QUOTA_EXCEEDED' || errorType === 'RATE_LIMIT')) {
-        const rotation = apiKeyManager.markKeyError(apiKey, errorType);
+      if (provider === 'gemini') {
+        // markKeyError tự quyết định: cooldown với quota/rate limit,
+        // đánh dấu 'error' với key sai, và giữ nguyên key nếu chỉ là model quá tải.
+        const rotation = apiKeyManager.markKeyError(activeApiKey, errorType);
         if (rotation.success && rotation.newKey) {
-          console.log(`🔄 Tự động xoay key: ${rotation.message}`);
-          setApiKey(rotation.newKey);
+          console.warn(`🔑 Xoay sang key dự phòng (${errorType})`);
+          setApiKey(rotation.newKey);              // quan trọng: cập nhật state
           localStorage.setItem('gemini_api_key', rotation.newKey);
           initializeGeminiChat(rotation.newKey, selectedModel, provider);
-          // Tự động thử lại với key mới
           setState(prev => ({ ...prev, isStreaming: false, error: null }));
-          setTimeout(() => startGeneration(), 500);
+          setTimeout(() => startGeneration(attempt + 1), 500);
           return;
         }
       }
@@ -1302,10 +1312,19 @@ QUAN TRỌNG:
   };
 
   // Generate Next Section
-  const generateNextSection = async (stepToRun?: GenerationStep) => {
+  const generateNextSection = async (stepToRun?: GenerationStep, attempt: number = 0) => {
     // ⚠️ GUARD: Ngăn gọi trùng khi đang streaming (race condition)
     if (state.isStreaming) {
       console.warn('⚠️ generateNextSection bị chặn: đang streaming');
+      return;
+    }
+
+    if (attempt >= 3) {
+      setState(prev => ({
+        ...prev,
+        isStreaming: false,
+        error: 'Đã thử lại 3 lần nhưng chưa thành công. Vui lòng kiểm tra API Key trong Cài đặt.'
+      }));
       return;
     }
 
@@ -1743,18 +1762,23 @@ SGK: ${userInfo.textbook}
 
     } catch (error: any) {
       setFallbackNotice(null);
-      // Thử xoay API key nếu lỗi quota/rate limit (chỉ áp dụng cho Gemini API)
       const errorType = parseApiError(error);
-      if (provider === 'gemini' && (errorType === 'QUOTA_EXCEEDED' || errorType === 'RATE_LIMIT')) {
-        const rotation = apiKeyManager.markKeyError(apiKey, errorType);
+      if (provider === 'gemini') {
+        const activeApiKey = localStorage.getItem('gemini_api_key') || apiKey;
+        const rotation = apiKeyManager.markKeyError(activeApiKey, errorType);
         if (rotation.success && rotation.newKey) {
-          console.log(`🔄 Tự động xoay key: ${rotation.message}`);
+          console.warn(`🔑 Xoay sang key dự phòng (${errorType})`);
           setApiKey(rotation.newKey);
           localStorage.setItem('gemini_api_key', rotation.newKey);
           initializeGeminiChat(rotation.newKey, selectedModel, provider);
+          // Khôi phục chat history trước khi retry
+          const savedHistory = getChatHistory();
+          if (savedHistory.length > 0) {
+            setChatHistory(savedHistory);
+          }
           // Tự động thử lại với key mới
           setState(prev => ({ ...prev, isStreaming: false, error: null }));
-          setTimeout(() => generateNextSection(activeStep), 500);
+          setTimeout(() => generateNextSection(activeStep, attempt + 1), 500);
           return;
         }
       }
@@ -2502,7 +2526,7 @@ Tổ: [Tổ chuyên môn]
                             setChatHistory(savedHistory);
                           }
                           setTimeout(() => {
-                            generateNextSection();
+                            state.step === GenerationStep.OUTLINE ? startGeneration() : generateNextSection();
                           }, 300);
                         }}
                         className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2"
@@ -2532,7 +2556,7 @@ Tổ: [Tổ chuyên môn]
                   provider={provider}
                   userInfo={userInfo}
                   onChange={handleUserChange}
-                  onSubmit={startGeneration}
+                  onSubmit={() => startGeneration()}
                   onManualSubmit={handleManualOutlineSubmit}
                   isSubmitting={state.isStreaming}
                 />
@@ -2544,6 +2568,11 @@ Tổ: [Tổ chuyên môn]
                   onUpdate={handleDocumentUpdate}
                   // Only allow direct editing in the OUTLINE step and when not streaming
                   isEditable={state.step === GenerationStep.OUTLINE && !state.isStreaming}
+                  isStreaming={state.isStreaming}
+                  error={state.error}
+                  onRetry={() =>
+                    state.step === GenerationStep.OUTLINE ? startGeneration() : generateNextSection()
+                  }
                 />
 
                 {/* Mobile Controls Floating */}

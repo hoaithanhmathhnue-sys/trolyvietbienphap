@@ -37,6 +37,22 @@ export const parseApiError = (error: any): string => {
   const combinedError = `${errorMessage} ${errorString}`;
   const lowerError = combinedError.toLowerCase();
 
+  if (
+    error?.code === 'REQUEST_TIMEOUT' ||
+    lowerError.includes('request_timeout') ||
+    lowerError.includes('chưa phản hồi sau 60 giây') ||
+    lowerError.includes('ngừng trả dữ liệu quá lâu')
+  ) {
+    return 'REQUEST_TIMEOUT';
+  }
+  if (
+    error?.code === 'EMPTY_RESPONSE' ||
+    lowerError.includes('empty_response') ||
+    lowerError.includes('trả về nội dung rỗng')
+  ) {
+    return 'EMPTY_RESPONSE';
+  }
+
   // 1. Lỗi quota / rate limit (429)
   if (
     lowerError.includes('429') ||
@@ -202,6 +218,30 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
         ]
       };
 
+    case 'REQUEST_TIMEOUT':
+      return {
+        type: 'timeout',
+        title: '⏱️ AI phản hồi quá lâu',
+        message: 'Hệ thống đã dừng chờ sau một khoảng thời gian để tránh treo vô hạn.',
+        suggestions: [
+          '🔄 Bấm "Thử lại" để gửi lại yêu cầu',
+          '⚡ Chọn model nhẹ hơn như Gemini 3.5 Flash-Lite trong Cài đặt',
+          '📄 Giảm bớt tài liệu tham khảo nếu đang tải file quá lớn'
+        ]
+      };
+
+    case 'EMPTY_RESPONSE':
+      return {
+        type: 'empty',
+        title: '📭 AI không trả về nội dung',
+        message: 'Yêu cầu đã gửi thành công nhưng AI không trả về chữ nào.',
+        suggestions: [
+          '🔄 Bấm "Thử lại" — phần lớn trường hợp này tự khỏi ở lần thử thứ hai',
+          '✂️ Rút gọn yêu cầu đặc biệt hoặc tài liệu tham khảo',
+          '🔀 Đổi model trong Cài đặt'
+        ]
+      };
+
     default:
       return {
         type: 'unknown',
@@ -322,7 +362,9 @@ export const shouldTryFallbackModel = (errorType: string, provider: AiProvider =
     errorType === 'MODEL_OVERLOADED' ||
     errorType === 'TRANSIENT_SERVER_ERROR' ||
     errorType === 'NETWORK_ERROR' ||
-    errorType === 'MODEL_NOT_FOUND'
+    errorType === 'MODEL_NOT_FOUND' ||
+    errorType === 'REQUEST_TIMEOUT' ||
+    errorType === 'EMPTY_RESPONSE'
   ) {
     return true;
   }
@@ -401,6 +443,85 @@ export const generateContentWithModelFallback = async ({
   throw lastError || new Error(`Tất cả model ${activeProvider === 'agent-platform' ? 'Agent Platform' : 'Gemini'} đều thất bại. Vui lòng thử lại sau.`);
 };
 
+export class StreamTimeoutError extends Error {
+  code = 'REQUEST_TIMEOUT';
+  constructor(message: string) {
+    super(message);
+    this.name = 'StreamTimeoutError';
+  }
+}
+
+// Ngưỡng thời gian: chờ token đầu tiên lâu hơn token tiếp theo
+const FIRST_CHUNK_TIMEOUT_MS = 60_000;   // 60s không có chữ đầu tiên → bỏ
+const IDLE_TIMEOUT_MS = 45_000;          // 45s không có chữ mới → bỏ
+const TOTAL_TIMEOUT_MS = 8 * 60_000;     // trần tuyệt đối 8 phút / một model
+
+/**
+ * Đọc stream có watchdog. Không phụ thuộc việc SDK có hỗ trợ AbortSignal hay không:
+ * nếu quá hạn, ta chủ động reject để thoát khỏi `for await` treo.
+ */
+const consumeStreamWithWatchdog = async (
+  stream: AsyncIterable<any>,
+  opts: {
+    firstChunkTimeoutMs?: number;
+    idleTimeoutMs?: number;
+    totalTimeoutMs?: number;
+    onChunk: (text: string) => void;
+  }
+): Promise<void> => {
+  const firstMs = opts.firstChunkTimeoutMs ?? FIRST_CHUNK_TIMEOUT_MS;
+  const idleMs = opts.idleTimeoutMs ?? IDLE_TIMEOUT_MS;
+  const totalMs = opts.totalTimeoutMs ?? TOTAL_TIMEOUT_MS;
+
+  const startedAt = Date.now();
+  let receivedAny = false;
+  let timer: ReturnType<typeof setTimeout> | null = null;
+  let fireTimeout: ((e: Error) => void) | null = null;
+
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    fireTimeout = reject;
+  });
+
+  const arm = () => {
+    if (timer) clearTimeout(timer);
+    const remainingTotal = totalMs - (Date.now() - startedAt);
+    const window = receivedAny ? idleMs : firstMs;
+    const wait = Math.max(1_000, Math.min(window, remainingTotal));
+    timer = setTimeout(() => {
+      fireTimeout?.(
+        new StreamTimeoutError(
+          receivedAny
+            ? 'AI ngừng trả dữ liệu quá lâu. Vui lòng thử lại.'
+            : 'AI chưa phản hồi sau 60 giây. Vui lòng thử lại hoặc chọn model nhẹ hơn.'
+        )
+      );
+    }, wait);
+  };
+
+  const iterator = stream[Symbol.asyncIterator]();
+  arm();
+
+  try {
+    while (true) {
+      const next = await Promise.race([iterator.next(), timeoutPromise]);
+      if (next.done) break;
+      const text = (next.value as any)?.text;
+      if (text) {
+        receivedAny = true;
+        opts.onChunk(text);
+      }
+      arm();
+    }
+  } finally {
+    if (timer) clearTimeout(timer);
+    try {
+      await iterator.return?.();   // đóng kết nối, tránh rò rỉ socket
+    } catch {
+      /* bỏ qua */
+    }
+  }
+};
+
 export const sendMessageStream = async (
   message: string,
   onChunk: (text: string) => void,
@@ -444,11 +565,21 @@ export const sendMessageStream = async (
 
       const responseStream = await chatSession.sendMessageStream({ message });
 
-      for await (const chunk of responseStream) {
-        if (chunk.text) {
-          onChunk(chunk.text);
-          fullResponse += chunk.text;
-        }
+      await consumeStreamWithWatchdog(responseStream, {
+        onChunk: (text) => {
+          onChunk(text);
+          fullResponse += text;
+        },
+      });
+
+      // Chặn trường hợp "thành công" nhưng không có một token nào
+      // (bộ lọc an toàn chặn, model từ chối, hoặc stream đóng sớm).
+      if (!fullResponse.trim()) {
+        const emptyErr: any = new Error(
+          'AI trả về nội dung rỗng. Có thể yêu cầu bị bộ lọc an toàn chặn hoặc model từ chối xử lý.'
+        );
+        emptyErr.code = 'EMPTY_RESPONSE';
+        throw emptyErr;
       }
 
       // Thành công - cập nhật history, xóa thông báo fallback và return

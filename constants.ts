@@ -11,13 +11,10 @@ export const LEGACY_SELECTED_MODEL_STORAGE_KEY = 'selected_model';
 
 // Thứ tự fallback chuẩn cho Google Gemini Provider (cập nhật 10/2026)
 export const FALLBACK_MODELS = [
-   'gemini-3.8-flash',
-   'gemini-3.7-flash',
-   'gemini-3.5-flash-lite',
-   'gemini-3.6-flash',
-   'gemini-3.5-flash',
-   'gemini-3.1-flash-lite',
-   'gemini-2.5-flash',
+  'gemini-3.8-flash',        // mặc định, mạnh nhất
+  'gemini-3.6-flash',        // thay thế trực tiếp cho 3.5-flash đã deprecated
+  'gemini-3.5-flash-lite',   // nhanh, rẻ, chịu tải tốt
+  'gemini-3.1-flash-lite',   // tuyến cuối ổn định
 ];
 
 export const FALLBACK_GEMINI_MODELS = FALLBACK_MODELS;
@@ -43,21 +40,13 @@ export const MODEL_INFO: Record<string, { name: string; description: string; isD
       description: 'Mặc định khuyên dùng (GA 09/2026) — thông minh, tốc độ cao & chịu tải tốt nhất',
       isDefault: true
    },
-   'gemini-3.7-flash': {
-      name: 'Gemini 3.7 Flash',
-      description: 'Bản ổn định tốc độ cao (GA 08/2026), thực thi đa bước tin cậy'
-   },
-   'gemini-3.5-flash-lite': {
-      name: 'Gemini 3.5 Flash Lite',
-      description: 'Siêu nhanh, dung lượng chịu tải cực lớn & chi phí thấp (GA 07/2026)'
-   },
    'gemini-3.6-flash': {
       name: 'Gemini 3.6 Flash',
       description: 'Bản ổn định thế hệ 3.6 (GA 07/2026), cân bằng đa phương thức'
    },
-   'gemini-3.5-flash': {
-      name: 'Gemini 3.5 Flash',
-      description: 'Tốc độ cao, ổn định thế hệ 3.5'
+   'gemini-3.5-flash-lite': {
+      name: 'Gemini 3.5 Flash Lite',
+      description: 'Siêu nhanh, dung lượng chịu tải cực lớn & chi phí thấp (GA 07/2026)'
    },
    'gemini-3.1-flash-lite': {
       name: 'Gemini 3.1 Flash Lite',
@@ -66,10 +55,6 @@ export const MODEL_INFO: Record<string, { name: string; description: string; isD
    'gemini-3.1-pro-preview': {
       name: 'Gemini 3.1 Pro Preview',
       description: 'Chuyên dụng cho suy luận nâng cao trên Agent Platform'
-   },
-   'gemini-2.5-flash': {
-      name: 'Gemini 2.5 Flash',
-      description: 'Ổn định, tốc độ cao — mặc định cho Agent Platform API'
    },
    'gemini-2.5-flash-lite': {
       name: 'Gemini 2.5 Flash Lite',
