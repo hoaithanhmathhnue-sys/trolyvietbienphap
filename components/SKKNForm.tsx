@@ -139,16 +139,18 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
       disableStream: true,
     });
 
-    // Timeout 30 giây khi load PDF
+    // Timeout 30 giây khi load PDF — phải hủy timer khi tải xong, nếu không 30s sau
+    // loadingTask.destroy() sẽ phá tài liệu đang đọc dở (file lớn mất các trang cuối).
+    let loadTimeout: ReturnType<typeof setTimeout> | undefined;
     const pdf = await Promise.race([
       loadingTask.promise,
-      new Promise<never>((_, reject) =>
-        setTimeout(() => {
+      new Promise<never>((_, reject) => {
+        loadTimeout = setTimeout(() => {
           loadingTask.destroy();
           reject(new Error('Hết thời gian tải PDF (30s). File có thể bị lỗi hoặc bảo mật.'));
-        }, 30000)
-      )
-    ]);
+        }, 30000);
+      })
+    ]).finally(() => clearTimeout(loadTimeout));
 
     const totalPages = pdf.numPages;
     console.log(`📄 PDF có ${totalPages} trang. Bắt đầu trích xuất text...`);
@@ -212,11 +214,11 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
       const arrayBuffer = await file.arrayBuffer();
       let extractedText = '';
 
-      if (file.type === 'application/pdf') {
+      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
         extractedText = await extractTextFromPdf(arrayBuffer, setFileProgress);
       } else if (
         file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-        file.name.endsWith('.docx')
+        file.name.toLowerCase().endsWith('.docx')
       ) {
         const result = await mammoth.extractRawText({ arrayBuffer });
         extractedText = result.value;
@@ -279,7 +281,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
             });
           } else if (
             file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-            file.name.endsWith('.docx')
+            file.name.toLowerCase().endsWith('.docx')
           ) {
             const result = await mammoth.extractRawText({ arrayBuffer });
             extractedText = result.value;
@@ -342,11 +344,11 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
       const arrayBuffer = await file.arrayBuffer();
       let extractedText = '';
 
-      if (file.type === 'application/pdf') {
+      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
         extractedText = await extractTextFromPdf(arrayBuffer, setFileProgress);
       } else if (
         file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
-        file.name.endsWith('.docx')
+        file.name.toLowerCase().endsWith('.docx')
       ) {
         const result = await mammoth.extractRawText({ arrayBuffer });
         extractedText = result.value;

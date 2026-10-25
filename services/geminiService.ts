@@ -36,26 +36,31 @@ export const parseApiError = (error: any): string => {
   }
   const combinedError = `${errorMessage} ${errorString}`;
   const lowerError = combinedError.toLowerCase();
+  // So khớp mã HTTP theo ranh giới từ để "4000 tokens" không bị hiểu nhầm thành lỗi 400
+  const hasCode = (code: number) => new RegExp(`\\b${code}\\b`).test(combinedError);
 
+  // 0. Ưu tiên mã lỗi có cấu trúc (ApiError.status / error.code / error.status) trước khi đoán theo text
+  const structuredCode = Number(error?.status ?? error?.code ?? error?.error?.code);
+  const structuredStatus = String(error?.error?.status || (typeof error?.status === 'string' ? error.status : '')).toUpperCase();
+  if (structuredCode === 503 || structuredStatus === 'UNAVAILABLE') return 'MODEL_OVERLOADED';
+  if ([500, 502, 504].includes(structuredCode) || structuredStatus === 'DEADLINE_EXCEEDED' || structuredStatus === 'INTERNAL') return 'TRANSIENT_SERVER_ERROR';
+  if (structuredCode === 404 || structuredStatus === 'NOT_FOUND') return 'MODEL_NOT_FOUND';
+  if (structuredCode === 403 || structuredStatus === 'PERMISSION_DENIED') return 'PERMISSION_DENIED';
+  if (structuredCode === 401 || structuredStatus === 'UNAUTHENTICATED') return 'INVALID_API_KEY';
+
+  // Hết thời gian chờ do app tự hủy (timeout / watchdog) - không fallback để tránh chờ dây chuyền
   if (
-    error?.code === 'REQUEST_TIMEOUT' ||
-    lowerError.includes('request_timeout') ||
-    lowerError.includes('chưa phản hồi sau 60 giây') ||
-    lowerError.includes('ngừng trả dữ liệu quá lâu')
+    error?.name === 'AbortError' ||
+    lowerError.includes('aborted') ||
+    lowerError.includes('app_timeout')
   ) {
-    return 'REQUEST_TIMEOUT';
-  }
-  if (
-    error?.code === 'EMPTY_RESPONSE' ||
-    lowerError.includes('empty_response') ||
-    lowerError.includes('trả về nội dung rỗng')
-  ) {
-    return 'EMPTY_RESPONSE';
+    return 'TIMEOUT';
   }
 
   // 1. Lỗi quota / rate limit (429)
   if (
-    lowerError.includes('429') ||
+    structuredCode === 429 ||
+    hasCode(429) ||
     lowerError.includes('resource_exhausted') ||
     lowerError.includes('quota')
   ) {
@@ -68,7 +73,7 @@ export const parseApiError = (error: any): string => {
 
   // 2. Lỗi model quá tải tạm thời (503 UNAVAILABLE) - tuyệt đối không đổ lỗi cho API key
   if (
-    lowerError.includes('503') ||
+    hasCode(503) ||
     lowerError.includes('unavailable') ||
     lowerError.includes('high demand') ||
     lowerError.includes('overloaded') ||
@@ -80,9 +85,9 @@ export const parseApiError = (error: any): string => {
 
   // 3. Lỗi máy chủ hoặc mạng tạm thời (500, 502, 504, fetch failed) - được phép fallback
   if (
-    lowerError.includes('500') ||
-    lowerError.includes('502') ||
-    lowerError.includes('504') ||
+    hasCode(500) ||
+    hasCode(502) ||
+    hasCode(504) ||
     lowerError.includes('deadline_exceeded') ||
     lowerError.includes('deadline exceeded') ||
     lowerError.includes('bad gateway') ||
@@ -97,7 +102,7 @@ export const parseApiError = (error: any): string => {
 
   // 4. Lỗi 404 model/endpoint không còn khả dụng - được phép fallback
   if (
-    lowerError.includes('404') ||
+    hasCode(404) ||
     lowerError.includes('not_found') ||
     lowerError.includes('is not found')
   ) {
@@ -106,7 +111,7 @@ export const parseApiError = (error: any): string => {
 
   // 5. Lỗi 403 PERMISSION_DENIED - tách riêng khỏi 401 để xử lý chuẩn cho Agent Platform
   if (
-    lowerError.includes('403') ||
+    hasCode(403) ||
     lowerError.includes('permission_denied') ||
     lowerError.includes('caller does not have permission')
   ) {
@@ -116,7 +121,7 @@ export const parseApiError = (error: any): string => {
   // 6. Lỗi 401 API key không hợp lệ / hết hạn
   if (
     lowerError.includes('api_key_invalid') ||
-    lowerError.includes('401') ||
+    hasCode(401) ||
     lowerError.includes('unauthorized') ||
     lowerError.includes('invalid api key')
   ) {
@@ -124,7 +129,7 @@ export const parseApiError = (error: any): string => {
   }
 
   // 7. Lỗi 400 INVALID_ARGUMENT (dừng ngay, không fallback)
-  if (lowerError.includes('400') || lowerError.includes('invalid_argument')) {
+  if (structuredCode === 400 || hasCode(400) || lowerError.includes('invalid_argument')) {
     return 'INVALID_ARGUMENT';
   }
 
@@ -206,6 +211,18 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
         ]
       };
 
+    case 'TIMEOUT':
+      return {
+        type: 'timeout',
+        title: '⏱️ Quá thời gian chờ phản hồi',
+        message: 'Máy chủ AI phản hồi quá lâu nên yêu cầu đã được dừng lại để tránh treo ứng dụng. API Key của bạn vẫn hợp lệ.',
+        suggestions: [
+          '🔄 Bấm Thử lại sau vài giây',
+          '⚡ Chọn model nhẹ hơn trong Cài đặt nếu lỗi lặp lại',
+          '📶 Kiểm tra kết nối mạng'
+        ]
+      };
+
     case 'NETWORK_ERROR':
       return {
         type: 'network',
@@ -215,30 +232,6 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
           '📶 Kiểm tra kết nối WiFi/Internet',
           '🔄 Thử làm mới trang (F5)',
           '🌍 Thử sử dụng mạng khác'
-        ]
-      };
-
-    case 'REQUEST_TIMEOUT':
-      return {
-        type: 'timeout',
-        title: '⏱️ AI phản hồi quá lâu',
-        message: 'Hệ thống đã dừng chờ sau một khoảng thời gian để tránh treo vô hạn.',
-        suggestions: [
-          '🔄 Bấm "Thử lại" để gửi lại yêu cầu',
-          '⚡ Chọn model nhẹ hơn như Gemini 3.5 Flash-Lite trong Cài đặt',
-          '📄 Giảm bớt tài liệu tham khảo nếu đang tải file quá lớn'
-        ]
-      };
-
-    case 'EMPTY_RESPONSE':
-      return {
-        type: 'empty',
-        title: '📭 AI không trả về nội dung',
-        message: 'Yêu cầu đã gửi thành công nhưng AI không trả về chữ nào.',
-        suggestions: [
-          '🔄 Bấm "Thử lại" — phần lớn trường hợp này tự khỏi ở lần thử thứ hai',
-          '✂️ Rút gọn yêu cầu đặc biệt hoặc tài liệu tham khảo',
-          '🔀 Đổi model trong Cài đặt'
         ]
       };
 
@@ -305,6 +298,11 @@ export const createGeminiConfig = ({
   };
 };
 
+// Thời gian chờ tối đa cho một lời gọi không stream (phân tích, thẩm định, viết lại DOCX)
+const REQUEST_TIMEOUT_MS = 4 * 60 * 1000;
+// Stream bị coi là treo nếu không nhận thêm chunk nào trong khoảng này (model thinking có thể chậm ra chunk đầu)
+const STREAM_IDLE_TIMEOUT_MS = 3 * 60 * 1000;
+
 let chatSession: Chat | null = null;
 let currentApiKey: string | null = null;
 let currentSelectedModel: string | null = null;
@@ -362,9 +360,7 @@ export const shouldTryFallbackModel = (errorType: string, provider: AiProvider =
     errorType === 'MODEL_OVERLOADED' ||
     errorType === 'TRANSIENT_SERVER_ERROR' ||
     errorType === 'NETWORK_ERROR' ||
-    errorType === 'MODEL_NOT_FOUND' ||
-    errorType === 'REQUEST_TIMEOUT' ||
-    errorType === 'EMPTY_RESPONSE'
+    errorType === 'MODEL_NOT_FOUND'
   ) {
     return true;
   }
@@ -419,7 +415,8 @@ export const generateContentWithModelFallback = async ({
       const response = await ai.models.generateContent({
         model,
         contents,
-        ...(Object.keys(mergedConfig).length > 0 ? { config: mergedConfig } : {})
+        // Timeout cho lời gọi không stream: tránh UI treo vô hạn khi mạng chập chờn
+        config: { ...mergedConfig, httpOptions: { timeout: REQUEST_TIMEOUT_MS } }
       });
       notifyFallback(null);
       return response;
@@ -443,85 +440,6 @@ export const generateContentWithModelFallback = async ({
   throw lastError || new Error(`Tất cả model ${activeProvider === 'agent-platform' ? 'Agent Platform' : 'Gemini'} đều thất bại. Vui lòng thử lại sau.`);
 };
 
-export class StreamTimeoutError extends Error {
-  code = 'REQUEST_TIMEOUT';
-  constructor(message: string) {
-    super(message);
-    this.name = 'StreamTimeoutError';
-  }
-}
-
-// Ngưỡng thời gian: chờ token đầu tiên lâu hơn token tiếp theo
-const FIRST_CHUNK_TIMEOUT_MS = 60_000;   // 60s không có chữ đầu tiên → bỏ
-const IDLE_TIMEOUT_MS = 45_000;          // 45s không có chữ mới → bỏ
-const TOTAL_TIMEOUT_MS = 8 * 60_000;     // trần tuyệt đối 8 phút / một model
-
-/**
- * Đọc stream có watchdog. Không phụ thuộc việc SDK có hỗ trợ AbortSignal hay không:
- * nếu quá hạn, ta chủ động reject để thoát khỏi `for await` treo.
- */
-const consumeStreamWithWatchdog = async (
-  stream: AsyncIterable<any>,
-  opts: {
-    firstChunkTimeoutMs?: number;
-    idleTimeoutMs?: number;
-    totalTimeoutMs?: number;
-    onChunk: (text: string) => void;
-  }
-): Promise<void> => {
-  const firstMs = opts.firstChunkTimeoutMs ?? FIRST_CHUNK_TIMEOUT_MS;
-  const idleMs = opts.idleTimeoutMs ?? IDLE_TIMEOUT_MS;
-  const totalMs = opts.totalTimeoutMs ?? TOTAL_TIMEOUT_MS;
-
-  const startedAt = Date.now();
-  let receivedAny = false;
-  let timer: ReturnType<typeof setTimeout> | null = null;
-  let fireTimeout: ((e: Error) => void) | null = null;
-
-  const timeoutPromise = new Promise<never>((_, reject) => {
-    fireTimeout = reject;
-  });
-
-  const arm = () => {
-    if (timer) clearTimeout(timer);
-    const remainingTotal = totalMs - (Date.now() - startedAt);
-    const window = receivedAny ? idleMs : firstMs;
-    const wait = Math.max(1_000, Math.min(window, remainingTotal));
-    timer = setTimeout(() => {
-      fireTimeout?.(
-        new StreamTimeoutError(
-          receivedAny
-            ? 'AI ngừng trả dữ liệu quá lâu. Vui lòng thử lại.'
-            : 'AI chưa phản hồi sau 60 giây. Vui lòng thử lại hoặc chọn model nhẹ hơn.'
-        )
-      );
-    }, wait);
-  };
-
-  const iterator = stream[Symbol.asyncIterator]();
-  arm();
-
-  try {
-    while (true) {
-      const next = await Promise.race([iterator.next(), timeoutPromise]);
-      if (next.done) break;
-      const text = (next.value as any)?.text;
-      if (text) {
-        receivedAny = true;
-        opts.onChunk(text);
-      }
-      arm();
-    }
-  } finally {
-    if (timer) clearTimeout(timer);
-    try {
-      await iterator.return?.();   // đóng kết nối, tránh rò rỉ socket
-    } catch {
-      /* bỏ qua */
-    }
-  }
-};
-
 export const sendMessageStream = async (
   message: string,
   onChunk: (text: string) => void,
@@ -542,6 +460,13 @@ export const sendMessageStream = async (
   for (let i = 0; i < modelsToTry.length; i++) {
     const model = modelsToTry[i];
     let fullResponse = "";
+    // Watchdog: hủy stream nếu quá lâu không nhận được chunk mới, để UI không kẹt ở trạng thái "Đang viết..."
+    const abortController = new AbortController();
+    let idleTimer: ReturnType<typeof setTimeout> | undefined;
+    const resetIdleTimer = () => {
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => abortController.abort(), STREAM_IDLE_TIMEOUT_MS);
+    };
 
     try {
       console.log(`🤖 Đang thử model: ${model} (${activeProvider})`);
@@ -559,28 +484,21 @@ export const sendMessageStream = async (
 
       chatSession = ai.chats.create({
         model,
-        config: chatConfig,
+        config: { ...chatConfig, abortSignal: abortController.signal },
         history
       });
 
+      resetIdleTimer();
       const responseStream = await chatSession.sendMessageStream({ message });
 
-      await consumeStreamWithWatchdog(responseStream, {
-        onChunk: (text) => {
-          onChunk(text);
-          fullResponse += text;
-        },
-      });
-
-      // Chặn trường hợp "thành công" nhưng không có một token nào
-      // (bộ lọc an toàn chặn, model từ chối, hoặc stream đóng sớm).
-      if (!fullResponse.trim()) {
-        const emptyErr: any = new Error(
-          'AI trả về nội dung rỗng. Có thể yêu cầu bị bộ lọc an toàn chặn hoặc model từ chối xử lý.'
-        );
-        emptyErr.code = 'EMPTY_RESPONSE';
-        throw emptyErr;
+      for await (const chunk of responseStream) {
+        resetIdleTimer();
+        if (chunk.text) {
+          onChunk(chunk.text);
+          fullResponse += chunk.text;
+        }
       }
+      if (idleTimer) clearTimeout(idleTimer);
 
       // Thành công - cập nhật history, xóa thông báo fallback và return
       history.push({ role: 'user', parts: [{ text: message }] });
@@ -590,6 +508,10 @@ export const sendMessageStream = async (
       return;
 
     } catch (error: any) {
+      if (idleTimer) clearTimeout(idleTimer);
+      if (abortController.signal.aborted) {
+        error = new Error(`APP_TIMEOUT: model ${model} không phản hồi sau ${STREAM_IDLE_TIMEOUT_MS / 1000} giây (request aborted).`);
+      }
       console.error(`❌ Model ${model} thất bại:`, error.message || error);
       lastError = error;
 
@@ -614,7 +536,7 @@ export const sendMessageStream = async (
   }
 
   notifyFallback(null);
-  console.error(`💀 Tất cả ${modelsToTry.length} models đều thất bại.`);
+  console.error(`💀 Gửi tin nhắn thất bại (${activeProvider}).`);
   throw lastError || new Error("Tất cả models đều thất bại. Vui lòng kiểm tra API key hoặc thử lại sau.");
 };
 
@@ -1017,7 +939,13 @@ export interface EnhancedAnalysisResult {
   suggestions: string[];
   // Legacy compatibility
   criteria: Array<{ name: string; score: number; maxScore: number; details: string }>;
+  // Số ký tự thực sự được gửi cho AI chấm so với tổng độ dài văn bản (văn bản dài bị cắt bớt)
+  analyzedChars: number;
+  totalChars: number;
 }
+
+// Giới hạn ký tự của văn bản gửi đi thẩm định
+export const ANALYZE_OLD_DOC_MAX_CHARS = 20000;
 
 export const analyzeOldDocument = async (
   apiKey: string,
@@ -1026,9 +954,10 @@ export const analyzeOldDocument = async (
   provider?: AiProvider
 ): Promise<EnhancedAnalysisResult> => {
   try {
-    // Truncate content if too long (keep first 20000 chars)
-    const truncatedContent = content.length > 20000
-      ? content.substring(0, 20000) + '\n\n[... nội dung còn lại đã được cắt bớt ...]'
+    // Truncate content if too long (keep first ANALYZE_OLD_DOC_MAX_CHARS chars)
+    const isTruncated = content.length > ANALYZE_OLD_DOC_MAX_CHARS;
+    const truncatedContent = isTruncated
+      ? content.substring(0, ANALYZE_OLD_DOC_MAX_CHARS) + '\n\n[... nội dung còn lại đã được cắt bớt — chỉ đánh giá trên phần văn bản phía trên, KHÔNG kết luận "thiếu mục" cho các phần có thể nằm ở đoạn bị cắt ...]'
       : content;
 
     const prompt = `
@@ -1055,13 +984,15 @@ ${truncatedContent}
 ## B. TIÊU CHÍ CHẤT LƯỢNG LINH HOẠT (qualityCriteria)
 Tạo 6-8 tiêu chí phù hợp VỚI CẤU TRÚC ĐÃ PHÁT HIỆN. Gợi ý: Cấu trúc, Lý luận, Số liệu, Khả thi, Tính mới, Ngôn ngữ, Thực tiễn, Hình thức... (chọn phù hợp). Mỗi tiêu chí chấm 0-10.
 
-## C. PHÂN TÍCH ĐẠO VĂN (plagiarism)
-- Ước lượng % trùng lặp tổng thể (0-100%)
+## C. PHÂN TÍCH DẤU HIỆU TRÙNG LẶP VĂN PHONG (plagiarism — ƯỚC LƯỢNG, KHÔNG PHẢI ĐỐI CHIẾU NGUỒN THẬT)
+⚠️ QUAN TRỌNG: Bạn KHÔNG có khả năng truy cập internet hay cơ sở dữ liệu văn bản thật trong tác vụ này. Do đó:
+- Chỉ ước lượng % các đoạn có văn phong SÁO RỖNG, QUÁ PHỔ BIẾN (dễ trùng với nhiều văn bản khác), KHÔNG PHẢI đạo văn đã được xác minh.
+- Trường "source" PHẢI để trống hoặc ghi "Không xác định (chưa đối chiếu nguồn thật)" — TUYỆT ĐỐI KHÔNG bịa tên nguồn, tên tài liệu, hay website cụ thể.
 - Xác định mức độ: "Thấp" (<15%), "Trung bình" (15-30%), "Cao" (30-50%), "Rất cao" (>50%)
-- Liệt kê 3-5 đoạn nghi ngờ đạo văn cao nhất (nếu có), kèm nguồn gốc tương tự và % giống
+- Liệt kê 3-5 đoạn có văn phong sáo rỗng/phổ biến nhất (nếu có), kèm lý do ngắn gọn vì sao đoạn đó giống văn mẫu
 
-## D. PHÂN TÍCH NGUY CƠ AI (aiRisk)
-Kiểm tra xem văn bản có dấu hiệu được viết bởi AI không:
+## D. PHÂN TÍCH DẤU HIỆU VĂN PHONG AI (aiRisk — HEURISTIC CHỦ QUAN CỦA MÔ HÌNH, KHÔNG PHẢI CÔNG CỤ PHÁT HIỆN AI ĐÃ KIỂM ĐỊNH)
+Đây là một ước lượng chủ quan dựa trên văn phong, không phải kết quả từ công cụ phát hiện AI chuyên dụng. Mục đích là gợi ý người viết chỉnh sửa cho tự nhiên hơn — KHÔNG dùng để kết luận chắc chắn một văn bản "là AI" hay "không là AI".
 
 ### Các chỉ số:
 1. **Perplexity (0-100)**: AI thường 20-40, người viết 40-80+
@@ -1076,6 +1007,7 @@ Kiểm tra xem văn bản có dấu hiệu được viết bởi AI không:
 
 ### Mẫu câu đặc trưng AI cần kiểm tra:
 - ChatGPT: "trong bối cảnh... hiện nay", "theo định hướng... chương trình", "việc... là yêu cầu cấp thiết"
+
 - Gemini: "điều này cho thấy... rằng", "một cách... hiệu quả", "đáng chú ý là"
 - Claude: "điều đáng chú ý là", "một điểm đáng xem xét"
 
@@ -1102,7 +1034,7 @@ Kiểm tra xem văn bản có dấu hiệu được viết bởi AI không:
   "plagiarismPercent": <0-100>,
   "plagiarismLevel": "Thấp|Trung bình|Cao|Rất cao",
   "plagiarismSegments": [
-    {"segment": "<đoạn văn nghi ngờ ~50 ký tự>", "source": "<nguồn tương tự>", "similarity": <0-100>},
+    {"segment": "<trích nguyên văn đoạn có văn phong sáo rỗng/phổ biến, ~50-150 ký tự>", "source": "Không xác định (chưa đối chiếu nguồn thật) — <lý do ngắn vì sao giống văn mẫu>", "similarity": <0-100, mức độ phổ biến ước lượng>},
     ...tối đa 5
   ],
   "aiRiskPercent": <0-100>,
@@ -1147,7 +1079,7 @@ CHỈ TRẢ VỀ JSON THUẦN, KHÔNG GIẢI THÍCH, KHÔNG MARKDOWN CODE BLOCK.
     const result = JSON.parse(jsonText);
 
     // Build qualityCriteria with validation
-    const qualityCriteria = (result.qualityCriteria || []).map((c: any) => ({
+    const qualityCriteria = (Array.isArray(result.qualityCriteria) ? result.qualityCriteria : []).map((c: any) => ({
       name: c.name || 'Không rõ',
       score: Math.min(10, Math.max(0, Number(c.score) || 0)),
       maxScore: 10,
@@ -1163,34 +1095,48 @@ CHỈ TRẢ VỀ JSON THUẦN, KHÔNG GIẢI THÍCH, KHÔNG MARKDOWN CODE BLOCK.
     }));
 
     // Validate and sanitize result
+    // Lưu ý P1.3: khi model KHÔNG trả về một trường, KHÔNG được mặc định về giá trị
+    // "an toàn"/"thấp" — điều đó khiến người dùng tin nhầm là đã kiểm tra và đạt.
+    // Dùng `in` để phân biệt "model trả 0" với "model không trả trường này".
+    const hasField = (obj: any, field: string) => obj && Object.prototype.hasOwnProperty.call(obj, field);
+    // Ép về số trong [0, 100]; model đôi khi trả "45%" hoặc chuỗi rỗng → NaN, không được để NaN lọt ra UI
+    const clampPercent = (value: any): number => {
+      const n = typeof value === 'number' ? value : parseFloat(String(value ?? '').replace(',', '.'));
+      return Number.isFinite(n) ? Math.min(100, Math.max(0, Math.round(n))) : 0;
+    };
+    const toStringArray = (value: any): string[] => Array.isArray(value) ? value.map((v: any) => String(v)) : [];
+
     return {
-      totalScore: Math.min(100, Math.max(0, Number(result.totalScore) || 0)),
+      totalScore: clampPercent(result.totalScore),
       summary: result.summary || 'Không có tóm tắt.',
-      detectedSections: (result.detectedSections || []).map((s: any) => ({
+      detectedSections: (Array.isArray(result.detectedSections) ? result.detectedSections : []).map((s: any) => ({
         name: s.name || '',
         status: (['pass', 'warn', 'fail'].includes(s.status) ? s.status : 'warn') as 'pass' | 'warn' | 'fail',
         comment: s.comment || '',
       })),
       qualityCriteria,
-      plagiarismPercent: Math.min(100, Math.max(0, Number(result.plagiarismPercent) || 0)),
-      plagiarismLevel: result.plagiarismLevel || 'Thấp',
-      plagiarismSegments: (result.plagiarismSegments || []).slice(0, 5).map((p: any) => ({
-        segment: p.segment || '',
-        source: p.source || '',
-        similarity: Math.min(100, Math.max(0, Number(p.similarity) || 0)),
+      plagiarismPercent: clampPercent(result.plagiarismPercent),
+      plagiarismLevel: hasField(result, 'plagiarismLevel') && result.plagiarismLevel ? String(result.plagiarismLevel) : 'Chưa xác định',
+      plagiarismSegments: (Array.isArray(result.plagiarismSegments) ? result.plagiarismSegments : []).slice(0, 5).map((p: any) => ({
+        segment: p?.segment || '',
+        source: p?.source || 'Không xác định (chưa đối chiếu nguồn thật)',
+        similarity: clampPercent(p?.similarity),
       })),
-      aiRiskPercent: Math.min(100, Math.max(0, Number(result.aiRiskPercent) || 0)),
-      aiRiskLevel: result.aiRiskLevel || 'An toàn',
+      aiRiskPercent: clampPercent(result.aiRiskPercent),
+      aiRiskLevel: hasField(result, 'aiRiskLevel') && result.aiRiskLevel ? String(result.aiRiskLevel) : 'Chưa xác định',
       aiRiskDetails: {
-        perplexity: Math.min(100, Math.max(0, Number(result.aiRiskDetails?.perplexity) || 50)),
-        burstiness: Math.min(100, Math.max(0, Number(result.aiRiskDetails?.burstiness) || 50)),
-        patternDensity: Math.min(100, Math.max(0, Number(result.aiRiskDetails?.patternDensity) || 0)),
-        suspiciousPatterns: (result.aiRiskDetails?.suspiciousPatterns || []).slice(0, 5),
-        recommendations: (result.aiRiskDetails?.recommendations || []).slice(0, 3),
+        perplexity: clampPercent(result.aiRiskDetails?.perplexity),
+        burstiness: clampPercent(result.aiRiskDetails?.burstiness),
+        patternDensity: clampPercent(result.aiRiskDetails?.patternDensity),
+        suspiciousPatterns: toStringArray(result.aiRiskDetails?.suspiciousPatterns).slice(0, 5),
+        recommendations: toStringArray(result.aiRiskDetails?.recommendations).slice(0, 3),
       },
-      suggestions: result.suggestions || [],
+      suggestions: toStringArray(result.suggestions),
       criteria: legacyCriteria,
+      analyzedChars: Math.min(content.length, ANALYZE_OLD_DOC_MAX_CHARS),
+      totalChars: content.length,
     };
+
 
   } catch (error: any) {
     console.error('Lỗi phân tích biện pháp cũ:', error);
