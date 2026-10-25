@@ -53,6 +53,22 @@ const truncateForPrompt = (text: string, maxChars: number = MAX_REF_DOCS_FOR_PRO
   return truncated + `\n\n[... ĐÃ LƯỢC BỚT ${removedChars.toLocaleString()} KÝ TỰ (~${estimatedPages} trang) DO QUÁ DÀI. Nội dung phía trên đã đủ để tham khảo các ý chính ...]`;
 };
 
+// Key hệ thống (.env) chỉ được giữ trong bộ nhớ, KHÔNG BAO GIỜ ghi xuống localStorage của người dùng
+const ENV_API_KEYS = [
+  ...parseGoogleAiApiKeys(import.meta.env.VITE_GEMINI_API_KEYS || ''),
+  ...parseGoogleAiApiKeys(import.meta.env.VITE_AGENT_PLATFORM_API_KEYS || ''),
+];
+
+const persistApiKey = (key: string, targetProvider: AiProvider) => {
+  const storageKey = targetProvider === 'agent-platform' ? 'agent_platform_api_key' : 'gemini_api_key';
+  if (ENV_API_KEYS.includes(key)) {
+    // Người dùng chọn key hệ thống → bỏ key cũ đã lưu để lần sau tự quay về key hệ thống trong bộ nhớ
+    localStorage.removeItem(storageKey);
+    return;
+  }
+  localStorage.setItem(storageKey, key);
+};
+
 // SessionStorage key cho tài liệu tham khảo lớn
 const SESSION_REF_DOCS_KEY = 'skkn_ref_docs';
 const SESSION_REF_NAMES_KEY = 'skkn_ref_file_names';
@@ -78,15 +94,20 @@ interface SessionData {
 // -------------------------------------------------------------------------------- //
 // HELPER: Thêm prompt cải thiện nếu đang ở chế độ Healing
 // -------------------------------------------------------------------------------- //
-const getHealingPromptSnippet = (healingContext: { originalContent: string; analysisResult: any } | null) => {
+// includeOriginal = true chỉ dùng cho lần lập dàn ý đầu tiên: văn bản gốc đã nằm trong lịch sử chat,
+// gửi lại ở mọi bước sẽ nhân số token lên nhiều lần.
+const getHealingPromptSnippet = (
+  healingContext: { originalContent: string; analysisResult: any } | null,
+  includeOriginal: boolean = false
+) => {
   if (!healingContext) return "";
   return `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🩺 CHẾ ĐỘ Cải thiện (HEALING MODE) ĐANG ĐƯỢC BẬT:
-Đây là văn bản báo cáo/Biện pháp gốc của người dùng được tải lên:
+${includeOriginal ? `Đây là văn bản báo cáo/Biện pháp gốc của người dùng được tải lên:
 <DOCUMENT_GOC>
-${healingContext.originalContent}
-</DOCUMENT_GOC>
+${truncateForPrompt(healingContext.originalContent, 60000)}
+</DOCUMENT_GOC>` : `(Văn bản Biện pháp gốc của người dùng đã được cung cấp trong <DOCUMENT_GOC> ở đầu cuộc hội thoại — tiếp tục bám sát văn bản đó.)`}
 
 Và đây là BÁO CÁO Thẩm định (Giải pháp) từ AI chuyên gia:
 <TOA_THUOC_KHAM_BENH>
@@ -190,9 +211,10 @@ const App: React.FC = () => {
         const envKeys = parseGoogleAiApiKeys(import.meta.env.VITE_GEMINI_API_KEYS || '');
         if (envKeys.length > 0) {
           const firstEnvKey = envKeys[0];
+          // CHỈ giữ key hệ thống trong state (memory) của phiên hiện tại.
+          // KHÔNG ghi xuống localStorage để tránh key của chủ app bị lộ
+          // vĩnh viễn trong trình duyệt của từng người dùng (xem api.md mục V.2).
           setApiKey(firstEnvKey);
-          localStorage.setItem('gemini_api_key', firstEnvKey);
-          console.log('🔑 Tự động sử dụng API key từ biến môi trường');
         } else {
           // Không có key nào → hiển thị modal bắt buộc nhập
           setShowApiModal(true);
@@ -238,11 +260,7 @@ const App: React.FC = () => {
     localStorage.setItem('google_ai_provider', targetProvider);
     localStorage.setItem('google_ai_provider_selection_source', 'manual');
 
-    if (targetProvider === 'agent-platform') {
-      localStorage.setItem('agent_platform_api_key', key);
-    } else {
-      localStorage.setItem('gemini_api_key', key);
-    }
+    persistApiKey(key, targetProvider);
 
     localStorage.setItem(GEMINI_MODEL_STORAGE_KEY, model);
     setApiKey(key);
@@ -252,8 +270,10 @@ const App: React.FC = () => {
     // 🆕 Nếu đang có lỗi (ví dụ: hết quota), clear error và reinitialize chat với key mới
     if (state.error) {
       setState(prev => ({ ...prev, error: null }));
-      // Reinitialize chat session với key mới
+      // Reinitialize chat session với key mới — giữ lại lịch sử hội thoại (init sẽ xóa history)
+      const savedHistory = getChatHistory();
       initializeGeminiChat(key, model, targetProvider);
+      setChatHistory(savedHistory);
     }
   };
 
@@ -323,6 +343,13 @@ const App: React.FC = () => {
   });
 
   const [outlineFeedback, setOutlineFeedback] = useState("");
+
+  // Bước đang viết thì bị lỗi (để sidebar đánh dấu đúng chỗ dừng)
+  const [failedStep, setFailedStep] = useState<GenerationStep | null>(null);
+
+  // Luôn trỏ tới API key mới nhất — dùng trong các callback có deps rỗng (restoreSession)
+  const apiKeyRef = useRef(apiKey);
+  apiKeyRef.current = apiKey;
 
   // Phụ lục riêng biệt
   const [appendixDocument, setAppendixDocument] = useState('');
@@ -431,9 +458,11 @@ const App: React.FC = () => {
         rawProvider === 'agent-platform' && selectionSource === 'manual'
           ? 'agent-platform'
           : 'gemini';
-      const savedKey = activeProvider === 'agent-platform'
+      const storedKey = activeProvider === 'agent-platform'
         ? localStorage.getItem('agent_platform_api_key')
         : localStorage.getItem('gemini_api_key');
+      // Key hệ thống (.env) không nằm trong localStorage → dùng key đang có trong state
+      const savedKey = storedKey && isValidGoogleAiApiKey(storedKey) ? storedKey : apiKeyRef.current;
       const savedModel = localStorage.getItem(GEMINI_MODEL_STORAGE_KEY);
       if (savedKey && isValidGoogleAiApiKey(savedKey)) {
         initializeGeminiChat(savedKey.trim(), savedModel || undefined, activeProvider);
@@ -669,26 +698,17 @@ QUY TẮC BẮT BUỘC:
   };
 
   // Start the Generation Process
-  const startGeneration = async (attempt: number = 0) => {
-    const activeApiKey = (provider === 'gemini' ? localStorage.getItem('gemini_api_key') : null) || apiKey;
-    if (!activeApiKey) {
+  const startGeneration = async () => {
+    if (!apiKey) {
       setShowApiModal(true);
       return;
     }
 
-    if (attempt >= 3) {
-      setState(prev => ({
-        ...prev,
-        isStreaming: false,
-        error: 'Đã thử lại 3 lần nhưng chưa thành công. Vui lòng kiểm tra API Key trong Cài đặt.'
-      }));
-      return;
-    }
-
+    let generatedText = "";
     try {
-      setState(prev => ({ ...prev, step: GenerationStep.OUTLINE, isStreaming: true, error: null }));
+      setState(prev => ({ ...prev, step: GenerationStep.OUTLINE, isStreaming: true, error: null, fullDocument: '' }));
 
-      initializeGeminiChat(activeApiKey, selectedModel, provider);
+      initializeGeminiChat(apiKey, selectedModel, provider);
 
       const isHigherEd = HIGHER_ED_LEVELS.includes(userInfo.level);
       const learnerTerm = isHigherEd ? 'sinh viên' : 'học sinh';
@@ -1230,8 +1250,9 @@ QUAN TRỌNG:
       └─────────────────────────────────┘
 `;
 
-      let generatedText = "";
-      await sendMessageStream(initMessage, (chunk) => {
+      // Chế độ Cải thiện: đưa văn bản gốc + kết quả thẩm định vào ngay lần lập dàn ý đầu tiên
+      const healingSnippet = getHealingPromptSnippet(healingContext, true);
+      await sendMessageStream(healingSnippet + initMessage, (chunk) => {
         generatedText += chunk;
         setState(prev => ({
           ...prev,
@@ -1244,30 +1265,40 @@ QUAN TRỌNG:
 
     } catch (error: any) {
       setFallbackNotice(null);
+      // Thử xoay API key nếu lỗi quota/rate limit (chỉ áp dụng cho Gemini API)
       const errorType = parseApiError(error);
-      if (provider === 'gemini') {
-        // markKeyError tự quyết định: cooldown với quota/rate limit,
-        // đánh dấu 'error' với key sai, và giữ nguyên key nếu chỉ là model quá tải.
-        const rotation = apiKeyManager.markKeyError(activeApiKey, errorType);
+      if (provider === 'gemini' && (errorType === 'QUOTA_EXCEEDED' || errorType === 'RATE_LIMIT')) {
+        const rotation = apiKeyManager.markKeyError(apiKey, errorType, provider);
         if (rotation.success && rotation.newKey) {
-          console.warn(`🔑 Xoay sang key dự phòng (${errorType})`);
-          setApiKey(rotation.newKey);              // quan trọng: cập nhật state
-          localStorage.setItem('gemini_api_key', rotation.newKey);
-          initializeGeminiChat(rotation.newKey, selectedModel, provider);
+          console.log(`🔄 Tự động xoay key: ${rotation.message}`);
+          setApiKey(rotation.newKey);
+          persistApiKey(rotation.newKey, provider);
+          // Tự động thử lại với key mới — gọi qua ref để dùng closure mới nhất (apiKey đã đổi)
           setState(prev => ({ ...prev, isStreaming: false, error: null }));
-          setTimeout(() => startGeneration(attempt + 1), 500);
+          setTimeout(() => startGenerationRef.current(), 500);
           return;
         }
       }
-      setState(prev => ({ ...prev, isStreaming: false, error: error.message || "Failed to generate." }));
+      setFailedStep(GenerationStep.OUTLINE);
+      // Chưa nhận được chữ nào → quay về form nhập để người dùng bấm lại, không kẹt ở màn dàn ý trống
+      setState(prev => ({
+        ...prev,
+        isStreaming: false,
+        step: generatedText.trim() ? prev.step : GenerationStep.INPUT_FORM,
+        error: error.message || "Failed to generate."
+      }));
     }
   };
+  const startGenerationRef = useRef(startGeneration);
+  startGenerationRef.current = startGeneration;
 
   // Regenerate Outline based on feedback
   const regenerateOutline = async (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
     if (!outlineFeedback.trim()) return;
 
+    // Giữ dàn ý cũ để khôi phục nếu yêu cầu viết lại thất bại (tránh mất trắng dàn ý)
+    const previousOutline = state.fullDocument;
     try {
       setState(prev => ({ ...prev, isStreaming: true, error: null, fullDocument: '' }));
 
@@ -1307,24 +1338,18 @@ QUAN TRỌNG:
 
     } catch (error: any) {
       setFallbackNotice(null);
-      setState(prev => ({ ...prev, isStreaming: false, error: error.message }));
+      setFailedStep(GenerationStep.OUTLINE);
+      setState(prev => ({ ...prev, isStreaming: false, fullDocument: previousOutline, error: error.message }));
     }
   };
+  const regenerateOutlineRef = useRef(regenerateOutline);
+  regenerateOutlineRef.current = regenerateOutline;
 
   // Generate Next Section
-  const generateNextSection = async (stepToRun?: GenerationStep, attempt: number = 0) => {
+  const generateNextSection = async (stepToRun?: GenerationStep) => {
     // ⚠️ GUARD: Ngăn gọi trùng khi đang streaming (race condition)
     if (state.isStreaming) {
       console.warn('⚠️ generateNextSection bị chặn: đang streaming');
-      return;
-    }
-
-    if (attempt >= 3) {
-      setState(prev => ({
-        ...prev,
-        isStreaming: false,
-        error: 'Đã thử lại 3 lần nhưng chưa thành công. Vui lòng kiểm tra API Key trong Cài đặt.'
-      }));
       return;
     }
 
@@ -1334,7 +1359,11 @@ QUAN TRỌNG:
 
     const activeStep = stepToRun !== undefined ? stepToRun : state.step;
     console.log(`📝 generateNextSection: activeStep=${activeStep}, state.step=${state.step}, stepToRun=${stepToRun}`);
-    const healingSnippet = getHealingPromptSnippet(healingContext);
+    // Dàn ý nhập tay (không qua startGeneration) thì AI chưa thấy văn bản gốc → gửi kèm ở bước đầu tiên
+    const healingSnippet = getHealingPromptSnippet(
+      healingContext,
+      activeStep === GenerationStep.OUTLINE && getChatHistory().length === 0
+    );
 
     // Logic for OUTLINE step specifically handles manual edits synchronization
     if (activeStep === GenerationStep.OUTLINE) {
@@ -1726,18 +1755,33 @@ SGK: ${userInfo.textbook}
 
     if (!currentStepPrompt) return;
 
+    // Bước kết thúc chỉ là thông báo hoàn thành, không ghi vào văn bản →
+    // không cần tốn một lượt gọi AI, chuyển thẳng sang COMPLETED rồi tạo phụ lục.
+    if (!shouldAppend && nextStepEnum === GenerationStep.COMPLETED) {
+      setState(prev => ({ ...prev, error: null, step: GenerationStep.COMPLETED }));
+      setTimeout(() => {
+        generateAppendixRef.current();
+      }, 1000);
+      return;
+    }
+
+    // Ảnh chụp văn bản trước khi viết phần mới: nếu lỗi giữa chừng thì khôi phục,
+    // tránh phần viết dở bị nối thêm lần nữa khi bấm Thử lại.
+    const documentBeforeSection = state.fullDocument;
     setState(prev => ({ ...prev, isStreaming: true, error: null, step: nextStepEnum }));
 
     try {
-      let sectionText = "\n\n---\n\n"; // Separator
+      let isFirstChunk = true;
       // Tiêm healing context vào prompt nếu đang ở chế độ Cải thiện
       const finalPrompt = healingSnippet + currentStepPrompt;
       await sendMessageStream(finalPrompt, (chunk) => {
-        sectionText += chunk;
         if (shouldAppend) {
+          // Ngăn phần mới dính liền vào dòng cuối của phần trước
+          const piece = isFirstChunk ? `\n\n${chunk}` : chunk;
+          isFirstChunk = false;
           setState(prev => ({
             ...prev,
-            fullDocument: prev.fullDocument + chunk
+            fullDocument: prev.fullDocument + piece
           }));
         }
       }, provider, ThinkingLevel.MEDIUM);
@@ -1746,45 +1790,55 @@ SGK: ${userInfo.textbook}
       setState(prev => ({ ...prev, isStreaming: false }));
 
       // Tự động gọi hàm kế tiếp nếu chưa tới bài toán COMPLETED
-      // Timeout một xíu để mượt UX render
+      // Timeout một xíu để mượt UX render. Gọi qua ref để dùng closure của lần render mới nhất
+      // (closure hiện tại vẫn giữ fullDocument/apiKey cũ từ lúc bấm nút).
       if (nextStepEnum !== GenerationStep.COMPLETED) {
         if (autoGenerateRef.current) {
           setTimeout(() => {
-            generateNextSection(nextStepEnum);
+            generateNextSectionRef.current(nextStepEnum);
           }, 1500);
         }
       } else {
         // Nếu đã hoàn thành, tự động tạo phụ lục
         setTimeout(() => {
-          generateAppendix();
+          generateAppendixRef.current();
         }, 3000);
       }
 
     } catch (error: any) {
       setFallbackNotice(null);
+      // Thử xoay API key nếu lỗi quota/rate limit (chỉ áp dụng cho Gemini API)
       const errorType = parseApiError(error);
-      if (provider === 'gemini') {
-        const activeApiKey = localStorage.getItem('gemini_api_key') || apiKey;
-        const rotation = apiKeyManager.markKeyError(activeApiKey, errorType);
+      if (provider === 'gemini' && (errorType === 'QUOTA_EXCEEDED' || errorType === 'RATE_LIMIT')) {
+        const rotation = apiKeyManager.markKeyError(apiKey, errorType, provider);
         if (rotation.success && rotation.newKey) {
-          console.warn(`🔑 Xoay sang key dự phòng (${errorType})`);
+          console.log(`🔄 Tự động xoay key: ${rotation.message}`);
           setApiKey(rotation.newKey);
-          localStorage.setItem('gemini_api_key', rotation.newKey);
-          initializeGeminiChat(rotation.newKey, selectedModel, provider);
-          // Khôi phục chat history trước khi retry
+          persistApiKey(rotation.newKey, provider);
+          // Giữ lịch sử hội thoại khi đổi key (init sẽ xóa history)
           const savedHistory = getChatHistory();
-          if (savedHistory.length > 0) {
-            setChatHistory(savedHistory);
-          }
-          // Tự động thử lại với key mới
-          setState(prev => ({ ...prev, isStreaming: false, error: null }));
-          setTimeout(() => generateNextSection(activeStep, attempt + 1), 500);
+          initializeGeminiChat(rotation.newKey, selectedModel, provider);
+          setChatHistory(savedHistory);
+          // Tự động thử lại với key mới: khôi phục văn bản + bước trước khi viết phần lỗi
+          setState(prev => ({ ...prev, isStreaming: false, error: null, step: activeStep, fullDocument: documentBeforeSection }));
+          setTimeout(() => generateNextSectionRef.current(activeStep), 500);
           return;
         }
       }
-      setState(prev => ({ ...prev, isStreaming: false, error: error.message }));
+      // Quay lại bước vừa hoàn thành để mọi nút "Viết tiếp"/"Thử lại" viết lại ĐÚNG phần bị lỗi,
+      // thay vì nhảy qua phần đó (trước đây step đã bị đẩy sang bước kế trước khi gọi AI).
+      setFailedStep(nextStepEnum);
+      setState(prev => ({
+        ...prev,
+        isStreaming: false,
+        step: activeStep,
+        fullDocument: documentBeforeSection,
+        error: error.message
+      }));
     }
   };
+  const generateNextSectionRef = useRef(generateNextSection);
+  generateNextSectionRef.current = generateNextSection;
 
   // Export to Word
   const exportToWord = async () => {
@@ -1802,6 +1856,8 @@ SGK: ${userInfo.textbook}
 
   // Generate Appendix - Function riêng để tạo phụ lục
   const generateAppendix = async () => {
+    // Tránh tạo phụ lục 2 lần (tự động + người dùng bấm nút cùng lúc)
+    if (isAppendixLoading || appendixDocument) return;
     if (!apiKey) {
       setShowApiModal(true);
       return;
@@ -2026,6 +2082,9 @@ Tổ: [Tổ chuyên môn]
       setIsAppendixLoading(false);
     }
   };
+  // Tạo phụ lục tự động (setTimeout) phải đọc fullDocument MỚI NHẤT, không phải bản dàn ý lúc bắt đầu
+  const generateAppendixRef = useRef(generateAppendix);
+  generateAppendixRef.current = generateAppendix;
 
   // Export Appendix to Word - Xuất phụ lục thành file Word riêng
   const exportAppendixToWord = async () => {
@@ -2070,7 +2129,8 @@ Tổ: [Tổ chuyên môn]
             let icon = <div className="w-2 h-2 rounded-full bg-gray-300" />;
 
             // ERROR STATE HANDLING
-            if (state.error && state.step === stepNum) {
+            const isFailedStep = !!state.error && failedStep === stepNum;
+            if (isFailedStep) {
               statusColor = "text-red-600 border-red-600 bg-red-50";
               icon = <AlertTriangle className="w-4 h-4 text-red-600" />;
             }
@@ -2097,11 +2157,11 @@ Tổ: [Tổ chuyên môn]
               <div
                 key={key}
                 onClick={handleStepClick}
-                className={`flex items - start pl - 4 border - l - 2 ${statusColor.includes('border-sky') ? 'border-sky-500' : statusColor.includes('border-red') ? 'border-red-500' : 'border-gray-200'} py - 1 transition - all ${isClickable ? 'cursor-pointer hover:bg-sky-50 rounded-r-lg' : ''} `}
+                className={`flex items-start pl-4 border-l-2 ${statusColor.includes('border-sky') ? 'border-sky-500' : statusColor.includes('border-red') ? 'border-red-500' : 'border-gray-200'} py-1 transition-all ${isClickable ? 'cursor-pointer hover:bg-sky-50 rounded-r-lg' : ''}`}
               >
                 <div className="flex-1">
-                  <h4 className={`text - sm ${statusColor.includes('text-sky') ? 'text-sky-900' : statusColor.includes('text-red') ? 'text-red-700' : 'text-gray-500'} font - medium`}>
-                    {state.error && state.step === stepNum ? "Đã dừng do lỗi" : info.label}
+                  <h4 className={`text-sm ${statusColor.includes('text-sky') ? 'text-sky-900' : statusColor.includes('text-red') ? 'text-red-700' : 'text-gray-500'} font-medium`}>
+                    {isFailedStep ? `Đã dừng do lỗi — ${info.label}` : info.label}
                   </h4>
                   <p className="text-xs text-gray-400">{info.description}</p>
                 </div>
@@ -2387,12 +2447,20 @@ Tổ: [Tổ chuyên môn]
               selectedModel={selectedModel}
               provider={provider}
               onHealDoc={(originalContent, analysisResult) => {
+                if (state.isStreaming) {
+                  alert('AI đang viết, vui lòng đợi hoàn tất rồi thử lại.');
+                  return;
+                }
+                if (state.step > GenerationStep.INPUT_FORM &&
+                  !confirm('Bắt đầu viết lại Biện pháp từ bản thẩm định? Bản đang viết dở trên màn hình sẽ được thay thế (hãy xuất Word trước nếu cần giữ).')) {
+                  return;
+                }
                 setHealingContext({ originalContent, analysisResult });
+                // Không tự động sinh dàn ý ngay: form thông tin (tên đề tài, môn, cấp học...) còn trống
+                // và chưa qua kiểm tra hợp lệ. Đưa người dùng về form để điền rồi bấm "Tiếp theo".
+                setState(prev => ({ ...prev, step: GenerationStep.INPUT_FORM, fullDocument: '', error: null }));
+                setAppendixDocument('');
                 setActiveAppTab('create');
-                // Auto-trigger sinh dàn ý cải thiện sau khi state update
-                setTimeout(() => {
-                  startGeneration();
-                }, 500);
               }}
             />
           </div>
@@ -2424,7 +2492,7 @@ Tổ: [Tổ chuyên môn]
               <div className="flex justify-between items-center">
                 <h1 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-500 text-xl" style={{ fontFamily: 'Nunito, sans-serif' }}>BIỆN PHÁP GVG</h1>
                 <span className="text-xs bg-blue-100 text-blue-700 px-3 py-1 rounded-full font-medium">
-                  {STEPS_INFO[state.step < 9 ? state.step : 8].label}
+                  {STEPS_INFO[state.step]?.label || ''}
                 </span>
               </div>
               <p className="text-xs text-blue-700 font-medium">✨ TRỢ LÝ VIẾT BIỆN PHÁP GVG/GVCN GIỎI</p>
@@ -2500,33 +2568,41 @@ Tổ: [Tổ chuyên môn]
                           let keyToUse = apiKey;
                           if (provider === 'gemini') {
                             // Xoay sang API key tiếp theo trước khi thử lại
-                            const rotation = apiKeyManager.rotateToNextKey('manual_retry');
+                            const rotation = apiKeyManager.rotateToNextKey('manual_retry', provider);
                             if (rotation.success && rotation.newKey) {
                               keyToUse = rotation.newKey;
                               setApiKey(keyToUse);
-                              localStorage.setItem('gemini_api_key', keyToUse);
+                              persistApiKey(keyToUse, provider);
                               console.log(`🔑 Đã xoay sang key mới: ${rotation.message}`);
                             } else {
                               // Nếu không có key khác, reset tất cả key và thử lại
-                              apiKeyManager.resetAllKeys();
-                              const freshKey = apiKeyManager.getActiveKey();
+                              apiKeyManager.resetAllKeys(provider);
+                              const freshKey = apiKeyManager.getActiveKey(provider);
                               if (freshKey) {
                                 keyToUse = freshKey;
                                 setApiKey(keyToUse);
-                                localStorage.setItem('gemini_api_key', keyToUse);
+                                persistApiKey(keyToUse, provider);
                                 console.log('🔄 Đã reset tất cả key và thử lại');
                               }
                             }
                           }
                           setState(prev => ({ ...prev, error: null }));
-                          initializeGeminiChat(keyToUse, selectedModel, provider);
-                          // Khôi phục chat history trước khi retry
+                          // Lấy lịch sử TRƯỚC khi init (init sẽ xóa history), rồi khôi phục lại
                           const savedHistory = getChatHistory();
+                          initializeGeminiChat(keyToUse, selectedModel, provider);
                           if (savedHistory.length > 0) {
                             setChatHistory(savedHistory);
                           }
+                          // Gọi qua ref để dùng apiKey/state mới nhất sau khi xoay key
+                          const retryOutline = failedStep === GenerationStep.OUTLINE && state.step === GenerationStep.OUTLINE;
                           setTimeout(() => {
-                            state.step === GenerationStep.OUTLINE ? startGeneration() : generateNextSection();
+                            if (retryOutline) {
+                              // Lỗi khi lập/viết lại dàn ý → làm lại đúng thao tác đó
+                              if (outlineFeedback.trim()) regenerateOutlineRef.current();
+                              else startGenerationRef.current();
+                            } else {
+                              generateNextSectionRef.current();
+                            }
                           }, 300);
                         }}
                         className="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-colors flex items-center gap-2"
@@ -2556,7 +2632,7 @@ Tổ: [Tổ chuyên môn]
                   provider={provider}
                   userInfo={userInfo}
                   onChange={handleUserChange}
-                  onSubmit={() => startGeneration()}
+                  onSubmit={startGeneration}
                   onManualSubmit={handleManualOutlineSubmit}
                   isSubmitting={state.isStreaming}
                 />
@@ -2568,11 +2644,6 @@ Tổ: [Tổ chuyên môn]
                   onUpdate={handleDocumentUpdate}
                   // Only allow direct editing in the OUTLINE step and when not streaming
                   isEditable={state.step === GenerationStep.OUTLINE && !state.isStreaming}
-                  isStreaming={state.isStreaming}
-                  error={state.error}
-                  onRetry={() =>
-                    state.step === GenerationStep.OUTLINE ? startGeneration() : generateNextSection()
-                  }
                 />
 
                 {/* Mobile Controls Floating */}

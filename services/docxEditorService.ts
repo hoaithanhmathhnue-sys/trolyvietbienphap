@@ -73,38 +73,27 @@ ${JSON.stringify(items, null, 2)}
     return JSON.parse(jsonText);
 }
 
-// Tạo prompt giảm AI dựa trên kết quả thẩm định
-function buildAIReductionPrompt(analysisResult?: any): string {
+// Tạo prompt yêu cầu viết lại cho rõ ràng, mạch lạc, đúng văn phong học thuật.
+// KHÔNG nhắm tới việc né bộ phát hiện AI hay đặt ngưỡng % — mục tiêu duy nhất là chất lượng văn bản.
+function buildClarityImprovementPrompt(analysisResult?: any): string {
     if (!analysisResult) return '';
-    const aiRisk = analysisResult.aiRiskPercent || 0;
-    if (aiRisk < 30) return '';
 
-    const patterns = (analysisResult.aiRiskDetails?.suspiciousPatterns || []).slice(0, 5);
-    const patternsList = patterns.length > 0
-        ? patterns.map((p: string, i: number) => `${i + 1}. "${p}"`).join('\n')
-        : 'Không có mẫu cụ thể';
+    const recommendations = (analysisResult.aiRiskDetails?.recommendations || []).slice(0, 5);
+    const recommendationsList = recommendations.length > 0
+        ? recommendations.map((r: string, i: number) => `${i + 1}. ${r}`).join('\n')
+        : '';
 
     return `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚨 GIẢM NGUY CƠ AI (AI Risk hiện tại: ${aiRisk}%) — BẮT BUỘC ÁP DỤNG
+✍️ YÊU CẦU VIẾT LẠI RÕ RÀNG, MẠCH LẠC, TỰ NHIÊN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Các mẫu câu AI phát hiện:
-${patternsList}
+Hãy viết lại các đoạn dưới đây để:
+- Giọng văn tự nhiên như một giáo viên chia sẻ kinh nghiệm thực tế của chính mình, có suy nghĩ, quan sát cá nhân.
+- Đa dạng độ dài câu và cấu trúc câu, tránh lặp từ/cụm từ sáo rỗng.
+- Giữ nguyên số liệu, tên riêng, trích dẫn pháp lý — KHÔNG tự thêm hoặc chỉnh số liệu.
+${recommendationsList ? `\nGợi ý cải thiện từ bước thẩm định:\n${recommendationsList}` : ''}
 
-Áp dụng 10 KỸ THUẬT VƯỢT AI DETECTION sau để sửa lại văn bản, mục tiêu đưa AI score xuống dưới 15%:
-
-1. PERPLEXITY INJECTION: Thay 15-20% từ ngữ thông dụng bằng từ đồng nghĩa học thuật ít gặp hơn. Tránh lặp lại cùng 1 cụm từ trong 3 câu liên tiếp.
-2. BURSTINESS CONTROL: Đảm bảo có câu ngắn (<15 từ) xen kẽ câu dài (>40 từ). Không để 3 câu liên tiếp có độ dài tương đương.
-3. SYNTACTIC VARIATION: Thay đổi chủ ngữ đa dạng ("Tôi" → "Việc..." → "Quá trình..."). Dùng câu bị động 20-30%.
-4. LEXICAL SUBSTITUTION: Không lặp danh từ chính trong 2 câu liên tiếp. Chuẩn bị 3-4 từ đồng nghĩa cho khái niệm chính.
-5. SENTENCE COMPLEXITY: Xen kẽ câu đơn (20%), câu ghép (30%), câu phức (50%). Không 3 câu cùng loại liên tiếp.
-6. TRANSITION VARIATION: Không dùng cùng 1 liên từ quá 2 lần. "tuy nhiên" → "song" → "ngược lại" → "trái lại".
-7. INFORMATION DENSITY: 30% câu nhiều thông tin (số liệu), 40% trung bình, 30% ít thông tin (kết luận ngắn).
-8. PASSIVE VOICE: Dùng bị động 20-25% ở phần Phương pháp. Giữ chủ động ở suy nghĩ cá nhân.
-9. NOMINALIZATION: 60% danh từ hóa, 40% động từ. Không 3 câu liên tiếp toàn danh từ hóa.
-10. MICRO-VARIATION: Thêm ngoặc đơn chú thích, dấu hai chấm, trình bày số liệu đa dạng (%, phân số, tỷ lệ).
-
-⚠️ QUAN TRỌNG: Sửa TẤT CẢ các đoạn có dấu hiệu AI, KHÔNG CHỈ đoạn đạo văn. Mục tiêu: AI score < 15%.
+⚠️ KHÔNG hướng tới việc "vượt qua" bất kỳ công cụ phát hiện AI nào, không đặt mục tiêu theo phần trăm điểm số. Chỉ tập trung vào việc văn bản rõ ràng, mạch lạc và trung thực.
 `;
 }
 
@@ -115,8 +104,8 @@ export async function processDocxFile(
     onProgress: (percent: number, message: string) => void,
     analysisResult?: any,
     provider?: AiProvider
-): Promise<Blob> {
-    const aiReductionPrompt = buildAIReductionPrompt(analysisResult);
+): Promise<{ blob: Blob; failedBatches: number; totalBatches: number }> {
+    const clarityPrompt = buildClarityImprovementPrompt(analysisResult);
     onProgress(5, "Đang mở file tài liệu gốc...");
     
     // Đọc array buffer
@@ -162,6 +151,8 @@ export async function processDocxFile(
     // Xử lý theo từng lô (Batching)
     const BATCH_SIZE = 5; 
     let completed = 0;
+    const totalBatches = Math.ceil(targetParagraphs.length / BATCH_SIZE);
+    let failedBatches = 0;
     
     for (let i = 0; i < targetParagraphs.length; i += BATCH_SIZE) {
         const batch = targetParagraphs.slice(i, i + BATCH_SIZE);
@@ -172,7 +163,7 @@ export async function processDocxFile(
         });
         
         try {
-            const rewrittenObj = await rewriteTextBatch(apiKey, selectedModel, payload, aiReductionPrompt, provider);
+            const rewrittenObj = await rewriteTextBatch(apiKey, selectedModel, payload, clarityPrompt, provider);
             
             // Tiến hành thay thế trong DOM
             Object.keys(rewrittenObj).forEach(key => {
@@ -197,7 +188,10 @@ export async function processDocxFile(
                 }
             });
         } catch (error) {
-            console.error("Lỗi khi xử lý batch: ", error); // Vẫn chạy tiếp dù 1 batch lỗi
+            // Không âm thầm bỏ qua: đếm số lô lỗi để báo rõ cho người dùng ở cuối quá trình,
+            // vì phần văn bản tương ứng sẽ KHÔNG được cải thiện (xem P1.7 trong báo cáo rà soát).
+            failedBatches++;
+            console.error(`Lỗi khi xử lý batch (đoạn ${i + 1}-${Math.min(i + BATCH_SIZE, targetParagraphs.length)}):`, error);
         }
         
         completed += batch.length;
@@ -215,6 +209,10 @@ export async function processDocxFile(
     
     // Xuất Blob DOCX
     const blob = await zip.generateAsync({ type: "blob" });
-    onProgress(100, "Hoàn tất!");
-    return blob;
+    if (failedBatches > 0) {
+        onProgress(100, `Hoàn tất, nhưng ${failedBatches}/${totalBatches} lô xử lý bị lỗi — một số đoạn chưa được cải thiện.`);
+    } else {
+        onProgress(100, "Hoàn tất!");
+    }
+    return { blob, failedBatches, totalBatches };
 }

@@ -208,9 +208,10 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
     try {
       const arrayBuffer = await selectedFile.arrayBuffer();
       let extractedText = '';
-      if (selectedFile.type === 'application/pdf') {
+      const lowerName = selectedFile.name.toLowerCase();
+      if (selectedFile.type === 'application/pdf' || lowerName.endsWith('.pdf')) {
         extractedText = await extractTextFromPdf(arrayBuffer);
-      } else if (selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || selectedFile.name.endsWith('.docx')) {
+      } else if (selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || lowerName.endsWith('.docx')) {
         const result = await mammoth.extractRawText({ arrayBuffer });
         extractedText = result.value;
       } else {
@@ -219,6 +220,12 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
           reader.onload = (e) => resolve(e.target?.result as string);
           reader.readAsText(selectedFile);
         });
+      }
+      if (!extractedText.trim()) {
+        alert("File không chứa văn bản có thể trích xuất (có thể là PDF dạng ảnh/scan). Vui lòng dùng file Word hoặc PDF có chữ.");
+        setFile(null);
+        setOriginalContent('');
+        return;
       }
       setOriginalContent(extractedText);
     } catch (error) {
@@ -258,18 +265,24 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
     setImproveMessage('Bắt đầu xử lý...');
     try {
       const defaultModel = provider === 'agent-platform' ? DEFAULT_AGENT_PLATFORM_MODEL : DEFAULT_GEMINI_MODEL;
-      const blob = await processDocxFile(file, apiKey, selectedModel || defaultModel, (percent, msg) => {
+      const { blob, failedBatches, totalBatches } = await processDocxFile(file, apiKey, selectedModel || defaultModel, (percent, msg) => {
         setImproveProgress(percent);
         setImproveMessage(msg);
       }, analysisResult || undefined, provider);
       const url = window.URL.createObjectURL(blob);
+      // Giải phóng blob URL của lần cải thiện trước (nếu có)
+      if (improvedDocxUrl) window.URL.revokeObjectURL(improvedDocxUrl);
       setImprovedDocxUrl(url);
       setImprovedDocxName(`[DA_CAI_THIEN]_${file.name}`);
       const a = document.createElement('a');
       a.href = url; a.download = `[DA_CAI_THIEN]_${file.name}`;
       document.body.appendChild(a); a.click(); a.remove();
-      setImproveMessage('Hoàn tất!');
-      setTimeout(() => setIsImprovingDocx(false), 2000);
+      if (failedBatches > 0) {
+        setImproveMessage(`Hoàn tất, nhưng ${failedBatches}/${totalBatches} lô xử lý bị lỗi — một số đoạn chưa được cải thiện. Vui lòng kiểm tra lại file.`);
+      } else {
+        setImproveMessage('Hoàn tất!');
+      }
+      setTimeout(() => setIsImprovingDocx(false), 2500);
     } catch (error: any) {
       alert('Lỗi cải thiện DOCX: ' + error.message);
       setIsImprovingDocx(false);
@@ -286,6 +299,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
 
   const getRiskColor = (level: string) => {
     const l = level.toLowerCase();
+    if (l.includes('chưa xác định')) return '#6B7280';
     if (l.includes('cao') || l.includes('nguy hiểm') || l.includes('rất')) return '#DC2626';
     if (l.includes('trung bình')) return '#D97706';
     return '#16A34A';
@@ -365,7 +379,11 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
                 <ShieldAlert className="w-6 h-6 text-teal-500" /> Kết quả Phân tích
               </h3>
               <div className="flex items-center gap-2">
-                <button onClick={() => { setAnalysisResult(null); setFile(null); setOriginalContent(''); }}
+                <button onClick={() => {
+                  setAnalysisResult(null); setFile(null); setOriginalContent('');
+                  if (improvedDocxUrl) window.URL.revokeObjectURL(improvedDocxUrl);
+                  setImprovedDocxUrl(null); setImprovedDocxName('');
+                }}
                   className="text-sm text-gray-500 hover:text-gray-700 underline">
                   Thẩm định file khác
                 </button>
@@ -375,6 +393,16 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
             <p className="text-sm text-gray-600 italic bg-teal-50 px-4 py-2 rounded-lg border border-teal-100">
               {r.summary}
             </p>
+
+            <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2">
+              ⚠️ <strong>Lưu ý quan trọng:</strong> Các chỉ số "Nguy cơ đạo văn" và "Nguy cơ AI" dưới đây là <strong>ước lượng chủ quan của mô hình AI</strong> dựa trên văn phong, KHÔNG phải kết quả đối chiếu với cơ sở dữ liệu văn bản thật (không dùng Turnitin, iThenticate hay công cụ đối chiếu nguồn nào). Nguồn/% tương tự do AI suy diễn, cần tự kiểm tra lại trước khi kết luận.
+            </div>
+
+            {r.totalChars > r.analyzedChars && (
+              <div className="text-xs text-red-700 bg-red-50 border border-red-200 rounded-lg px-4 py-2">
+                ✂️ <strong>Văn bản dài nên chỉ được chấm một phần:</strong> AI mới đánh giá {r.analyzedChars.toLocaleString()} / {r.totalChars.toLocaleString()} ký tự đầu (khoảng {Math.round((r.analyzedChars / r.totalChars) * 100)}%). Các mục nằm ở phần sau của văn bản chưa được xem xét.
+              </div>
+            )}
 
             {/* ===== ROW 1: 4 Cards (Chất lượng, Đạo văn, AI, Cấu trúc) ===== */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -525,7 +553,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
 
               {r.aiRiskPercent >= 30 && (
                 <div className="mt-3 bg-orange-100 border border-orange-300 rounded-lg p-3 text-sm text-orange-800">
-                  <strong>⚠️ Lưu ý:</strong> Nguy cơ AI cao ({r.aiRiskPercent}%). Khi bấm "Xác nhận Cải thiện", hệ thống sẽ tự động áp dụng <strong>10 kỹ thuật giảm AI</strong> (Perplexity Injection, Burstiness Control, Syntactic Variation...) để đưa AI score về mức an toàn.
+                  <strong>⚠️ Lưu ý:</strong> Nguy cơ AI ước lượng ({r.aiRiskPercent}%) khá cao theo đánh giá của AI. Khi bấm "Xác nhận Cải thiện", hệ thống sẽ viết lại các đoạn này theo hướng rõ ràng, mạch lạc và tự nhiên hơn — <strong>không nhằm né tránh bất kỳ công cụ phát hiện AI nào</strong>.
                 </div>
               )}
 

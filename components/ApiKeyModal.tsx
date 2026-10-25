@@ -109,11 +109,8 @@ export const ApiKeyModal: React.FC<ApiKeyModalProps> = ({ isOpen, onSave, onClos
         localStorage.removeItem(LEGACY_SELECTED_MODEL_STORAGE_KEY);
         localStorage.setItem('google_ai_provider', provider);
         localStorage.setItem('google_ai_provider_selection_source', 'manual');
-        if (provider === 'agent-platform') {
-            localStorage.setItem('agent_platform_api_key', keyToSave);
-        } else {
-            localStorage.setItem('gemini_api_key', keyToSave);
-        }
+        // Key hệ thống (.env) KHÔNG được ghi xuống localStorage (chỉ giữ trong bộ nhớ phiên).
+        // Việc lưu key người dùng do onSave (App.handleSaveApiKey) đảm nhiệm.
         localStorage.setItem(GEMINI_MODEL_STORAGE_KEY, selectedModel);
 
         setError('');
