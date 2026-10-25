@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import { Edit, Save, X, FileText, RefreshCw } from 'lucide-react';
+import { Edit, Save, X, FileText } from 'lucide-react';
 import { Button } from './Button';
 
 /**
@@ -106,7 +106,7 @@ function formatContent(text: string): string {
 
     let content = segment.content;
 
-    // Pattern 1: Xuống dòng trước "• Bước X:" hoặc "Bước X:"
+    // Pattern 1: Xuống dòng trước "• Bước X:" hoặc "Bước X:" 
     content = content.replace(/([^\n])\s*(•\s*Bước\s+\d+)/gi, '$1\n\n$2');
     content = content.replace(/([^\n])\s*(Bước\s+\d+\s*:)/gi, '$1\n\n$2');
 
@@ -159,28 +159,13 @@ interface Props {
   content: string;
   onUpdate?: (newContent: string) => void;
   isEditable?: boolean;
-  /** Đang nhận dữ liệu từ AI */
-  isStreaming?: boolean;
-  /** Thông báo lỗi đã thân thiện hoá; có giá trị nghĩa là request đã chết */
-  error?: string | null;
-  /** Cho phép người dùng thử lại ngay tại chỗ */
-  onRetry?: () => void;
 }
 
-export const DocumentPreview: React.FC<Props> = ({
-  content,
-  onUpdate,
-  isEditable = false,
-  isStreaming = false,
-  error = null,
-  onRetry,
-}) => {
+export const DocumentPreview: React.FC<Props> = ({ content, onUpdate, isEditable = false }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [tempContent, setTempContent] = useState(content);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
-
-  const hasContent = content.trim().length > 0;
 
   // Sync content when not editing (e.g. streaming updates)
   useEffect(() => {
@@ -188,6 +173,14 @@ export const DocumentPreview: React.FC<Props> = ({
       setTempContent(content);
     }
   }, [content, isEditing]);
+
+  // Khi hết quyền sửa (ví dụ bấm "Chốt dàn ý" lúc đang mở ô sửa) thì thoát chế độ sửa,
+  // nếu không ô textarea bị kẹt lại, mất nút Lưu/Hủy và che mất nội dung AI đang stream.
+  useEffect(() => {
+    if (!isEditable && isEditing) {
+      setIsEditing(false);
+    }
+  }, [isEditable, isEditing]);
 
   const handleSave = () => {
     if (onUpdate) {
@@ -277,54 +270,20 @@ export const DocumentPreview: React.FC<Props> = ({
           />
         ) : (
           <div className="h-full overflow-y-auto max-h-[calc(100vh-140px)] custom-scrollbar p-8 md:p-12">
-            {hasContent ? (
-              <>
-                {error && (
-                  <div className="mb-6 flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
-                    <span className="font-semibold">Nội dung có thể chưa hoàn chỉnh.</span>
-                    <span>{error}</span>
-                  </div>
-                )}
-                <article className="prose prose-sky prose-lg max-w-none text-gray-900 pb-12">
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm, remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
-                  >
-                    {formattedContent}
-                  </ReactMarkdown>
-                  <div ref={bottomRef} />
-                </article>
-              </>
-            ) : error ? (
-              /* CÓ LỖI: tuyệt đối không quay spinner nữa */
-              <div className="h-full flex flex-col items-center justify-center text-center space-y-4 px-6">
-                <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center">
-                  <X size={28} className="text-red-500" />
-                </div>
-                <p className="text-gray-800 font-semibold">Chưa tạo được nội dung</p>
-                <p className="text-sm text-gray-600 max-w-md">{error}</p>
-                {onRetry && (
-                  <button
-                    onClick={onRetry}
-                    className="mt-2 flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-sky-600 rounded-lg hover:bg-sky-700 transition-colors"
-                  >
-                    <RefreshCw size={16} /> Thử lại
-                  </button>
-                )}
-              </div>
-            ) : isStreaming ? (
-              /* ĐANG CHẠY: spinner chỉ xuất hiện ở đúng trạng thái này */
+            {content ? (
+              <article className="prose prose-sky prose-lg max-w-none text-gray-900 pb-12">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm, remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
+                >
+                  {formattedContent}
+                </ReactMarkdown>
+                <div ref={bottomRef} />
+              </article>
+            ) : (
               <div className="h-full flex flex-col items-center justify-center text-gray-400 space-y-4">
                 <div className="w-16 h-16 border-4 border-gray-200 border-t-sky-500 rounded-full animate-spin"></div>
-                <p>Đang nhận nội dung từ chuyên gia AI...</p>
-                <p className="text-xs text-gray-400">Quá 2 phút chưa có chữ, hệ thống sẽ tự báo lỗi.</p>
-              </div>
-            ) : (
-              /* CHƯA BẮT ĐẦU: không giả vờ đang tải */
-              <div className="h-full flex flex-col items-center justify-center text-center text-gray-400 space-y-3 px-6">
-                <FileText size={40} className="text-gray-300" />
-                <p className="text-gray-600">Bản thảo đang trống</p>
-                <p className="text-sm">Điền thông tin đề tài và bấm "Bắt đầu lập dàn ý" để AI viết bản thảo đầu tiên.</p>
+                <p>Đang chờ nội dung từ chuyên gia AI...</p>
               </div>
             )}
           </div>
