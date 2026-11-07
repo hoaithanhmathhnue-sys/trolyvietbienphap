@@ -39,6 +39,15 @@ export const parseApiError = (error: any): string => {
   // So khớp mã HTTP theo ranh giới từ để "4000 tokens" không bị hiểu nhầm thành lỗi 400
   const hasCode = (code: number) => new RegExp(`\\b${code}\\b`).test(combinedError);
 
+  // Key sai/hết hạn: Google trả về dạng 400 INVALID_ARGUMENT + reason API_KEY_INVALID → phải bắt trước mọi nhánh khác
+  if (
+    lowerError.includes('api_key_invalid') ||
+    lowerError.includes('api key not valid') ||
+    lowerError.includes('api key expired')
+  ) {
+    return 'INVALID_API_KEY';
+  }
+
   // 0. Ưu tiên mã lỗi có cấu trúc (ApiError.status / error.code / error.status) trước khi đoán theo text
   const structuredCode = Number(error?.status ?? error?.code ?? error?.error?.code);
   const structuredStatus = String(error?.error?.status || (typeof error?.status === 'string' ? error.status : '')).toUpperCase();
@@ -57,14 +66,14 @@ export const parseApiError = (error: any): string => {
     return 'TIMEOUT';
   }
 
-  // 1. Lỗi quota / rate limit (429)
+  // 1. Lỗi quota / rate limit (429). Hạn mức "per minute" chỉ là giới hạn tốc độ, hồi lại sau ~1 phút.
   if (
     structuredCode === 429 ||
     hasCode(429) ||
     lowerError.includes('resource_exhausted') ||
     lowerError.includes('quota')
   ) {
-    return 'QUOTA_EXCEEDED';
+    return lowerError.includes('per minute') || lowerError.includes('perminute') ? 'RATE_LIMIT' : 'QUOTA_EXCEEDED';
   }
 
   if (lowerError.includes('rate limit') || lowerError.includes('too many requests')) {
@@ -154,12 +163,13 @@ export const getFriendlyErrorMessage = (error: any): { type: string; title: stri
       return {
         type: 'quota',
         title: '⚠️ Đã vượt quá giới hạn sử dụng',
-        message: 'Đã hết quota hoặc vượt giới hạn tốc độ API. Vui lòng đợi rồi thử lại.',
+        message: 'Đã hết quota hoặc vượt giới hạn tốc độ API ở tất cả model đã thử. Vui lòng đợi rồi thử lại.',
         suggestions: [
-          '⏰ Đợi khoảng 1-2 phút rồi thử lại',
-          '🔑 Sử dụng API Key khác nếu có',
-          '📅 Đợi đến ngày hôm sau khi quota được reset',
-          '💳 Nâng cấp tài khoản Google AI Studio để có thêm quota'
+          '⏰ Đợi khoảng 1-2 phút rồi thử lại (giới hạn theo phút sẽ tự hồi)',
+          '📌 Nếu chi tiết bên dưới ghi "limit: 0": model đó không có lượt miễn phí cho key này — hãy chọn model khác (VD: Gemini 2.5 Flash) trong Cài đặt',
+          '🔑 Key mới phải thuộc PROJECT Google khác — các key cùng một project dùng chung quota',
+          '📅 Quota theo ngày được reset vào khoảng 14h–15h giờ Việt Nam',
+          '💳 Bật thanh toán (Billing) cho project trên Google AI Studio để có thêm quota'
         ]
       };
 
@@ -355,19 +365,61 @@ export const getOrderedModels = (selectedModel?: string | null, provider: AiProv
   );
 };
 
-export const shouldTryFallbackModel = (errorType: string, provider: AiProvider = 'gemini'): boolean => {
-  if (
+export const shouldTryFallbackModel = (errorType: string, _provider: AiProvider = 'gemini'): boolean => {
+  // Quota free tier và quyền truy cập được tính THEO TỪNG MODEL (api.md mục 3):
+  // hết lượt / bị chặn ở model này vẫn có thể dùng được model khác với cùng API key.
+  return (
     errorType === 'MODEL_OVERLOADED' ||
     errorType === 'TRANSIENT_SERVER_ERROR' ||
     errorType === 'NETWORK_ERROR' ||
-    errorType === 'MODEL_NOT_FOUND'
-  ) {
-    return true;
+    errorType === 'MODEL_NOT_FOUND' ||
+    errorType === 'QUOTA_EXCEEDED' ||
+    errorType === 'RATE_LIMIT' ||
+    errorType === 'PERMISSION_DENIED'
+  );
+};
+
+// Lý do hiển thị trên banner "Đang tự động chuyển model..."
+const getFallbackReason = (errorType: string): string => {
+  switch (errorType) {
+    case 'QUOTA_EXCEEDED': return 'đã hết lượt sử dụng';
+    case 'RATE_LIMIT': return 'đang bị giới hạn tốc độ';
+    case 'PERMISSION_DENIED': return 'không mở cho API key này';
+    case 'MODEL_NOT_FOUND': return 'không khả dụng';
+    default: return 'đang bận';
   }
-  if (provider === 'agent-platform' && errorType === 'PERMISSION_DENIED') {
-    return true;
+};
+
+// Khi mọi model đều lỗi, báo lỗi có ích nhất cho người dùng: lỗi quota/quyền của một model
+// quan trọng hơn lỗi "model không tồn tại" của model dự phòng cuối cùng.
+const pickReportedError = (errors: any[]): any => {
+  const priority = ['QUOTA_EXCEEDED', 'RATE_LIMIT', 'PERMISSION_DENIED'];
+  for (const type of priority) {
+    const found = errors.find(e => parseApiError(e) === type);
+    if (found) return found;
   }
-  return false;
+  return errors[errors.length - 1];
+};
+
+/**
+ * Lấy câu thông báo gốc của Google trong lỗi SDK (message thường chứa JSON lồng nhau),
+ * ví dụ "Quota exceeded for metric: ...generate_content_free_tier_requests, limit: 0, model: gemini-3.8-flash".
+ */
+export const extractGoogleErrorDetail = (error: any): string => {
+  const raw = typeof error === 'string' ? error : (error?.message || '');
+  const matches = [...raw.matchAll(/\\*"message\\*"\s*:\s*\\*"((?:[^"\\]|\\.)*?)\\*"/g)].map(m => m[1]);
+  const detail = (matches.length > 0 ? matches[matches.length - 1] : raw)
+    .replace(/\\+n/g, ' ')
+    .replace(/\\+"/g, '"')
+    .replace(/\s+/g, ' ')
+    .trim();
+  // Với lỗi quota, phần có ích (metric, limit, model, thời gian chờ) nằm ở cuối câu dài → lấy riêng phần đó
+  const quotaParts = detail.match(/Quota exceeded for metric:.*?(?=\s\*\s|\sPlease retry|$)/g);
+  if (quotaParts) {
+    const retry = detail.match(/Please retry in [\d.]+m?s/);
+    return [...quotaParts, retry?.[0]].filter(Boolean).join(' | ');
+  }
+  return detail.length > 300 ? detail.slice(0, 300) + '…' : detail;
 };
 
 export const generateContentWithModelFallback = async ({
@@ -397,6 +449,8 @@ export const generateContentWithModelFallback = async ({
   const ai = createGoogleAiClient(apiKey, activeProvider);
   const modelsToTry = getOrderedModels(selectedModel, activeProvider);
   let lastError: any = null;
+  const errors: any[] = [];
+  let stoppedEarly = false;
 
   for (let i = 0; i < modelsToTry.length; i++) {
     const model = modelsToTry[i];
@@ -422,22 +476,25 @@ export const generateContentWithModelFallback = async ({
       return response;
     } catch (error: any) {
       lastError = error;
+      errors.push(error);
       const errorType = parseApiError(error);
       console.warn(`⚠️ ${logLabel} [${activeProvider}]: model ${model} lỗi ${errorType}`, error?.message || error);
 
       if (!shouldTryFallbackModel(errorType, activeProvider)) {
+        stoppedEarly = true;
         break;
       }
 
       const nextModel = modelsToTry[i + 1];
       if (nextModel) {
-        notifyFallback(`Đang tự động chuyển từ ${model} sang ${nextModel} (do ${model} đang bận)...`);
+        notifyFallback(`Đang tự động chuyển từ ${model} sang ${nextModel} (do ${model} ${getFallbackReason(errorType)})...`);
       }
     }
   }
 
   notifyFallback(null);
-  throw lastError || new Error(`Tất cả model ${activeProvider === 'agent-platform' ? 'Agent Platform' : 'Gemini'} đều thất bại. Vui lòng thử lại sau.`);
+  const reportedError = stoppedEarly ? lastError : pickReportedError(errors);
+  throw reportedError || new Error(`Tất cả model ${activeProvider === 'agent-platform' ? 'Agent Platform' : 'Gemini'} đều thất bại. Vui lòng thử lại sau.`);
 };
 
 export const sendMessageStream = async (
@@ -452,6 +509,8 @@ export const sendMessageStream = async (
   }
 
   let lastError: any = null;
+  const errors: any[] = [];
+  let stoppedEarly = false;
   const modelsToTry = getOrderedModels(undefined, activeProvider);
 
   console.log(`🚀 Bắt đầu gửi tin nhắn (${activeProvider}). Sẽ thử ${modelsToTry.length} model theo thứ tự: ${modelsToTry.join(' → ')}`);
@@ -514,30 +573,34 @@ export const sendMessageStream = async (
       }
       console.error(`❌ Model ${model} thất bại:`, error.message || error);
       lastError = error;
+      errors.push(error);
 
       const errorType = parseApiError(error);
       if (fullResponse.length > 0) {
         console.warn(`⚠️ Model ${model} lỗi sau khi đã stream một phần nội dung; dừng fallback để tránh trộn kết quả.`);
+        stoppedEarly = true;
         break;
       }
 
       if (shouldTryFallbackModel(errorType, activeProvider)) {
         const nextModel = modelsToTry[i + 1];
         if (nextModel) {
-          notifyFallback(`Đang tự động chuyển từ ${model} sang ${nextModel} (do ${model} đang bận)...`);
+          notifyFallback(`Đang tự động chuyển từ ${model} sang ${nextModel} (do ${model} ${getFallbackReason(errorType)})...`);
         }
         console.log(`⏭️ Lỗi ${errorType}, thử model tiếp theo...`);
         continue;
       }
 
       console.log(`⛔ Lỗi ${errorType} không nên fallback model.`);
+      stoppedEarly = true;
       break;
     }
   }
 
   notifyFallback(null);
   console.error(`💀 Gửi tin nhắn thất bại (${activeProvider}).`);
-  throw lastError || new Error("Tất cả models đều thất bại. Vui lòng kiểm tra API key hoặc thử lại sau.");
+  const reportedError = stoppedEarly ? lastError : pickReportedError(errors);
+  throw reportedError || new Error("Tất cả models đều thất bại. Vui lòng kiểm tra API key hoặc thử lại sau.");
 };
 
 // Phân tích tài liệu để trích xuất thông tin cho SKKN (không dùng chat session)

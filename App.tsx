@@ -21,6 +21,7 @@ import {
   getChatHistory,
   setChatHistory,
   setOnFallbackNotice,
+  extractGoogleErrorDetail,
   ThinkingLevel
 } from './services/geminiService';
 import { apiKeyManager } from './services/apiKeyManager';
@@ -2510,6 +2511,11 @@ Tổ: [Tổ chuyên môn]
                     <div className="flex-1">
                       <h3 className="font-bold text-red-800 text-lg">{errorInfo.title}</h3>
                       <p className="text-red-700 text-sm mt-1">{errorInfo.message}</p>
+                      {errorInfo.type !== 'unknown' && extractGoogleErrorDetail(state.error) && (
+                        <p className="text-xs text-red-600/80 mt-2 font-mono break-words">
+                          Chi tiết từ Google: {extractGoogleErrorDetail(state.error)}
+                        </p>
+                      )}
                     </div>
                   </div>
 
