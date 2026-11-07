@@ -27,6 +27,15 @@ import {
 import { apiKeyManager } from './services/apiKeyManager';
 import { isValidGoogleAiApiKey, parseGoogleAiApiKeys } from './services/googleAiApiKey';
 import { getSubjectInfo } from './data/subjectsData';
+import {
+  WORDS_PER_PAGE,
+  getBudgetSections,
+  computeSectionBudget,
+  countWords,
+  estimatePages,
+  formatPages,
+  stripFixedPageHints
+} from './services/pageBudget';
 import { SKKNForm } from './components/SKKNForm';
 import { DocumentPreview } from './components/DocumentPreview';
 import { Button } from './components/Button';
@@ -88,6 +97,7 @@ interface SessionData {
   solutionsState: SolutionsState;
   appendixDocument: string;
   outlineFeedback: string;
+  outlineLength?: number | null; // phiên lưu từ bản cũ không có trường này
   chatHistory: any[];
   savedAt: string;
 }
@@ -348,6 +358,10 @@ const App: React.FC = () => {
   // Bước đang viết thì bị lỗi (để sidebar đánh dấu đúng chỗ dừng)
   const [failedStep, setFailedStep] = useState<GenerationStep | null>(null);
 
+  // Độ dài phần Dàn ý ở đầu fullDocument (ghi lại lúc "Chốt dàn ý"). Dàn ý KHÔNG thuộc bài Biện pháp:
+  // không tính vào giới hạn trang và không xuất vào file Word.
+  const [outlineLength, setOutlineLength] = useState<number | null>(null);
+
   // Luôn trỏ tới API key mới nhất — dùng trong các callback có deps rỗng (restoreSession)
   const apiKeyRef = useRef(apiKey);
   apiKeyRef.current = apiKey;
@@ -389,6 +403,7 @@ const App: React.FC = () => {
         solutionsState,
         appendixDocument,
         outlineFeedback,
+        outlineLength,
         chatHistory: getChatHistory(),
         savedAt: new Date().toISOString(),
       };
@@ -399,7 +414,7 @@ const App: React.FC = () => {
     } catch (e) {
       console.warn('Không thể lưu phiên (có thể do dữ liệu quá lớn):', e);
     }
-  }, [state.step, state.messages, state.fullDocument, state.isStreaming, userInfo, solutionsState, appendixDocument, outlineFeedback]);
+  }, [state.step, state.messages, state.fullDocument, state.isStreaming, userInfo, solutionsState, appendixDocument, outlineFeedback, outlineLength]);
 
   // Tự động lưu khi state thay đổi (debounce 2 giây)
   useEffect(() => {
@@ -447,6 +462,8 @@ const App: React.FC = () => {
         setOutlineFeedback(sessionData.outlineFeedback);
       }
 
+      setOutlineLength(typeof sessionData.outlineLength === 'number' ? sessionData.outlineLength : null);
+
       // Khôi phục chat history cho Gemini
       if (sessionData.chatHistory && sessionData.chatHistory.length > 0) {
         setChatHistory(sessionData.chatHistory);
@@ -488,100 +505,80 @@ const App: React.FC = () => {
   }, []);
 
 
-  // Helper: Tính toán phân bổ trang cho từng phần Biện pháp
+  // Phần thân văn bản (bỏ dàn ý ở đầu) — dùng để đếm số từ đã viết và để xuất Word
+  const getBodyText = useCallback((doc: string) => {
+    if (outlineLength === null || state.step <= GenerationStep.OUTLINE) return doc;
+    return doc.slice(outlineLength);
+  }, [outlineLength, state.step]);
+
+  // Helper: Giới hạn số trang (null nếu người dùng không đặt). Áp dụng ngay khi có nhập số trang,
+  // không phụ thuộc nút "Xác nhận lưu yêu cầu".
   const getPageAllocation = useCallback(() => {
-    if (!userInfo.pageLimit || typeof userInfo.pageLimit !== 'number') return null;
-
-    const pages = userInfo.pageLimit;
-    const wordsPerPage = 350; // 1 trang A4 ≈ 350 từ (font 13pt, line spacing 1.5)
-    const charsPerPage = 2500;
-    const numSolutions = 3; // Biện pháp GVG luôn có 3 biện pháp
-
-    // Phân bổ: I&II (5%), III (5%), IV-GP (85%), V&VI (5%)
-    const partI_II_pages = Math.max(1, Math.round(pages * 0.05));
-    const partIII_pages = Math.max(1, Math.round(pages * 0.05));
-    const partIV_pages = Math.max(numSolutions * 3, Math.round(pages * 0.85));
-    const partV_VI_pages = Math.max(1, pages - partI_II_pages - partIII_pages - partIV_pages);
-    const pagesPerSolution = Math.max(2, Math.floor(partIV_pages / numSolutions));
-
+    if (!userInfo.pageLimit || typeof userInfo.pageLimit !== 'number' || userInfo.pageLimit <= 0) return null;
+    const numSolutions = userInfo.includeSolution4_5 ? 5 : 3;
+    const sections = getBudgetSections(numSolutions);
+    const totalWords = userInfo.pageLimit * WORDS_PER_PAGE;
     return {
-      totalPages: pages,
-      wordsPerPage,
-      charsPerPage,
-      totalWords: pages * wordsPerPage,
-      totalChars: pages * charsPerPage,
+      totalPages: userInfo.pageLimit,
+      totalWords,
       numSolutions,
-      partI_II: { pages: partI_II_pages, words: partI_II_pages * wordsPerPage, chars: partI_II_pages * charsPerPage },
-      partIII: { pages: partIII_pages, words: partIII_pages * wordsPerPage, chars: partIII_pages * charsPerPage },
-      partIV: { pages: partIV_pages, words: partIV_pages * wordsPerPage, chars: partIV_pages * charsPerPage },
-      perSolution: { pages: pagesPerSolution, words: pagesPerSolution * wordsPerPage, chars: pagesPerSolution * charsPerPage },
-      partV_VI: { pages: partV_VI_pages, words: partV_VI_pages * wordsPerPage, chars: partV_VI_pages * charsPerPage },
+      sections: sections.map(s => ({ ...s, words: Math.round((totalWords * s.weight) / 10) * 10 })),
     };
-  }, [userInfo.pageLimit]);
+  }, [userInfo.pageLimit, userInfo.includeSolution4_5]);
 
-  // Helper: Tạo prompt giới hạn số từ/trang cho MỘT phần cụ thể đang viết
-  const getSectionPagePrompt = useCallback((sectionName: string, sectionKey: 'partI_II' | 'partIII' | 'perSolution' | 'partV_VI') => {
+  // Helper: Tạo prompt giới hạn số từ cho MỘT phần cụ thể đang viết, tính lại theo số từ ĐÃ viết thật
+  const getSectionPagePrompt = useCallback((sectionName: string, sectionKey: string) => {
     const alloc = getPageAllocation();
     if (!alloc) return '';
 
-    const section = alloc[sectionKey];
+    // Đang ở bước Dàn ý thì bài Biện pháp chưa có chữ nào (fullDocument lúc này chỉ là dàn ý)
+    const writtenWords = state.step <= GenerationStep.OUTLINE ? 0 : countWords(getBodyText(state.fullDocument));
+    const budget = computeSectionBudget(alloc.totalPages, alloc.numSolutions, sectionKey, writtenWords);
+    if (!budget) return '';
+
+    const overBudget = budget.remainingWords <= 0;
     return `
-🚨 GIỚI HẠN SỐ TRANG CHO PHẦN NÀY (BẮT BUỘC):
-📌 ${sectionName}: PHẢI viết khoảng ${section.pages} TRANG (≈ ${section.words.toLocaleString()} từ ≈ ${section.chars.toLocaleString()} ký tự)
-⚠️ Trong tổng ${alloc.totalPages} trang Biện pháp, phần này chiếm ${section.pages} trang.
-🚫 KHÔNG viết quá ${Math.ceil(section.pages * 1.15)} trang và KHÔNG viết dưới ${Math.max(1, Math.floor(section.pages * 0.85))} trang.
-✅ Viết CÔ ĐỌNG, SÚC TÍCH nhưng ĐẦY ĐỦ NỘI DUNG. Ưu tiên bảng biểu để tiết kiệm không gian.
+🚨 GIỚI HẠN ĐỘ DÀI CHO PHẦN NÀY (BẮT BUỘC — ƯU TIÊN CAO HƠN MỌI CON SỐ TRANG / SỐ VÍ DỤ Ở TRÊN):
+📌 ${sectionName}: viết KHOẢNG ${budget.targetWords.toLocaleString('vi-VN')} TỪ ≈ ${formatPages(budget.targetWords / WORDS_PER_PAGE)} trang A4. TỐI ĐA ${Math.round(budget.targetWords * 1.1).toLocaleString('vi-VN')} từ.
+📊 Toàn bài giới hạn ${budget.totalPages} trang ≈ ${budget.totalWords.toLocaleString('vi-VN')} từ. Đã viết ≈ ${budget.writtenWords.toLocaleString('vi-VN')} từ, còn ≈ ${budget.remainingWords.toLocaleString('vi-VN')} từ cho ${budget.remainingSections} phần (kể cả phần này).
+${overBudget ? '⛔ ĐÃ DÙNG HẾT số từ cho phép → viết phần này CỰC NGẮN, chỉ các ý cốt lõi.\n' : ''}✂️ Muốn vừa số từ: chỉ 1 ví dụ minh họa ngắn, gộp các bước nhỏ, bảng ngắn gọn, KHÔNG thêm mục con ngoài dàn ý, KHÔNG nhắc lại nội dung phần trước.
+📝 ĐỊNH DẠNG: viết thành đoạn văn liền mạch 3–5 câu; KHÔNG xuống dòng sau mỗi câu (quy tắc này THAY THẾ mọi yêu cầu "xuống dòng sau mỗi câu" ở trên).
 `;
+  }, [getPageAllocation, getBodyText, state.fullDocument]);
+
+  // Bỏ các số trang cố định trong prompt mẫu khi người dùng có đặt giới hạn trang
+  const applyPageLimitToPrompt = useCallback((prompt: string) => {
+    return getPageAllocation() ? stripFixedPageHints(prompt) : prompt;
   }, [getPageAllocation]);
 
   // Helper function để tạo prompt nhắc lại các yêu cầu đặc biệt
   const getPageLimitPrompt = useCallback(() => {
-    // Kiểm tra xem người dùng đã xác nhận yêu cầu chưa
-    if (!userInfo.requirementsConfirmed) return '';
-
     const requirements: string[] = [];
 
-    // 1. Giới hạn số trang - TÍNH TOÁN CHI TIẾT
+    // 1. Giới hạn số trang — luôn áp dụng khi có nhập số trang
     const alloc = getPageAllocation();
     if (alloc) {
       requirements.push(`
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🚨🚨🚨 GIỚI HẠN SỐ TRANG - BẮT BUỘC TUYỆT ĐỐI 🚨🚨🚨
+🚨 GIỚI HẠN ĐỘ DÀI TOÀN BÀI - BẮT BUỘC
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📌 TỔNG: ${alloc.totalPages} TRANG A4 ≈ ${alloc.totalWords.toLocaleString('vi-VN')} TỪ (không tính Dàn ý và Phụ lục; quy đổi ${WORDS_PER_PAGE} từ/trang).
+📊 PHÂN BỔ SỐ TỪ THEO PHẦN:
+${alloc.sections.map(s => `• ${s.label}: ≈ ${s.words.toLocaleString('vi-VN')} từ`).join('\n')}
+⚠️ Mọi con số "x trang", "3-5 ví dụ", "10-15 công thức"... trong các hướng dẫn mẫu chỉ áp dụng khi KHÔNG giới hạn trang — nay phải co lại cho vừa số từ trên.
+✅ Viết CÔ ĐỌNG: đoạn văn liền mạch 3–5 câu, 1 ví dụ minh họa ngắn mỗi giải pháp, không lặp ý.`);
+    }
 
-📌 TỔNG SỐ TRANG YÊU CẦU: ${alloc.totalPages} TRANG (không tính Dàn ý và Phụ lục)
-
-📐 QUY ĐỔI CHUẨN (Font 13pt, Line spacing 1.5):
-• 1 trang A4 ≈ ${alloc.wordsPerPage} từ ≈ ${alloc.charsPerPage} ký tự
-• TỔNG CHO ${alloc.totalPages} TRANG: ≈ ${alloc.totalWords.toLocaleString()} từ ≈ ${alloc.totalChars.toLocaleString()} ký tự
-
-📊 PHÂN BỔ CHI TIẾT TỪNG PHẦN:
-┌──────────────────────────────────────────────────────────────────┐
-│ PHẦN                │ SỐ TRANG  │ SỐ TỪ         │ SỐ KÝ TỰ       │
-├──────────────────────────────────────────────────────────────────┤
-│ Phần I & II         │ ${alloc.partI_II.pages} trang    │ ~${alloc.partI_II.words.toLocaleString()} từ      │ ~${alloc.partI_II.chars.toLocaleString()} ký tự     │
-│ Phần III            │ ${alloc.partIII.pages} trang    │ ~${alloc.partIII.words.toLocaleString()} từ      │ ~${alloc.partIII.chars.toLocaleString()} ký tự     │
-│ Phần IV (${alloc.numSolutions} GP)    │ ${alloc.partIV.pages} trang   │ ~${alloc.partIV.words.toLocaleString()} từ     │ ~${alloc.partIV.chars.toLocaleString()} ký tự    │
-│  → Mỗi giải pháp   │ ${alloc.perSolution.pages} trang    │ ~${alloc.perSolution.words.toLocaleString()} từ      │ ~${alloc.perSolution.chars.toLocaleString()} ký tự     │
-│ Phần V & VI + KL    │ ${alloc.partV_VI.pages} trang    │ ~${alloc.partV_VI.words.toLocaleString()} từ      │ ~${alloc.partV_VI.chars.toLocaleString()} ký tự     │
-└──────────────────────────────────────────────────────────────────┘
-
-⚠️ QUY TẮC NGHIÊM NGẶT:
-1. MỖI ĐOẠN VĂN: Tối đa 3-4 câu (≈ 60-80 từ)
-2. MỖI MỤC NHỎ: Tối đa 5-7 đoạn văn
-3. KHÔNG lặp lại ý, KHÔNG viết dư thừa
-4. VÍ DỤ MINH HỌA: Chỉ 1-2 ví dụ ngắn gọn/giải pháp (trừ khi yêu cầu thêm)
-5. BẢNG BIỂU: Giúp tiết kiệm không gian - ưu tiên sử dụng
-
-🚫 CẢNH BÁO: NẾU VƯỢT QUÁ ${alloc.totalPages} TRANG → VI PHẠM YÊU CẦU!
-✅ MỤC TIÊU: Viết CÔ ĐỌNG, SÚC TÍCH nhưng vẫn ĐẦY ĐỦ NỘI DUNG.`);
+    // Các yêu cầu còn lại chỉ áp dụng khi người dùng đã bấm "Xác nhận lưu các yêu cầu"
+    if (!userInfo.requirementsConfirmed) {
+      return requirements.length === 0 ? '' : `\n${requirements.join('\n')}\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
     }
 
     // 2. Thêm bài toán thực tế, ví dụ minh họa
     if (userInfo.includePracticalExamples) {
       requirements.push(`
 📊 YÊU CẦU THÊM BÀI TOÁN THỰC TẾ, VÍ DỤ MINH HỌA:
-- Mỗi giải pháp PHẢI có ít nhất 2-3 ví dụ thực tế cụ thể
+- Mỗi giải pháp PHẢI có ít nhất ${alloc ? '1-2 ví dụ thực tế ngắn gọn (vẫn phải vừa giới hạn số từ)' : '2-3 ví dụ thực tế cụ thể'}
 - Bài toán thực tế phải gắn với đời sống, công việc, nghề nghiệp
 - Ví dụ minh họa phải chi tiết, có thể áp dụng ngay
 - Ưu tiên các ví dụ từ SGK ${userInfo.textbook || "hiện hành"}`);
@@ -615,7 +612,7 @@ Hãy áp dụng CHÍNH XÁC các yêu cầu trên vào phần đang viết!`);
 ${requirements.join('\n')}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 `;
-  }, [userInfo.requirementsConfirmed, userInfo.pageLimit, userInfo.includePracticalExamples, userInfo.includeStatistics, userInfo.specialRequirements, userInfo.textbook, getPageAllocation]);
+  }, [userInfo.requirementsConfirmed, userInfo.includePracticalExamples, userInfo.includeStatistics, userInfo.specialRequirements, userInfo.textbook, getPageAllocation]);
 
   // Helper function để tạo prompt cấu trúc từ mẫu Biện pháp đã trích xuất
   const getCustomTemplatePrompt = useCallback(() => {
@@ -696,6 +693,7 @@ QUY TẮC BẮT BUỘC:
       isStreaming: false,
       error: null
     }));
+    setOutlineLength(null);
   };
 
   // Start the Generation Process
@@ -708,6 +706,7 @@ QUY TẮC BẮT BUỘC:
     let generatedText = "";
     try {
       setState(prev => ({ ...prev, step: GenerationStep.OUTLINE, isStreaming: true, error: null, fullDocument: '' }));
+      setOutlineLength(null);
 
       initializeGeminiChat(apiKey, selectedModel, provider);
 
@@ -868,7 +867,7 @@ ${userInfo.specialRequirements}
 
 Hãy phân tích kỹ các yêu cầu trên và áp dụng CHÍNH XÁC vào toàn bộ bài viết.
 
-📌 HƯỚNG DẪN XỬ LÝ GIỚI HẠN SỐ TRANG:
+${getPageAllocation() ? '' : `📌 HƯỚNG DẪN XỬ LÝ GIỚI HẠN SỐ TRANG:
 - Nếu yêu cầu "giới hạn X trang" → Số trang này tính từ PHẦN I & II đến hết PHẦN V, VI & KẾT LUẬN
 - KHÔNG tính dàn ý vào giới hạn số trang
 - KHÔNG tính Phụ lục vào giới hạn số trang (Phụ lục được tạo riêng, không giới hạn)
@@ -884,7 +883,7 @@ Ví dụ: Nếu giới hạn 40 trang (KHÔNG tính Phụ lục):
   + Phần IV: 24-28 trang
   + Phần V, VI & Kết luận: 6-8 trang
   + Phụ lục: TÍNH RIÊNG (không giới hạn)
-
+`}
 Các yêu cầu khác:
 - Nếu yêu cầu "viết ngắn gọn phần lý thuyết" → Tóm tắt cô đọng phần cơ sở lý luận
 - Nếu yêu cầu "thêm nhiều bài toán thực tế" → Bổ sung ví dụ toán thực tế phong phú
@@ -1253,7 +1252,7 @@ QUAN TRỌNG:
 
       // Chế độ Cải thiện: đưa văn bản gốc + kết quả thẩm định vào ngay lần lập dàn ý đầu tiên
       const healingSnippet = getHealingPromptSnippet(healingContext, true);
-      await sendMessageStream(healingSnippet + initMessage, (chunk) => {
+      await sendMessageStream(applyPageLimitToPrompt(healingSnippet + initMessage), (chunk) => {
         generatedText += chunk;
         setState(prev => ({
           ...prev,
@@ -1404,7 +1403,7 @@ QUAN TRỌNG:
         Mọi ví dụ, số liệu, thuật ngữ PHẢI phù hợp với cấp ${userInfo.level}, khối ${userInfo.grade}.
 
   ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Phần 1 (Đặt vấn đề)', 'partI_II')} `;
+  ${getSectionPagePrompt('Phần 1 (Đặt vấn đề)', 'part1')} `;
 
       nextStepEnum = GenerationStep.PART_1;
     } else {
@@ -1450,7 +1449,7 @@ QUAN TRỌNG:
               ** [🖼️ GỢI Ý HÌNH ẢNH: Ảnh chụp thực tế lớp học / phòng thí nghiệm tại ${userInfo.school} - Đặt phần đặc điểm nhà trường] **
 
   ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Phần III (Thực trạng vấn đề)', 'partIII')} `,
+  ${getSectionPagePrompt('Phần 2 (Cơ sở lý luận & thực tiễn)', 'part2')} `,
           nextStep: GenerationStep.PART_2
         },
         [GenerationStep.PART_2]: {
@@ -1491,7 +1490,7 @@ SGK: ${userInfo.textbook}
               ** [🖼️ GỢI Ý HÌNH ẢNH: Ảnh chụp học sinh thực hiện hoạt động / Ảnh miền họa hoạt động mẫu - Đặt trong phần Ví dụ minh họa] **
 
   ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Giải pháp 1', 'perSolution')} `,
+  ${getSectionPagePrompt('Giải pháp 1', 'gp1')} `,
           nextStep: GenerationStep.BP1
         },
         [GenerationStep.BP1]: {
@@ -1516,7 +1515,7 @@ SGK: ${userInfo.textbook}
               ** [🖼️ GỢI Ý HÌNH ẢNH: Mô tả chi tiết hình ảnh - Đặt sau phần nào] **
 
   ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Giải pháp 2', 'perSolution')} `,
+  ${getSectionPagePrompt('Giải pháp 2', 'gp2')} `,
           nextStep: GenerationStep.BP2
         },
         [GenerationStep.BP2]: {
@@ -1540,7 +1539,7 @@ SGK: ${userInfo.textbook}
               Trong GIẢI PHÁP 3, hãy gợi ý 1 - 2 vị trí nên đặt hình ảnh minh họa.
 
   ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Giải pháp 3', 'perSolution')} `,
+  ${getSectionPagePrompt('Giải pháp 3', 'gp3')} `,
           nextStep: GenerationStep.BP3
         },
         [GenerationStep.BP3]: {
@@ -1565,7 +1564,7 @@ SGK: ${userInfo.textbook}
               Trong GIẢI PHÁP 4, hãy gợi ý 1-2 vị trí nên đặt hình ảnh minh họa.
 
   ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Giải pháp 4', 'perSolution')} `
+  ${getSectionPagePrompt('Giải pháp 4', 'gp4')} `
             : `
               BẮT ĐẦU phản hồi bằng MENU NAVIGATION trạng thái (Viết mục 2.4 Tính mới, tính sáng tạo - Đang thực hiện).
 
@@ -1591,8 +1590,9 @@ SGK: ${userInfo.textbook}
               - Phải liên hệ trực tiếp với 3 biện pháp đã viết ở mục 2.3
               - Dùng số liệu cụ thể để chứng minh tính mới
               - Bám sát đặc thù cấp ${userInfo.level}, môn ${userInfo.subject}
-              
-              ${getPageLimitPrompt()}`,
+
+              ${getPageLimitPrompt()}
+              ${getSectionPagePrompt('Mục 2.4 (Tính mới, tính sáng tạo)', 'tinhMoi')}`,
           nextStep: userInfo.includeSolution4_5 ? GenerationStep.BP4 : GenerationStep.TINH_MOI
         },
         [GenerationStep.BP4]: {
@@ -1616,7 +1616,7 @@ SGK: ${userInfo.textbook}
               Trong GIẢI PHÁP 5, hãy gợi ý 1-2 vị trí nên đặt hình ảnh minh họa.
 
   ${getPageLimitPrompt()}
-  ${getSectionPagePrompt('Giải pháp 5', 'perSolution')} `,
+  ${getSectionPagePrompt('Giải pháp 5', 'gp5')} `,
           nextStep: GenerationStep.BP5
         },
         [GenerationStep.BP5]: {
@@ -1645,8 +1645,9 @@ SGK: ${userInfo.textbook}
               - Phải liên hệ trực tiếp với 5 biện pháp đã viết ở mục 2.3
               - Dùng số liệu cụ thể để chứng minh tính mới
               - Bám sát đặc thù cấp ${userInfo.level}, môn ${userInfo.subject}
-              
-              ${getPageLimitPrompt()}`,
+
+              ${getPageLimitPrompt()}
+              ${getSectionPagePrompt('Mục 2.4 (Tính mới, tính sáng tạo)', 'tinhMoi')}`,
           nextStep: GenerationStep.TINH_MOI
         },
         [GenerationStep.TINH_MOI]: {
@@ -1681,8 +1682,9 @@ SGK: ${userInfo.textbook}
               Số liệu phải LOGIC, sử dụng số lẻ. Có bảng so sánh Markdown chuẩn.
               
               🖼️ GỢI Ý HÌNH ẢNH MINH HỌA.
-              
-              ${getPageLimitPrompt()}`,
+
+              ${getPageLimitPrompt()}
+              ${getSectionPagePrompt('Phần 3 (Phạm vi ảnh hưởng, hiệu quả)', 'phamVi')}`,
           nextStep: GenerationStep.PHAM_VI
         },
         [GenerationStep.PHAM_VI]: {
@@ -1718,8 +1720,9 @@ SGK: ${userInfo.textbook}
               - Tài liệu điện tử (website uy tín)
               
               ⚠️ LƯU Ý: Kết luận phải bám sát nội dung đã viết. Kiến nghị phải khả thi.
-              
-              ${getPageLimitPrompt()}`,
+
+              ${getPageLimitPrompt()}
+              ${getSectionPagePrompt('Phần 4 (Kết luận, kiến nghị & Tài liệu tham khảo)', 'ketLuan')}`,
           nextStep: GenerationStep.KET_LUAN
         },
         // KẾT LUẬN → COMPLETED
@@ -1769,12 +1772,16 @@ SGK: ${userInfo.textbook}
     // Ảnh chụp văn bản trước khi viết phần mới: nếu lỗi giữa chừng thì khôi phục,
     // tránh phần viết dở bị nối thêm lần nữa khi bấm Thử lại.
     const documentBeforeSection = state.fullDocument;
+    // Chốt dàn ý: ghi lại điểm kết thúc dàn ý để không tính/không xuất dàn ý vào bài Biện pháp
+    if (activeStep === GenerationStep.OUTLINE && outlineLength === null) {
+      setOutlineLength(state.fullDocument.length);
+    }
     setState(prev => ({ ...prev, isStreaming: true, error: null, step: nextStepEnum }));
 
     try {
       let isFirstChunk = true;
-      // Tiêm healing context vào prompt nếu đang ở chế độ Cải thiện
-      const finalPrompt = healingSnippet + currentStepPrompt;
+      // Tiêm healing context vào prompt nếu đang ở chế độ Cải thiện; bỏ số trang cố định nếu có giới hạn trang
+      const finalPrompt = applyPageLimitToPrompt(healingSnippet + currentStepPrompt);
       await sendMessageStream(finalPrompt, (chunk) => {
         if (shouldAppend) {
           // Ngăn phần mới dính liền vào dòng cuối của phần trước
@@ -1846,7 +1853,8 @@ SGK: ${userInfo.textbook}
     try {
       const { exportMarkdownToDocx } = await import('./services/docxExporter');
       const filename = `SKKN_${userInfo.topic.substring(0, 30).replace(/[^a-zA-Z0-9\u00C0-\u1EF9]/g, '_')}.docx`;
-      await exportMarkdownToDocx(state.fullDocument, filename);
+      // Bỏ phần Dàn ý ở đầu: file Word chỉ chứa bài Biện pháp (dàn ý không tính vào giới hạn trang)
+      await exportMarkdownToDocx(getBodyText(state.fullDocument), filename);
     } catch (error: any) {
       console.error('Export error:', error);
       alert('Có lỗi khi xuất file. Vui lòng thử lại.');
@@ -2182,6 +2190,20 @@ Tổ: [Tổ chuyên môn]
                 {userInfo.topic}
               </div>
 
+              {/* Ước tính độ dài bài (không tính dàn ý) so với giới hạn trang */}
+              {state.step > GenerationStep.OUTLINE && (() => {
+                const words = countWords(getBodyText(state.fullDocument));
+                const pages = estimatePages(words);
+                const limit = typeof userInfo.pageLimit === 'number' && userInfo.pageLimit > 0 ? userInfo.pageLimit : null;
+                const over = limit !== null && pages > limit;
+                return (
+                  <div className={`p-2 rounded text-xs border ${over ? 'bg-red-50 border-red-200 text-red-700' : 'bg-sky-50 border-sky-100 text-sky-800'}`}>
+                    📄 Ước tính: ~{formatPages(pages)} trang ({words.toLocaleString('vi-VN')} từ)
+                    {limit !== null && <> / giới hạn {limit} trang{over ? ' — đang vượt' : ''}</>}
+                  </div>
+                );
+              })()}
+
               {/* Session persistence buttons */}
               <div className="flex gap-2">
                 <button
@@ -2461,6 +2483,7 @@ Tổ: [Tổ chuyên môn]
                 // và chưa qua kiểm tra hợp lệ. Đưa người dùng về form để điền rồi bấm "Tiếp theo".
                 setState(prev => ({ ...prev, step: GenerationStep.INPUT_FORM, fullDocument: '', error: null }));
                 setAppendixDocument('');
+                setOutlineLength(null);
                 setActiveAppTab('create');
               }}
             />

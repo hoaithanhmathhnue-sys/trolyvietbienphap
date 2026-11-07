@@ -230,7 +230,7 @@ Nếu chủ đề liên quan đến MÔN TOÁN, bạn phải tuân thủ tuyệt
 - **CẤM:** Viết công thức dạng text thuần (như "tích phân từ a đến b").
 
 ### 2. MẬT ĐỘ VÍ DỤ (TIÊU CHUẨN CAO)
-Trong mỗi giải pháp (3-4 trang) PHẢI CÓ:
+Trong mỗi giải pháp PHẢI CÓ (khi người dùng đặt GIỚI HẠN SỐ TRANG/SỐ TỪ thì giới hạn đó được ưu tiên: giảm số ví dụ, công thức, bảng cho vừa):
 - **3-5 ví dụ bài toán cụ thể** (Có Đề bài, Lời giải chi tiết, Công thức LaTeX).
 - **10-15 công thức toán học** LaTeX.
 - **2-3 bảng công thức** (nếu liên quan).
