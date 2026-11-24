@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-ssr/
+
+# Local environment files (CHẶN TUYỆT ĐỐI KHÔNG ĐẨY API KEY LÊN GIT)
+.env
+.env.local
+.env.*.local
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db
+.vercel/

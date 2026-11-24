@@ -1,85 +1,208 @@
 import { KNOWLEDGE_BASE } from './data/knowledgeBase';
 import { WRITING_RULES } from './data/writingRules';
+import type { AiProvider } from './types';
 
-export const DEFAULT_GEMINI_MODEL = 'gemini-3.8-flash';
-export const DEFAULT_AGENT_PLATFORM_MODEL = 'gemini-2.5-flash';
+export type { AiProvider };
+
+// ============================================================
+// PROVIDER & MODEL CONFIGURATION (theo api.md v5.0 — 24/11/2026)
+// ============================================================
+
+export const DEFAULT_GEMINI_MODEL = 'gemini-4-hydrogen';
+export const DEFAULT_AGENT_PLATFORM_MODEL = 'gemini-3-flash-preview';
 export const MODEL_NAME = DEFAULT_GEMINI_MODEL;
 
-export const GEMINI_MODEL_STORAGE_KEY = 'gemini_model_id_v38';
-export const LEGACY_GEMINI_MODEL_STORAGE_KEY = 'GEMINI_MODEL_ID';
+export const GEMINI_MODEL_STORAGE_KEY = 'gemini_model_id_v4';
+export const LEGACY_GEMINI_MODEL_STORAGE_KEY = 'gemini_model_id_v38';
 export const LEGACY_SELECTED_MODEL_STORAGE_KEY = 'selected_model';
+export const LEGACY_GEMINI_MODEL_STORAGE_KEYS: readonly string[] = [
+   'gemini_model_id_v38',
+   'GEMINI_MODEL_ID',
+   'selected_model',
+];
 
-// Thứ tự fallback chuẩn cho Google Gemini Provider (cập nhật 10/2026)
-export const FALLBACK_MODELS = [
+// Chuỗi fallback Gemini API — chỉ gồm 6 model MIỄN PHÍ (Free Tier) đang hoạt động,
+// KHÔNG chứa model đã khai bỏ/deprecated hoặc auto-route trùng lặp (api.md v5.0)
+export const FALLBACK_MODELS: string[] = [
+   'gemini-4-hydrogen',
    'gemini-3.8-flash',
-   'gemini-3.7-flash',
    'gemini-3.5-flash-lite',
    'gemini-3.6-flash',
-   'gemini-3.5-flash',
    'gemini-3.1-flash-lite',
-   'gemini-2.5-flash',
+   'gemini-3-flash-preview',
 ];
 
 export const FALLBACK_GEMINI_MODELS = FALLBACK_MODELS;
 
-// Danh sách model hiển thị cho Agent Platform API Provider
-export const AGENT_PLATFORM_MODELS = [
+// Agent Platform API (Express Mode) — danh sách model & fallback chính thức (11/2026)
+export const AGENT_PLATFORM_MODELS: readonly string[] = [
+   'gemini-3-flash-preview',
    'gemini-2.5-flash',
    'gemini-2.5-flash-lite',
    'gemini-2.5-pro',
-   'gemini-3.1-pro-preview'
-];
+   'gemini-3.1-pro-preview',
+] as const;
 
-// Thứ tự fallback an toàn cho Agent Platform API Provider
-export const AGENT_PLATFORM_FALLBACK_MODELS = [
+export const AGENT_PLATFORM_FALLBACK_MODELS: readonly string[] = [
+   'gemini-3-flash-preview',
    'gemini-2.5-flash',
    'gemini-2.5-flash-lite',
-];
+] as const;
 
 // Thông tin hiển thị cho các model AI
-export const MODEL_INFO: Record<string, { name: string; description: string; isDefault?: boolean }> = {
+export const MODEL_INFO: Record<string, {
+   name: string;
+   description: string;
+   isDefault?: boolean;
+   isFree?: boolean;
+   badge?: string;
+   provider?: AiProvider | 'both';
+}> = {
+   // ---- Gemini API Free Tier models (active 11/2026) ----
+   'gemini-4-hydrogen': {
+      name: 'Gemini 4 Hydrogen',
+      description: 'Thế hệ 4 mới nhất (11/2026), miễn phí, giảm >5x bịa đặt, viết Biện pháp sắc bén nhất',
+      isDefault: true,
+      isFree: true,
+      badge: 'Mới • Mặc định',
+      provider: 'gemini'
+   },
    'gemini-3.8-flash': {
       name: 'Gemini 3.8 Flash',
-      description: 'Mặc định khuyên dùng (GA 09/2026) — thông minh, tốc độ cao & chịu tải tốt nhất',
-      isDefault: true
-   },
-   'gemini-3.7-flash': {
-      name: 'Gemini 3.7 Flash',
-      description: 'Bản ổn định tốc độ cao (GA 08/2026), thực thi đa bước tin cậy'
+      description: 'Dự phòng ưu tiên #2, miễn phí, chất lượng cao & rất ổn định cho văn bản dài',
+      isFree: true,
+      badge: 'Miễn phí',
+      provider: 'gemini'
    },
    'gemini-3.5-flash-lite': {
-      name: 'Gemini 3.5 Flash Lite',
-      description: 'Siêu nhanh, dung lượng chịu tải cực lớn & chi phí thấp (GA 07/2026)'
+      name: 'Gemini 3.5 Flash-Lite',
+      description: 'Nhanh nhất, miễn phí, chịu tải cực cao & quota rộng cho giờ cao điểm',
+      isFree: true,
+      badge: 'Siêu nhanh',
+      provider: 'gemini'
    },
    'gemini-3.6-flash': {
       name: 'Gemini 3.6 Flash',
-      description: 'Bản ổn định thế hệ 3.6 (GA 07/2026), cân bằng đa phương thức'
-   },
-   'gemini-3.5-flash': {
-      name: 'Gemini 3.5 Flash',
-      description: 'Tốc độ cao, ổn định thế hệ 3.5'
+      description: 'Cân bằng hiệu năng và độ chính xác, miễn phí, có hạn mức riêng biệt',
+      isFree: true,
+      badge: 'Miễn phí',
+      provider: 'gemini'
    },
    'gemini-3.1-flash-lite': {
-      name: 'Gemini 3.1 Flash Lite',
-      description: 'Ổn định, tương thích ngược & tiết kiệm tài nguyên'
+      name: 'Gemini 3.1 Flash-Lite',
+      description: 'Nhẹ, ổn định, miễn phí, tách riêng quota dự phòng',
+      isFree: true,
+      badge: 'Miễn phí',
+      provider: 'gemini'
    },
-   'gemini-3.1-pro-preview': {
-      name: 'Gemini 3.1 Pro Preview',
-      description: 'Chuyên dụng cho suy luận nâng cao trên Agent Platform'
+   'gemini-3-flash-preview': {
+      name: 'Gemini 3 Flash (Preview)',
+      description: 'Tốc độ cao, có Free Tier (Gemini API) và hỗ trợ Agent Platform Express',
+      isDefault: true,
+      isFree: true,
+      badge: 'Miễn phí',
+      provider: 'both'
    },
+   // ---- Agent Platform API models ----
    'gemini-2.5-flash': {
       name: 'Gemini 2.5 Flash',
-      description: 'Ổn định, tốc độ cao — mặc định cho Agent Platform API'
+      description: 'Tương thích Agent Platform Express (lưu ý: từ 01/12/2026 Gemini API tự chuyển sang 3.5 Flash-Lite)',
+      provider: 'agent-platform'
    },
    'gemini-2.5-flash-lite': {
-      name: 'Gemini 2.5 Flash Lite',
-      description: 'Nhẹ hơn, phù hợp khi model chính quá tải'
+      name: 'Gemini 2.5 Flash-Lite',
+      description: 'Nhanh, nhẹ và ổn định (Agent Platform Express)',
+      provider: 'agent-platform'
    },
    'gemini-2.5-pro': {
       name: 'Gemini 2.5 Pro',
-      description: 'Ổn định cho tác vụ cần suy luận sâu trên Agent Platform'
+      description: 'Suy luận mạnh, xử lý tài liệu dài (Agent Platform Express)',
+      provider: 'agent-platform'
+   },
+   'gemini-3.1-pro-preview': {
+      name: 'Gemini 3.1 Pro Preview',
+      description: 'Mô hình Pro thế hệ 3 cho tác vụ phức tạp (Agent Platform Express)',
+      provider: 'agent-platform'
    }
 };
+
+// Kiểm tra model có thuộc dòng Gemini 3.x hoặc 4.x không (cùng chuẩn thinkingLevel, không gửi temperature/topP/topK/thinkingBudget)
+export const isGemini3Or4 = (model: string): boolean => /^gemini-[34]/.test(model);
+
+// Cấu hình riêng cho từng model
+// - Gemini 4.x & 3.x: dùng thinkingLevel, KHÔNG gửi temperature/topP/topK/thinkingBudget
+// - Gemini 2.x: dùng thinkingBudget, gửi temperature
+export interface ModelConfig {
+   maxOutputTokens: number;
+   thinkingLevel?: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH';
+   thinkingBudget?: number;
+   temperature?: number;
+   topK?: number;
+   topP?: number;
+}
+
+export const MODEL_CONFIG: Record<string, ModelConfig> = {
+   // ---- Gemini 4.x — KHÔNG gửi temperature/topP/topK/thinkingBudget ----
+   'gemini-4-hydrogen': {
+      maxOutputTokens: 65536,
+      thinkingLevel: 'MEDIUM',
+   },
+   // ---- Gemini 3.x — KHÔNG gửi temperature/topP/topK/thinkingBudget ----
+   'gemini-3.8-flash': {
+      maxOutputTokens: 65536,
+      thinkingLevel: 'MEDIUM',
+   },
+   'gemini-3.5-flash-lite': {
+      maxOutputTokens: 65536,
+      // Flash-Lite: giữ mặc định (minimal) để đạt tốc độ cao nhất & tránh lỗi không hỗ trợ
+   },
+   'gemini-3.6-flash': {
+      maxOutputTokens: 65536,
+      thinkingLevel: 'MEDIUM',
+   },
+   'gemini-3.1-flash-lite': {
+      maxOutputTokens: 65536,
+      // Flash-Lite: giữ mặc định để đạt tốc độ cao nhất
+   },
+   'gemini-3-flash-preview': {
+      maxOutputTokens: 65536,
+      thinkingLevel: 'MEDIUM',
+   },
+   'gemini-3.1-pro-preview': {
+      maxOutputTokens: 65536,
+      thinkingLevel: 'MEDIUM',
+   },
+   // ---- Gemini 2.x — có thể gửi temperature ----
+   'gemini-2.5-flash': {
+      maxOutputTokens: 65536,
+      thinkingBudget: 2048,
+      temperature: 0.7,
+   },
+   'gemini-2.5-flash-lite': {
+      maxOutputTokens: 8192,
+      temperature: 0.5,
+   },
+   'gemini-2.5-pro': {
+      maxOutputTokens: 65536,
+      thinkingBudget: 4096,
+      temperature: 0.5,
+   },
+};
+
+// Helper: lấy config phù hợp, đảm bảo không gửi sampling params cho 3.x/4.x
+export const getModelConfigSafe = (model: string): ModelConfig => {
+   const cfg = MODEL_CONFIG[model] || MODEL_CONFIG[DEFAULT_GEMINI_MODEL];
+   if (isGemini3Or4(model)) {
+      const { temperature, topK, topP, thinkingBudget, ...rest } = cfg;
+      if (model.includes('lite')) {
+         const { thinkingLevel, ...liteRest } = rest;
+         return liteRest;
+      }
+      return rest;
+   }
+   return cfg;
+};
+
 
 export const SYSTEM_INSTRUCTION = `
 # 🔮 KÍCH HOẠT CHẾ ĐỘ: CHUYÊN GIA GIÁO DỤC CẤP QUỐC GIA (ULTRA-DETAILED MODE)
