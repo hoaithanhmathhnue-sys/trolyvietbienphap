@@ -26,6 +26,7 @@ interface Props {
   apiKey?: string;  // Thêm API key để gọi AI phân tích
   selectedModel?: string;  // Model đang sử dụng
   provider?: AiProvider;
+  hasServerProxy?: boolean;
 }
 
 interface InputGroupProps {
@@ -51,7 +52,8 @@ const InputGroup: React.FC<InputGroupProps> = ({ label, icon: Icon, required, ch
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
 
-export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManualSubmit, isSubmitting, apiKey, selectedModel, provider }) => {
+export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManualSubmit, isSubmitting, apiKey, selectedModel, provider = 'gemini', hasServerProxy = false }) => {
+  const canCallAi = Boolean(apiKey) || (provider === 'gemini' && hasServerProxy);
   const [mode, setMode] = useState<'ai' | 'manual'>('ai');
   const [manualContent, setManualContent] = useState('');
   const [isProcessingFile, setIsProcessingFile] = useState(false);
@@ -365,11 +367,11 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
         onChange('skknTemplate', extractedText);
         setTemplateFileName(file.name);
 
-        // TỰ ĐỘNG TRÍCH XUẤT CẤU TRÚC NếU CÓ API KEY
-        if (apiKey) {
+        // TỰ ĐỘNG TRÍCH XUẤT CẤU TRÚC NẾU CÓ QUYỀN GỌI AI
+        if (canCallAi) {
           setIsExtractingStructure(true);
           try {
-            const sections = await extractSKKNStructure(apiKey, extractedText, selectedModel, provider);
+            const sections = await extractSKKNStructure(apiKey || '', extractedText, selectedModel, provider);
 
             if (sections.length > 0) {
               const customTemplate: SKKNTemplate = {
@@ -423,14 +425,14 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
 
   // Hàm phân tích tài liệu tham khảo bằng AI
   const handleAnalyzeRefDocs = async () => {
-    if (!userInfo.referenceDocuments || !apiKey) {
+    if (!userInfo.referenceDocuments || !canCallAi) {
       alert('Vui lòng tải lên tài liệu và đảm bảo đã nhập API Key.');
       return;
     }
     setIsAnalyzingRef(true);
     try {
       const result = await analyzeDocumentForSKKN(
-        apiKey,
+        apiKey || '',
         userInfo.referenceDocuments,
         'reference',
         selectedModel,
@@ -447,14 +449,14 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
 
   // Hàm phân tích mẫu Biện pháp bằng AI
   const handleAnalyzeTemplate = async () => {
-    if (!userInfo.skknTemplate || !apiKey) {
+    if (!userInfo.skknTemplate || !canCallAi) {
       alert('Vui lòng tải lên mẫu Biện pháp và đảm bảo đã nhập API Key.');
       return;
     }
     setIsAnalyzingTemplate(true);
     try {
       const result = await analyzeDocumentForSKKN(
-        apiKey,
+        apiKey || '',
         userInfo.skknTemplate,
         'template',
         selectedModel,
@@ -475,14 +477,14 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
       alert('Vui lòng nhập tên đề tài trước khi phân tích.');
       return;
     }
-    if (!apiKey) {
+    if (!canCallAi) {
       alert('Vui lòng cấu hình API Key trước.');
       return;
     }
     setIsAnalyzingTitle(true);
     try {
       const result = await analyzeTitleSKKN(
-        apiKey,
+        apiKey || '',
         userInfo.topic,
         userInfo.subject,
         userInfo.level,
@@ -893,7 +895,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
                   {/* Nút Phân tích sơ bộ */}
                   <button
                     onClick={handleAnalyzeRefDocs}
-                    disabled={isAnalyzingRef || !apiKey}
+                    disabled={isAnalyzingRef || !canCallAi}
                     className="mt-3 w-full text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-2 rounded-lg hover:bg-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-200 transition-colors"
                   >
                     {isAnalyzingRef ? (
@@ -977,7 +979,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
                   {/* Nút Phân tích sơ bộ mẫu Biện pháp */}
                   <button
                     onClick={handleAnalyzeTemplate}
-                    disabled={isAnalyzingTemplate || !apiKey}
+                    disabled={isAnalyzingTemplate || !canCallAi}
                     className="mt-2 w-full text-xs font-semibold text-emerald-700 bg-emerald-50 px-3 py-2 rounded-lg hover:bg-emerald-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 border border-emerald-200 transition-colors"
                   >
                     {isAnalyzingTemplate ? (
@@ -1333,6 +1335,7 @@ export const SKKNForm: React.FC<Props> = ({ userInfo, onChange, onSubmit, onManu
         apiKey={apiKey}
         selectedModel={selectedModel}
         provider={provider}
+        hasServerProxy={hasServerProxy}
         initialSubject={userInfo.subject}
         initialLevel={userInfo.level}
         onSelectTopic={(topic, method) => {

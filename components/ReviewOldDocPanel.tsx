@@ -16,6 +16,7 @@ interface ReviewOldDocPanelProps {
   apiKey?: string;
   selectedModel?: string;
   provider?: AiProvider;
+  hasServerProxy?: boolean;
 }
 
 const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB
@@ -161,7 +162,8 @@ const StructureChecklist: React.FC<{ sections: EnhancedAnalysisResult['detectedS
 };
 
 // ===================== Main Component =====================
-export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, provider }: ReviewOldDocPanelProps) {
+export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, provider = 'gemini', hasServerProxy = false }: ReviewOldDocPanelProps) {
+  const canCallAi = Boolean(apiKey) || (provider === 'gemini' && hasServerProxy);
   const [file, setFile] = useState<File | null>(null);
   const [isProcessingFile, setIsProcessingFile] = useState(false);
   const [fileProgress, setFileProgress] = useState('');
@@ -238,13 +240,13 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
   };
 
   const startAnalysis = async () => {
-    if (!originalContent || !apiKey) {
-      if (!apiKey) alert("Vui lòng nhập API Key để dùng tính năng Thẩm định AI.");
+    if (!originalContent || !canCallAi) {
+      if (!canCallAi) alert("Vui lòng nhập API Key để dùng tính năng Thẩm định AI.");
       return;
     }
     setIsAnalyzing(true);
     try {
-      const result = await analyzeOldDocument(apiKey, originalContent, selectedModel, provider);
+      const result = await analyzeOldDocument(apiKey || '', originalContent, selectedModel, provider);
       setAnalysisResult(result);
     } catch (error: any) {
       alert("Lỗi phân tích biện pháp AI: " + error.message);
@@ -254,7 +256,10 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
   };
 
   const handleImproveDocx = async () => {
-    if (!file || !apiKey) return;
+    if (!file || !canCallAi) {
+      if (!canCallAi) alert("Vui lòng nhập API Key để dùng tính năng cải thiện DOCX.");
+      return;
+    }
     if (!file.name.toLowerCase().endsWith('.docx')) {
       alert('Tính năng sửa trực tiếp chỉ hỗ trợ file .docx.');
       onHealDoc(originalContent, analysisResult);
@@ -265,7 +270,7 @@ export default function ReviewOldDocPanel({ onHealDoc, apiKey, selectedModel, pr
     setImproveMessage('Bắt đầu xử lý...');
     try {
       const defaultModel = provider === 'agent-platform' ? DEFAULT_AGENT_PLATFORM_MODEL : DEFAULT_GEMINI_MODEL;
-      const { blob, failedBatches, totalBatches } = await processDocxFile(file, apiKey, selectedModel || defaultModel, (percent, msg) => {
+      const { blob, failedBatches, totalBatches } = await processDocxFile(file, apiKey || '', selectedModel || defaultModel, (percent, msg) => {
         setImproveProgress(percent);
         setImproveMessage(msg);
       }, analysisResult || undefined, provider);

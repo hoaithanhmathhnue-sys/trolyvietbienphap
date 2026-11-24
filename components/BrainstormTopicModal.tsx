@@ -11,14 +11,16 @@ interface BrainstormTopicModalProps {
   apiKey?: string;
   selectedModel?: string;
   provider?: AiProvider;
+  hasServerProxy?: boolean;
   initialSubject: string;
   initialLevel: string;
   onSelectTopic: (topic: string, method?: string) => void;
 }
 
 export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
-  isOpen, onClose, apiKey, selectedModel, provider, initialSubject, initialLevel, onSelectTopic
+  isOpen, onClose, apiKey, selectedModel, provider = 'gemini', hasServerProxy = false, initialSubject, initialLevel, onSelectTopic
 }) => {
+  const canCallAi = Boolean(apiKey) || (provider === 'gemini' && hasServerProxy);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     subject: initialSubject || '',
@@ -73,14 +75,14 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
   const handlePrev = () => setStep(prev => prev - 1);
 
   const handleSubmit = async () => {
-    if (!apiKey) {
-      alert("Vui lòng nhập API Key ở Settings trước khi tải AI.");
+    if (!canCallAi) {
+      alert("Vui lòng nhập API Key ở Cài đặt trước khi sử dụng AI.");
       return;
     }
     setError('');
     setIsLoading(true);
     try {
-      const resp = await brainstormTopicNames(apiKey, formData, selectedModel, provider);
+      const resp = await brainstormTopicNames(apiKey || '', formData, selectedModel, provider);
       setResults(resp);
       setStep(4); // Bước hiển thị kết quả
     } catch (err: any) {
@@ -92,14 +94,14 @@ export const BrainstormTopicModal: React.FC<BrainstormTopicModalProps> = ({
 
   // Hàm gọi AI gợi ý PP/KT
   const handleSuggestMethods = async () => {
-    if (!apiKey) {
-      alert("Vui lòng nhập API Key ở Settings trước khi dùng AI gợi ý.");
+    if (!canCallAi) {
+      alert("Vui lòng nhập API Key ở Cài đặt trước khi dùng AI gợi ý.");
       return;
     }
     setSuggestError('');
     setIsSuggesting(true);
     try {
-      const resp = await suggestMethods(apiKey, formData, selectedModel, provider);
+      const resp = await suggestMethods(apiKey || '', formData, selectedModel, provider);
       setSuggestedMethods(resp);
       // Tự động check các PP được AI gợi ý
       const suggestedNames = resp.map(r => r.method);
